@@ -35,7 +35,7 @@ const ContactPage = () => {
             className="flex items-center gap-3 text-indigo-600 hover:text-indigo-800 transition-colors"
           >
             <FaEnvelope /> hello@successlist.app 
-          </a> //Change later
+          </a> 
           <a
             href="https://twitter.com/successlistapp" // change later
             target="_blank"
@@ -43,7 +43,7 @@ const ContactPage = () => {
             className="flex items-center gap-3 text-indigo-600 hover:text-indigo-800 transition-colors"
           >
             <FaTwitter /> @successlistapp
-          </a> //Change later
+          </a> 
         </div>
 
         {/* FAQ */}
