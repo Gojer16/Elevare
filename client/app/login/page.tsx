@@ -7,6 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../../contexts/AuthContext";
 import Head from "next/head";
+import SocialLogin from "../components/SocialLogin";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -62,7 +63,7 @@ export default function LoginPage() {
           <p className="text-center text-gray-600 mb-6">
             Stay consistent. Stay focused. Achieve more.
           </p>
-
+          
           {/* ✅ Error Message */}
           {errorMessage && (
             <p className="mb-4 text-sm text-red-600 text-center">
@@ -124,7 +125,7 @@ export default function LoginPage() {
               {isSubmitting ? "Logging in..." : "Log In"}
             </button>
           </form>
-
+          <SocialLogin />
           {/* Links */}
           <div className="mt-6 text-center text-sm text-gray-600">
             <Link
