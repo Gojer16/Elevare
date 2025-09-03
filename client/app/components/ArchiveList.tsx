@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 
-// Define the shape of a task
 interface Task {
   id: string;
   title: string;
