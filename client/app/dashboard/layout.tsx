@@ -1,22 +1,23 @@
-"use client";
-import { useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext";
-import { useRouter } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import Navbar from "../components/dashboard/Navbar";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession(authOptions);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login");
-    }
-  }, [isAuthenticated, router]);
-
-  if (!isAuthenticated) {
-    // You can render a loading spinner here while redirecting
-    return null;
+  if (!session) {
+    redirect("/login");
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Navbar />
+      <section>{children}</section>
+    </>
+  );
 }
