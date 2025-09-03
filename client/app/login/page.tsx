@@ -37,8 +37,12 @@ export default function LoginPage() {
       // Call backend later
       await login(data.email, data.password);
       router.push("/dashboard");
-    } catch (err: any) {
-      setErrorMessage(err.message || "Login failed. Please try again.");
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "message" in err && typeof (err as any).message === "string") {
+        setErrorMessage((err as { message: string }).message);
+      } else {
+        setErrorMessage("Login failed. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }

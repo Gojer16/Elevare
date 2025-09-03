@@ -1,4 +1,4 @@
-import { FaUser, FaLightbulb } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 
 export const team = [
   {

@@ -15,7 +15,6 @@ interface Task {
 }
 
 export default function DashboardPage() {
-  const { data: session } = useSession();
   const [task, setTask] = useState<Task | null>(null);
   const [archive, setArchive] = useState<Task[]>([]);
   const [isReflectionModalOpen, setReflectionModalOpen] = useState(false);

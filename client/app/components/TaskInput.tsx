@@ -29,7 +29,7 @@ const TaskInput: React.FC<TaskInputProps> = ({ onSubmit }) => {
       <form onSubmit={handleSubmit} className="w-full">
         <div className="mb-6">
           <label htmlFor="title" className="block text-sm font-medium text-gray-600 mb-1">
-            Today's ONE Thing
+            Today&apos;s ONE Thing
           </label>
           <input
             type="text"
@@ -58,7 +58,7 @@ const TaskInput: React.FC<TaskInputProps> = ({ onSubmit }) => {
           className="w-full bg-primary-accent hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-sm hover:shadow-md disabled:opacity-50"
           disabled={!title.trim()}
         >
-          Set Today's Task
+          Set Today&apos;s Task
         </button>
       </form>
     </motion.div>

@@ -37,7 +37,9 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function RegisterPage() {
   const router = useRouter();
   const auth = useAuth?.(); // optional; useAuth may or may not exist
-  const authRegister = (auth && (auth as any).register) ? (auth as any).register : null;
+  const authRegister = (auth && typeof (auth as Record<string, unknown>).register === "function")
+    ? (auth as { register: (email: string, password: string) => Promise<void> }).register
+    : null;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -76,13 +78,16 @@ export default function RegisterPage() {
       // server should respond with JSON { success: boolean, message?: string, token?: string }
       if (!res.ok) {
         // try to read error message, fallback to generic
-        let body: any;
+        let body: unknown;
         try {
           body = await res.json();
         } catch {
           body = null;
         }
-        throw new Error(body?.message || "Registration failed. Try again.");
+        const message = (body && typeof body === 'object' && 'message' in body && typeof (body as { message?: string }).message === 'string')
+          ? (body as { message: string }).message
+          : undefined;
+        throw new Error(message || "Registration failed. Try again.");
       }
 
       const body = await res.json();
