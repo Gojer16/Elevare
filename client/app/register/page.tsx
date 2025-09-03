@@ -37,7 +37,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function RegisterPage() {
   const router = useRouter();
   const auth = useAuth?.(); // optional; useAuth may or may not exist
-  const authRegister = (auth && typeof (auth as Record<string, unknown>).register === "function")
+  const authRegister = (auth && typeof auth.register === "function")
     ? (auth as { register: (email: string, password: string) => Promise<void> }).register
     : null;
 

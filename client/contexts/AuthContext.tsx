@@ -8,6 +8,7 @@ interface AuthContextType {
   signIn: (provider: string) => void;
   signOut: () => void;
   login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,6 +42,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const handleRegister = async (email: string, password: string) => {
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!res.ok) {
+      let body: unknown;
+      try {
+        body = await res.json();
+      } catch {
+        body = null;
+      }
+      const message = (body && typeof body === 'object' && 'message' in body && typeof (body as { message?: string }).message === 'string')
+        ? (body as { message: string }).message
+        : undefined;
+      throw new Error(message || "Registration failed. Please try again.");
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -49,6 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signIn: handleSignIn,
         signOut: handleSignOut,
         login: handleLogin,
+        register: handleRegister,
       }}
     >
       {children}
