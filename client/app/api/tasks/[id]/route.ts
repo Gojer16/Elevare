@@ -10,7 +10,8 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { content, isDone, reflection } = await request.json();
+
+    const { content, isDone } = await request.json();
     if (typeof content !== 'string' || typeof isDone !== 'boolean') {
       return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
     }
@@ -19,7 +20,7 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
 
     const updated = await prisma.task.updateMany({
       where: { id, userId: session.user.id },
-      data: { content, isDone, reflection },
+      data: { content, isDone },
     });
 
     if (updated.count === 0) return NextResponse.json({ error: 'Task not found' }, { status: 404 });

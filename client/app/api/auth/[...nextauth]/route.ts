@@ -18,16 +18,16 @@ export const authOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-  session: { strategy: "database" },
+  session: { strategy: "database" as const },
   pages: { signIn: "/login", error: "/login" },
   callbacks: {
-    async session({ session, user }) {
+  async session({ session, user }: { session: any; user: any }) {
       if (session.user) {
         session.user.id = user.id;
       }
       return session;
     },
-    async signIn({ user, account }) {
+  async signIn({ user, account }: { user: any; account: any }) {
   if (account?.provider === "github") {
     const existingUser = await prisma.user.findUnique({
       where: { email: user.email ?? "" },
