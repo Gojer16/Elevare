@@ -38,7 +38,12 @@ export default function LoginPage() {
       await login(data.email, data.password);
       router.push("/dashboard");
     } catch (err: unknown) {
-      if (err && typeof err === "object" && "message" in err && typeof (err as any).message === "string") {
+      if (
+        err &&
+        typeof err === "object" &&
+        "message" in err &&
+        typeof (err as { message?: unknown }).message === "string"
+      ) {
         setErrorMessage((err as { message: string }).message);
       } else {
         setErrorMessage("Login failed. Please try again.");

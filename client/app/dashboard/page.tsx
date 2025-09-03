@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import TaskInput from "../components/TaskInput";
 import TaskDisplay from "../components/TaskDisplay";
 import ArchiveList from "../components/ArchiveList";
