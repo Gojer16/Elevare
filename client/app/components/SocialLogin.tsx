@@ -1,39 +1,22 @@
 "use client";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { FaGoogle, FaGithub } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function SocialLogin() {
-  const router = useRouter();
+  const { signIn } = useAuth();
   const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSignIn = async (provider: "google" | "github") => {
     setError(null);
     setLoadingProvider(provider);
-
     try {
-      // redirect: false -> return sign in result we can inspect
-      const result = await signIn(provider, {
-        redirect: false,
-        callbackUrl: "/dashboard",
-      } as any); // NextAuth types can be messy in client bundles; 'any' keeps it simple
-
-      // `result` is either undefined or an object with { ok, error, url }
-      if (result?.error) {
-        setError(result.error);
-        setLoadingProvider(null);
-        return;
-      }
-
-      // successful, navigate to callbackUrl (or result.url)
-      const destination = (result?.url as string) || "/dashboard";
-      router.push(destination);
+      await signIn(provider);
     } catch (err: unknown) {
-      // Type-safe error handling
       if (err instanceof Error) setError(err.message);
       else setError("Sign in failed. Try again.");
+    } finally {
       setLoadingProvider(null);
     }
   };
