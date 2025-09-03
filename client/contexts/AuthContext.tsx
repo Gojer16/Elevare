@@ -7,6 +7,7 @@ interface AuthContextType {
   isLoading: boolean;
   signIn: (provider: string) => void;
   signOut: () => void;
+  login: (email: string, password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,6 +29,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     await signOut({ callbackUrl: "/" });
   };
 
+  const handleLogin = async (email: string, password: string) => {
+    // Assumes you have a NextAuth credentials provider set up
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+    if (result && result.error) {
+      throw new Error(result.error);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -35,6 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
         signIn: handleSignIn,
         signOut: handleSignOut,
+        login: handleLogin,
       }}
     >
       {children}
