@@ -1,38 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "../contexts/AuthContext";
+import Providers from "./providers";
 import Script from "next/script";
-
-<Script
-  id="structured-data"
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      name: "Success-List",
-      description: "A simple productivity tool to help you focus on what matters most.",
-      url: "https://success-list.com", // replace with domain
-      applicationCategory: "ProductivityApplication",
-      operatingSystem: "Web",
-      author: {
-        "@type": "Organization",
-        name: "Success-List"
-      },
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD"
-      },
-      sameAs: [
-        "https://twitter.com/",
-        "https://www.linkedin.com/company/",
-        "https://github.com/"
-      ]
-    })
-  }}
-/>
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,15 +47,35 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
+      <head>
+        <Script
+          id="structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "Success-List",
+              description:
+                "A simple productivity tool to help you focus on what matters most.",
+              url: "https://success-list.com",
+              applicationCategory: "ProductivityApplication",
+              operatingSystem: "Web",
+              author: { "@type": "Organization", name: "Success-List" },
+              offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            }),
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
