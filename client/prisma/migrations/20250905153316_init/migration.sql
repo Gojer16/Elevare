@@ -3,10 +3,12 @@ CREATE TABLE "public"."Task" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "content" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
     "isDone" BOOLEAN NOT NULL DEFAULT false,
     "reflection" TEXT,
     "userId" TEXT NOT NULL,
+    "completedAt" TIMESTAMP(3),
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
 );
@@ -44,7 +46,7 @@ CREATE TABLE "public"."User" (
     "id" TEXT NOT NULL,
     "name" TEXT,
     "email" TEXT,
-    "emailVerified" TIMESTAMP(3),
+    "hashedPassword" TEXT,
     "image" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
