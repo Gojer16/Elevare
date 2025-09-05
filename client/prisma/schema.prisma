@@ -19,6 +19,7 @@ model Task {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   tags      Tag[]    @relation("TaskTags")
+  completedAt DateTime?
 }
 
 // NextAuth.js Models
