@@ -10,23 +10,20 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
+    const { id } = await context.params; 
+    const body = await request.json();
 
-    const { content, isDone } = await request.json();
-    if (typeof content !== 'string' || typeof isDone !== 'boolean') {
-      return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
+    // If we're marking a task as not done, clear the reflection
+    if (body.isDone === false) {
+      body.reflection = null;
     }
 
-    const { id } = await context.params;
-
-    const updated = await prisma.task.updateMany({
+    const updatedTask = await prisma.task.update({
       where: { id, userId: session.user.id },
-      data: { content, isDone },
+      data: body,
     });
 
-    if (updated.count === 0) return NextResponse.json({ error: 'Task not found' }, { status: 404 });
-
-    const task = await prisma.task.findUnique({ where: { id } });
-    return NextResponse.json(task);
+    return NextResponse.json(updatedTask);
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
