@@ -95,5 +95,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - "From tasks to triumphs"
 
 ---
-
-.Created by gojer with ❤️
+<p align="center">
+Created by gojer with ❤️
+</p>
