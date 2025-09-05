@@ -37,7 +37,7 @@ const AboutPage = () => {
                   rel="noopener noreferrer"
                   className="text-indigo-600 hover:underline font-medium"
                 >
-                  "The ONE Thing"
+                  &apos;The ONE Thing&apos;
                 </Link>
                 , we challenge the myth of multitasking. We ask:
               </p>
@@ -51,7 +51,7 @@ const AboutPage = () => {
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-gray-900">Our Mission</h2>
               <p>
-                Our mission is to help you achieve meaningful progress. We believe productivity isn't about cramming more tasks into your day, but about achieving what truly matters.
+                Our mission is to help you achieve meaningful progress. We believe productivity &apos;isn&apos;t just about cramming more tasks into your day, but about achieving what truly matters.
               </p>
               <p>
                 <strong>Success-List is your daily success ritual:</strong> one focus, one win, one step closer to the life you want.
@@ -63,7 +63,7 @@ const AboutPage = () => {
           <div className="mx-auto mt-24 max-w-5xl text-center">
             <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Meet the Team</h2>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              We're a small, passionate team dedicated to helping you succeed.
+              &apos;The ONE Thing&apos; - We&apos;re a small, passionate team dedicated to helping you succeed.
             </p>
             <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
               {team.map((member, index) => (
