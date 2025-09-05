@@ -23,7 +23,7 @@ const Testimonials = () => {
             Elevare Reviews: What People Are Saying About Our Productivity App
           </h2>
           <p className="max-w-2xl mx-auto text-center text-lg text-gray-700 mb-16">
-            Elevare is more than a task management and productivity app, &apos;it's&apos;
+            Elevare is more than a task management and productivity app, &apos;it&apos;s
             a daily practice of focus and goal achievement. &apos;Here&apos;s how professionals, creators, and
             leaders use Elevare to achieve clarity and extraordinary results.
           </p>
