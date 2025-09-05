@@ -8,6 +8,7 @@ import { signIn, getSession } from "next-auth/react";
 import Head from "next/head";
 import { motion } from "framer-motion";
 import SocialLogin from "../components/SocialLogin";
+import { Button } from "../components/ui/Button";
 
 
 
@@ -51,18 +52,18 @@ export default function LoginPage() {
   return (
     <>
       <Head>
-        <title>Log in to Success-List | Focus on Your ONE Thing</title>
+        <title>Log in to Elevare | Focus on Your ONE Thing</title>
         <meta
           name="description"
-          content="Log in to Success-List, the productivity app that helps you focus on your most important task each day and track your progress effortlessly."
+          content="Log in to Elevare, the productivity app that helps you focus on your most important task each day and track your progress effortlessly."
         />
         <meta name="robots" content="index, follow" />
       </Head>
 
       <main className="flex min-h-screen flex-col items-center justify-center p-6 sm:p-12 bg-gray-50 text-gray-900">
         <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
-          <h1 className="text-3xl font-bold mb-2 text-center text-gray-900">
-            Log in to Success-List
+          <h1 className="text-3xl font-bold mb-2 text-center text-primary">
+            Log in to Elevare
           </h1>
           <p className="text-center text-gray-600 mb-6">
             Stay consistent. Stay focused. Achieve more.
@@ -130,10 +131,10 @@ export default function LoginPage() {
               </div>
 
               {/* Submit */}
-              <button
+              <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-indigo-500 transition-colors disabled:opacity-50 flex items-center justify-center"
+                className="w-full font-semibold py-3 shadow-md transition-colors flex items-center justify-center"
               >
                 {isSubmitting && (
                   <svg
@@ -158,7 +159,7 @@ export default function LoginPage() {
                   </svg>
                 )}
                 {isSubmitting ? "Logging in..." : "Log In"}
-              </button>
+              </Button>
             </form>
           </motion.div>
           <SocialLogin />
@@ -166,7 +167,7 @@ export default function LoginPage() {
           <div className="mt-6 text-center text-sm text-gray-600">
             <Link
               href="/"
-              className="text-indigo-600 hover:underline"
+              className="text-primary hover:underline"
             >
               Forgot your password?
             </Link>
@@ -175,7 +176,7 @@ export default function LoginPage() {
             Don’t have an account?{" "}
             <Link
               href="/register"
-              className="font-semibold text-indigo-600 hover:underline"
+              className="font-semibold text-primary hover:underline"
             >
               Sign up
             </Link>

@@ -8,6 +8,7 @@ import { validateRegister } from "@/app/lib/validation";
 import { signIn, getSession } from "next-auth/react";
 import SocialLogin from "../components/SocialLogin";
 import { motion } from "framer-motion";
+import { Button } from "../components/ui/Button";
 
 
 
@@ -66,16 +67,16 @@ export default function RegisterPage() {
   return (
     <>
       <Head>
-        <title>Create an account · Success-List</title>
+        <title>Create an account · Elevare</title>
         <meta
           name="description"
-          content="Create your Success-List account to start focusing on your ONE daily task. Fast sign up with email or use Google/GitHub for instant access."
+          content="Create your Elevare account to start focusing on your ONE daily task. Fast sign up with email or use Google/GitHub for instant access."
         />
       </Head>
 
       <main className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
         <div className="w-full max-w-md bg-white rounded-2xl p-8 shadow-lg">
-          <h1 className="text-2xl font-bold text-center mb-1">Create your account</h1>
+          <h1 className="text-2xl font-bold text-center mb-1 text-primary">Create your account</h1>
           <p className="text-center text-gray-600 mb-6">
             Start building the habit of one focused win per day. Sign up below or use one click social login.
           </p>
@@ -105,7 +106,7 @@ export default function RegisterPage() {
                   value={values.name}
                   aria-invalid={!!errors.name}
                   aria-describedby={errors.name ? "name-error" : undefined}
-                  className="mt-1 w-full px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="mt-1 w-full px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="Your name"
                 />
                 {errors.name && (
@@ -128,7 +129,7 @@ export default function RegisterPage() {
                   value={values.email}
                   aria-invalid={!!errors.email}
                   aria-describedby={errors.email ? "email-error" : undefined}
-                  className="mt-1 w-full px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  className="mt-1 w-full px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary"
                   placeholder="you@domain.com"
                 />
                 {errors.email && (
@@ -152,17 +153,19 @@ export default function RegisterPage() {
                     value={values.password}
                     aria-invalid={!!errors.password}
                     aria-describedby={errors.password ? "password-error" : undefined}
-                    className="w-full px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                    className="w-full px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary"
                     placeholder="At least 8 characters"
                   />
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="sm"
                     onClick={() => setShowPassword((s) => !s)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                     className="absolute inset-y-0 right-2 px-2 text-sm text-gray-500"
                   >
                     {showPassword ? "Hide" : "Show"}
-                  </button>
+                  </Button>
                 </div>
                 {errors.password && (
                   <p id="password-error" className="mt-1 text-sm text-red-600">
@@ -173,10 +176,10 @@ export default function RegisterPage() {
 
               {/* Submit */}
               <div>
-                <button
+                <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white hover:bg-indigo-500 disabled:opacity-60 flex items-center justify-center"
+                  className="w-full font-semibold py-3 shadow-md transition-colors flex items-center justify-center"
                 >
                   {isSubmitting && (
                     <svg
@@ -201,7 +204,7 @@ export default function RegisterPage() {
                     </svg>
                   )}
                   {isSubmitting ? "Creating account…" : "Create account"}
-                </button>
+                </Button>
               </div>
             </form>
           </motion.div>
@@ -213,7 +216,7 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-gray-600 mt-6">
             By signing up, you agree to our{" "}
-            <Link href="/privacy" className="text-indigo-600 hover:underline">
+            <Link href="/privacy" className="text-primary hover:underline">
               Privacy Policy
             </Link>
             .
@@ -221,7 +224,7 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-gray-600 mt-4">
             Already have an account?{" "}
-            <Link href="/login" className="text-indigo-600 font-medium hover:underline">
+            <Link href="/login" className="text-primary font-medium hover:underline">
               Log in
             </Link>
           </p>
