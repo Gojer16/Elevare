@@ -32,7 +32,7 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onDrag' | 'onDragEnd' | 'onDragEnter' | 'onDragExit' | 'onDragLeave' | 'onDragOver' | 'onDragStart' | 'onDrop' | 'onAnimationStart' | 'onAnimationEnd' | 'onAnimationIteration'>,
     VariantProps<typeof buttonVariants> {}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
