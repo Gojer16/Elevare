@@ -1,4 +1,4 @@
-# Elevare: Your Success List, Elevated
+# Elevare: Your Success List, Elevated.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
 </p>
 
-> "If you chase two rabbits, you will not catch either one." — Russian Proverb
+> "If you chase two rabbits, you will not catch either one." — Russian Proverb.
 
 ## Overview
 
@@ -31,20 +31,20 @@ Unlike endless to-do lists, Elevare helps you cut through the noise by identifyi
 
 ## Key Features
 
-- 🎯 **Daily Focus** — Commit to your single most important task each day
-- ✅ **Completion & Reflection** — Mark tasks as complete and reflect to build awareness and growth
-- 📊 **Archive & Progress** — See your journey unfold through archived tasks and reflections
-- 🔐 **Secure Authentication** — Built with NextAuth.js + Prisma for safe, private accounts
-- 🏷️ **Tags** *(Roadmap)* — Organize tasks by life area (#Health, #Work, #Relationships)
-- 🏆 **Gamification** *(Planned)* — Rewards and streaks to keep you consistent, like Duolingo for focus
+- 🎯 **Daily Focus** — Commit to your single most important task each day.
+- ✅ **Completion & Reflection** — Mark tasks as complete and reflect to build awareness and growth.
+- 📊 **Archive & Progress** — See your journey unfold through archived tasks and reflections.
+- 🔐 **Secure Authentication** — Built with NextAuth.js + Prisma for safe, private accounts.
+- 🏷️ **Tags** *(Roadmap)* — Organize tasks by life area (#Health, #Work, #Relationships).
+- 🏆 **Gamification** *(Planned)* — Rewards and streaks to keep you consistent.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v18 or higher recommended)
-- npm or yarn
-- PostgreSQL (e.g., Supabase for hosting)
+- Node.js (v18 or higher recommended).
+- npm or yarn.
+- PostgreSQL (e.g., Supabase for hosting).
 
 ### Installation
 
@@ -64,9 +64,9 @@ Unlike endless to-do lists, Elevare helps you cut through the noise by identifyi
    ```
 
 4. **Set up your environment variables:**
-   - Create a `.env.local` file in the `client` directory
-   - Add the necessary environment variables (e.g., database connection strings, API keys)
-   - Refer to `.env.example` for a template
+   - Create a `.env.local` file in the `client` directory.
+   - Add the necessary environment variables (e.g., database connection strings, API keys).
+   - Refer to `.env.example` for a template.
 
 5. **Run the development server:**
    ```bash
@@ -78,11 +78,11 @@ Unlike endless to-do lists, Elevare helps you cut through the noise by identifyi
 
 We welcome contributions from the community! If you have ideas for new features, bug fixes, or improvements, please feel free to:
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
 ## License
 
