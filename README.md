@@ -27,7 +27,7 @@ Our philosophy is simple: consistent, focused effort on high-priority goals is t
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/success-list.git
+   git clone https://github.com/gojer16/success-list.git
    ```
 2. **Navigate to the client directory:**
    ```bash
