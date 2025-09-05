@@ -182,7 +182,7 @@ const fetchTasks = async () => {
             day: 'numeric' 
           });
           
-          return {...t, completed: t.isDone, date: formattedDate, reflection: t.reflection};
+          return {...t, description: t.description ?? "", completed: t.isDone, date: formattedDate, reflection: t.reflection ?? ""};
         })} />
 
       <ReflectionModal

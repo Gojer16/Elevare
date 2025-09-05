@@ -16,29 +16,7 @@ export async function GET() {
       select: { id: true, title: true, description: true, isDone: true, createdAt: true, reflection: true },
     });
 
-    // Reset tasks that were completed yesterday or earlier
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const updatedTasks = await Promise.all(tasks.map(async (task) => {
-  if (task.completedAt) {
-    const taskDate = new Date(task.completedAt);
-    taskDate.setHours(0, 0, 0, 0);
-
-    // If completed before today → reset
-    if (taskDate < today) {
-      await prisma.task.update({
-        where: { id: task.id },
-        data: { isDone: false, completedAt: null, reflection: null },
-      });
-      return { ...task, isDone: false, completedAt: null, reflection: null };
-    }
-  }
-
-  return task;
-}));
-
-    return NextResponse.json(updatedTasks);
+    return NextResponse.json(tasks);
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
@@ -75,7 +53,6 @@ export async function POST(request: Request) {
       title,
       description,
       isDone: isDone ?? false,
-      completedAt: isDone ? new Date() : null,
       user: { connect: { id: session.user.id } },
     },
   });
