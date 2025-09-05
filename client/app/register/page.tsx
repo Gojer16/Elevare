@@ -153,7 +153,7 @@ export default function RegisterPage() {
                     aria-invalid={!!errors.password}
                     aria-describedby={errors.password ? "password-error" : undefined}
                     className="w-full px-3 py-2 rounded-md border border-gray-200 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                    placeholder="At least 6 characters"
+                    placeholder="At least 8 characters"
                   />
                   <button
                     type="button"
