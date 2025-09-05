@@ -34,7 +34,7 @@ export default function Navbar() {
           {/* Brand */}
           <div className="flex items-center">
             <Link href="/dashboard" className="inline-flex items-center gap-3">
-              <span className="text-2xl font-bold text-gray-800">Success-List</span>
+              <span className="text-2xl font-bold text-gray-800">Elevare</span>
               <span className="sr-only">Go to dashboard</span>
             </Link>
           </div>
