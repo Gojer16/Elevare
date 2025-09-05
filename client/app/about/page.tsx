@@ -13,11 +13,11 @@ const AboutPage = () => {
           {/* Intro */}
           <div className="mx-auto max-w-3xl lg:mx-0 text-center">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              About Success-List
+              About Elevare
             </h1>
             <p className="mt-6 text-xl leading-8 text-gray-700">
-              Success-List is built on a simple, powerful idea:{" "}
-              <span className="font-semibold text-indigo-600">
+              Elevare is built on a simple, powerful idea:{" "}
+              <span className="font-semibold text-primary">
                 true productivity comes from doing less, with focus.
               </span>
             </p>
@@ -35,26 +35,26 @@ const AboutPage = () => {
                   href="https://www.amazon.com/ONE-Thing-Surprisingly-Extraordinary-Results/dp/1885167776"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-indigo-600 hover:underline font-medium"
+                  className="text-primary hover:underline font-medium"
                 >
                   &apos;The ONE Thing&apos;
                 </Link>
                 , we challenge the myth of multitasking. We ask:
               </p>
-              <blockquote className="border-l-4 border-indigo-500 pl-6 italic text-gray-800 font-serif">
+              <blockquote className="border-l-4 border-secondary pl-6 italic text-gray-800 font-serif">
                 “What’s the ONE thing I can do such that by doing it, everything else will be easier or unnecessary?”
               </blockquote>
               <p>
-                This question is the heart of Success-List. It’s about finding the highest-leverage action each day.
+                This question is the heart of Elevare. It’s about finding the highest-leverage action each day.
               </p>
             </div>
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-gray-900">Our Mission</h2>
               <p>
-                Our mission is to help you achieve meaningful progress. We believe productivity &apos;isn&apos;t just about cramming more tasks into your day, but about achieving what truly matters.
+                Our mission is to help you achieve meaningful progress and **goal achievement**. We believe productivity &apos;isn&apos;t just about cramming more tasks into your day, but about achieving what truly matters.
               </p>
               <p>
-                <strong>Success-List is your daily success ritual:</strong> one focus, one win, one step closer to the life you want.
+                <strong>Elevare is your daily success ritual:</strong> one focus, one win, one step closer to the life you want.
               </p>
             </div>
           </div>
@@ -75,13 +75,13 @@ const AboutPage = () => {
                   transition={{ duration: 0.5, delay: index * 0.2 }}
                   className="flex flex-col items-center text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
                 >
-                  <div className="mb-4 text-indigo-500">
+                  <div className="mb-4 text-secondary">
                     <member.icon size={40} />
                   </div>
                   <h3 className="text-xl font-semibold leading-7 tracking-tight text-gray-900">
                     {member.name}
                   </h3>
-                  <p className="text-sm font-semibold leading-6 text-indigo-600">
+                  <p className="text-sm font-semibold leading-6 text-primary">
                     {member.role}
                   </p>
                   <p className="mt-4 text-base leading-7 text-gray-600">

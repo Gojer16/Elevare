@@ -5,6 +5,7 @@ import { FaTwitter, FaEnvelope } from "react-icons/fa";
 import { faqs } from "../constants/faq";
 import Navbar from '../components/landing/Navbar';
 import { useForm, ValidationError } from '@formspree/react';
+import { Button } from "../components/ui/Button";
 
 const ContactPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -35,7 +36,7 @@ const ContactPage = () => {
               id="contact-heading"
               className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
             >
-              Contact the Success-List Team
+              Contact the Elevare Team
             </h2>
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Have questions, feedback, or feature requests? We’d love to hear
@@ -62,7 +63,8 @@ const ContactPage = () => {
                       id="email"
                       type="email" 
                       name="email"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      placeholder="Enter your email"
+                      className="block w-full h-8 text-clip p-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     <ValidationError 
                       prefix="Email" 
@@ -83,8 +85,9 @@ const ContactPage = () => {
                     <textarea
                       id="message"
                       name="message"
+                      placeholder="I love your app!"
                       rows={4}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      className="block w-full p-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     ></textarea>
                     <ValidationError 
                       prefix="Message" 
@@ -95,13 +98,13 @@ const ContactPage = () => {
                   </div>
                 </div>
                 <div>
-                  <button
+                  <Button
                     type="submit"
                     disabled={state.submitting}
-                    className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
+                    className="flex w-full justify-center rounded-md border border-transparent  py-2 px-4 text-sm font-medium text-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50"
                   >
                     Send Message
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>
@@ -115,20 +118,20 @@ const ContactPage = () => {
                 </h3>
                 <div className="mt-6 space-y-4">
                   <a
-                    href="mailto:hello@successlist.app"
-                    className="flex items-center gap-3 text-lg text-gray-600 hover:text-indigo-600 transition-colors"
+                    href="mailto:operation927@gmail.com"
+                    className="flex items-center gap-3 text-lg text-gray-600 hover:text-secondary transition-colors"
                   >
-                    <FaEnvelope className="text-indigo-600" />
-                    hello@successlist.app
+                    <FaEnvelope className="text-primary" />
+                    operation927@gmail.com
                   </a>
                   <a
-                    href="https://twitter.com/successlistapp"
+                    href="https://x.com/Gojer27"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-lg text-gray-600 hover:text-indigo-600 transition-colors"
+                    className="flex items-center gap-3 text-lg text-gray-600 hover:text-secondary transition-colors"
                   >
-                    <FaTwitter className="text-indigo-600" />
-                    @successlistapp
+                    <FaTwitter className="text-primary" />
+                    @Gojer27
                   </a>
                 </div>
               </div>
