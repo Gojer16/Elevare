@@ -25,25 +25,26 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        //  Validate inputs
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
-
+        //  Find user by email
         const user = await prisma.user.findUnique({
           where: {
             email: credentials.email,
           },
         });
-
+        //  Check if user exists
         if (!user || !user.hashedPassword) {
           return null;
         }
-
+        //  Check if password is correct
         const isCorrectPassword = await bcrypt.compare(
           credentials.password,
           user.hashedPassword
         );
-
+        
         if (!isCorrectPassword) {
           return null;
         }
