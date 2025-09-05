@@ -2,56 +2,51 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "../../contexts/AuthContext";
+import useFormValidation from "@/app/hooks/useFormValidation";
+import { validateLogin } from "@/app/lib/validation";
+import { signIn, getSession } from "next-auth/react";
 import Head from "next/head";
+import { motion } from "framer-motion";
 import SocialLogin from "../components/SocialLogin";
 
-const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
 
-type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const { login } = useAuth();
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const {
-    register,
+    handleChange,
     handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  });
+    values,
+    errors,
+    isSubmitting,
+  } = useFormValidation(
+    { email: '', password: '' },
+    validateLogin,
+    submit
+  );
 
-  const onSubmit = async (data: LoginFormData) => {
+  async function submit() {
     setErrorMessage("");
-    setIsSubmitting(true);
     try {
-      // Call backend later
-      await login(data.email, data.password);
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
+
+      if (result && result.error) {
+        throw new Error(result.error);
+      }
+
+      await getSession(); // Force a session refresh
       router.push("/dashboard");
     } catch (err: unknown) {
-      if (
-        err &&
-        typeof err === "object" &&
-        "message" in err &&
-        typeof (err as { message?: unknown }).message === "string"
-      ) {
-        setErrorMessage((err as { message: string }).message);
-      } else {
-        setErrorMessage("Login failed. Please try again.");
-      }
-    } finally {
-      setIsSubmitting(false);
+      if (err instanceof Error) setErrorMessage(err.message);
+      else setErrorMessage("Login failed. Please try again.");
     }
-  };
+  }
 
   return (
     <>
@@ -80,60 +75,92 @@ export default function LoginPage() {
             </p>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            {/* Email */}
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                {...register("email")}
-                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                placeholder="you@example.com"
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <form onSubmit={handleSubmit} noValidate>
+              {/* Email */}
+              <div className="mb-4">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  onChange={handleChange}
+                  value={values.email}
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  placeholder="you@example.com"
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.email}
+                  </p>
+                )}
+              </div>
 
-            {/* Password */}
-            <div className="mb-6">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                {...register("password")}
-                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                placeholder="••••••••••"
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
+              {/* Password */}
+              <div className="mb-6">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  onChange={handleChange}
+                  value={values.password}
+                  className="w-full p-3 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                  placeholder="••••••••••"
+                />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.password}
+                  </p>
+                )}
+              </div>
 
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-indigo-500 transition-colors disabled:opacity-50"
-            >
-              {isSubmitting ? "Logging in..." : "Log In"}
-            </button>
-          </form>
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-indigo-500 transition-colors disabled:opacity-50 flex items-center justify-center"
+              >
+                {isSubmitting && (
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                )}
+                {isSubmitting ? "Logging in..." : "Log In"}
+              </button>
+            </form>
+          </motion.div>
           <SocialLogin />
           {/* Links */}
           <div className="mt-6 text-center text-sm text-gray-600">
