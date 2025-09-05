@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "../ui/Button";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -38,8 +39,8 @@ const Navbar = () => {
             transition={{ duration: 0.5 }}
           >
             <Link href="/">
-              <span className="block text-2xl font-serif font-bold text-gray-900 tracking-tight hover:text-primary-accent transition-colors">
-                Success-List
+              <span className="block text-2xl font-serif font-bold text-gray-900 tracking-tight hover:text-primary transition-colors">
+                Elevare
               </span>
             </Link>
           </motion.div>
@@ -55,10 +56,10 @@ const Navbar = () => {
               >
                 <Link 
                   href={item.href}
-                  className="text-gray-600 hover:text-primary-accent transition-colors font-medium relative group"
+                  className="text-gray-600 hover:text-primary transition-colors font-medium relative group"
                 >
                   {item.name}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-accent transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
                 </Link>
               </motion.div>
             ))}
@@ -68,16 +69,7 @@ const Navbar = () => {
               transition={{ duration: 0.3, delay: 0.4 }}
             >
               <Link href="/register">
-                <motion.button 
-                  whileHover={{ 
-                    scale: 1.05,
-                    boxShadow: "0 10px 25px -5px rgba(74, 144, 226, 0.3)"
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-primary-accent text-white font-medium py-2 px-6 rounded-full shadow-sm hover:bg-blue-600 transition-all duration-300"
-                >
-                  Sign Up
-                </motion.button>
+                <Button>Sign Up</Button>
               </Link>
             </motion.div>
           </div>
@@ -87,7 +79,7 @@ const Navbar = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="md:hidden text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-accent rounded"
+            className="md:hidden text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary rounded"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
@@ -137,7 +129,7 @@ const Navbar = () => {
                   >
                     <Link 
                       href={item.href}
-                      className="text-gray-600 hover:text-primary-accent transition-colors font-medium py-2 block focus:outline-none focus:ring-2 focus:ring-primary-accent rounded"
+                      className="text-gray-600 hover:text-primary transition-colors font-medium py-2 block focus:outline-none focus:ring-2 focus:ring-primary rounded"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {item.name}
@@ -151,14 +143,7 @@ const Navbar = () => {
                   transition={{ duration: 0.2, delay: 0.1 }}
                 >
                   <Link href="/register" className="w-fit block">
-                    <motion.button 
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="bg-primary-accent text-white font-medium py-2 px-6 rounded-full shadow-sm hover:bg-blue-600 transition-colors mt-2 focus:outline-none focus:ring-2 focus:ring-primary-accent"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Sign Up
-                    </motion.button>
+                    <Button onClick={() => setIsMenuOpen(false)}>Sign Up</Button>
                   </Link>
                 </motion.div>
               </div>

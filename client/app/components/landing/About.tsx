@@ -14,7 +14,7 @@ const About = () => {
         >
           {/* SEO-optimized heading */}
           <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
-            What Is <span className="text-primary-accent">The ONE Thing?</span>
+            What Is <span className="text-primary">The ONE Thing?</span>
           </h2>
 
           <div className="max-w-3xl mx-auto space-y-6">
@@ -24,7 +24,7 @@ const About = () => {
                 href="https://www.amazon.com/ONE-Thing-Surprisingly-Extraordinary-Results/dp/1885167776"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-indigo-600 hover:underline"
+                className="text-primary hover:underline"
               >
                 <strong>The ONE Thing</strong> by Gary Keller and Jay Papasan
               </Link>
@@ -34,7 +34,7 @@ const About = () => {
               effect that makes everything else easier or unnecessary.
             </p>
 
-            <h3 className="text-2xl font-bold text-gray-900">
+            <h3 className="text-2xl font-bold text-primary">
               Why This Matters
             </h3>
             <p className="text-lg text-gray-600 leading-relaxed">
@@ -47,14 +47,14 @@ const About = () => {
               results through simplicity and clarity.
             </p>
 
-            <h3 className="text-2xl font-bold text-gray-900">
-              How Success-List Helps
+            <h3 className="text-2xl font-bold text-primary">
+              How Elevare Helps
             </h3>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Success-List is a{" "}
+              Elevare is a{" "}
               <strong>minimalist focus app</strong> designed to bring this
               principle to life. Each day, you choose{" "}
-              <em>your ONE success task</em>, commit to it, and reflect on your
+              <em>your ONE focus task</em>, commit to it, and reflect on your
               progress. That’s it—no clutter, no distractions. Just one clear
               win at a time, compounding into lasting success.
             </p>

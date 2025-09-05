@@ -18,14 +18,14 @@ const Testimonials = () => {
         >
           <h2
             id="testimonials-heading"
-            className="text-3xl md:text-4xl font-bold text-center mb-6"
+            className="text-3xl md:text-4xl font-bold text-center mb-6 text-primary"
           >
-            What People Are Saying
+            Elevare Reviews: What People Are Saying About Our Productivity App
           </h2>
           <p className="max-w-2xl mx-auto text-center text-lg text-gray-700 mb-16">
-            Success-List is more than a <strong>productivity app</strong>—it’s
-            a daily practice of focus. Here’s how professionals, creators, and
-            leaders use it to achieve clarity and results.
+            Elevare is more than a task management and productivity app, &apos;it's&apos;
+            a daily practice of focus and goal achievement. &apos;Here&apos;s how professionals, creators, and
+            leaders use Elevare to achieve clarity and extraordinary results.
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -39,7 +39,7 @@ const Testimonials = () => {
               transition={{ duration: 0.5, delay: index * 0.2 }}
               >
               <p className="text-lg text-gray-800 italic mb-6">“{t.quote}”</p>
-              <p className="font-semibold text-purple-600">{t.author}</p>
+              <p className="font-semibold text-secondary">{t.author}</p>
               <p className="text-sm text-gray-600">{t.title}</p>
             </motion.div>
             ))}
