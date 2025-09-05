@@ -1,10 +1,10 @@
-# Success-List: Achieve Your "One Thing" Every Day
+# Elevare: Achieve Your "One Thing" Every Day
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
 
-Success-List is a minimalist productivity app designed to help you focus on and accomplish your single most important task each day. Inspired by the principle of "The ONE Thing," this tool cuts through the clutter of traditional to-do lists, guiding you to identify and execute the one action that will make the biggest impact.
+Elevare is a minimalist productivity app designed to help you focus on and accomplish your single most important task each day. Inspired by the principle of "The ONE Thing," this tool cuts through the clutter of traditional to-do lists, guiding you to identify and execute the one action that will make the biggest impact.
 
 Our philosophy is simple: consistent, focused effort on high-priority goals is the key to long-term success. By completing your "One Thing" daily, you build momentum, cultivate discipline, and make meaningful progress toward what truly matters.
 
@@ -27,11 +27,11 @@ Our philosophy is simple: consistent, focused effort on high-priority goals is t
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/success-list.git
+   git clone https://github.com/your-username/Elevare.git
    ```
 2. **Navigate to the client directory:**
    ```bash
-   cd success-list/client
+   cd Elevare/client
    ```
 3. **Install dependencies:**
    ```bash

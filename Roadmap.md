@@ -1,6 +1,6 @@
-# Roadmap: The Future of Success-List
+# Roadmap: The Future of Elevare
 
-This document outlines the planned features and improvements for the Success-List application. Our goal is to enhance the user experience, provide deeper insights, and make goal achievement more engaging.
+This document outlines the planned features and improvements for the Elevare application. Our goal is to enhance the user experience, provide deeper insights, and make goal achievement more engaging.
 
 ## Q4 2025: Enhanced Insights & Personalization
 
