@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { FaGoogle, FaGithub } from "react-icons/fa";
 import { useAuth } from "../../contexts/AuthContext";
+import { Button } from "./ui/Button";
 
 export default function SocialLogin() {
   const { signIn } = useAuth();
@@ -26,21 +27,17 @@ export default function SocialLogin() {
       <p className="text-center text-sm text-gray-500 mb-4">Or continue with</p>
 
       <div className="flex justify-center gap-4">
-        <button
+        <Button
           aria-label="Sign in with Google"
+          variant="outline"
           onClick={() => handleSignIn("google")}
           disabled={!!loadingProvider}
-          className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${
-            loadingProvider === "google"
-              ? "bg-gray-200 text-gray-700 cursor-wait"
-              : "bg-white text-gray-900 shadow hover:bg-gray-100"
-          }`}
         >
           <FaGoogle size={18} />
-          <span className="font-medium">
+          <span className="font-medium ml-2">
             {loadingProvider === "google" ? "Signing in…" : "Google"}
           </span>
-        </button>
+        </Button>
 
         <button
           aria-label="Sign in with GitHub"

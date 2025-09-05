@@ -45,7 +45,7 @@ const ArchiveList: React.FC<ArchiveListProps> = ({ tasks }) => {
       initial="hidden"
       animate="visible"
     >
-      <h2 className="text-2xl font-bold mb-4 text-center text-gray-700">Archive</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center text-primary">Archive</h2>
       <div className="space-y-3">
         {tasks.map((task) => (
           <motion.div
@@ -58,7 +58,7 @@ const ArchiveList: React.FC<ArchiveListProps> = ({ tasks }) => {
                 <p className="font-semibold text-gray-700">{task.title}</p>
                 <p className="text-sm text-gray-500">{task.date}</p>
               </div>
-              <span className={`font-bold text-xs px-2 py-1 rounded-full ${task.completed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+              <span className={`font-bold text-xs px-2 py-1 rounded-full ${task.completed ? 'bg-secondary text-white' : 'bg-red-100 text-red-700'}`}>
                 {task.completed ? "COMPLETED" : "RESET"}
               </span>
             </div>
