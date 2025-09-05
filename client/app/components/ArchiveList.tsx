@@ -59,12 +59,13 @@ const ArchiveList: React.FC<ArchiveListProps> = ({ tasks }) => {
                 <p className="text-sm text-gray-500">{task.date}</p>
               </div>
               <span className={`font-bold text-xs px-2 py-1 rounded-full ${task.completed ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                {task.completed ? "COMPLETED" : "INCOMPLETE"}
+                {task.completed ? "COMPLETED" : "RESET"}
               </span>
             </div>
             {task.reflection && (
               <div className="mt-3 pt-3 border-t border-gray-200">
-                <p className="text-sm text-gray-600 italic whitespace-pre-wrap">{task.reflection}</p>
+                <p className="text-sm text-gray-600 italic whitespace-pre-wrap">"{task.reflection}"</p>
+                <p className="text-sm text-gray-600 italic whitespace-pre-wrap">"{task.description}"</p>
               </div>
             )}
           </motion.div>
