@@ -26,7 +26,7 @@ export default function useFormValidation<T>(
         setIsSubmitting(false);
       }
     }
-  }, [isSubmitting]);
+  }, [isSubmitting, errors, submit]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues({

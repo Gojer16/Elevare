@@ -64,8 +64,8 @@ const ArchiveList: React.FC<ArchiveListProps> = ({ tasks }) => {
             </div>
             {task.reflection && (
               <div className="mt-3 pt-3 border-t border-gray-200">
-                <p className="text-sm text-gray-600 italic whitespace-pre-wrap">"{task.reflection}"</p>
-                <p className="text-sm text-gray-600 italic whitespace-pre-wrap">"{task.description}"</p>
+                <p className="text-sm text-gray-600 italic whitespace-pre-wrap">&quot;{task.reflection}&quot;</p>
+                <p className="text-sm text-gray-600 italic whitespace-pre-wrap">&quot;{task.description}&quot;</p>
               </div>
             )}
           </motion.div>
