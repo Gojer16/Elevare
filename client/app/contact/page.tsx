@@ -6,7 +6,6 @@ import { faqs } from "../constants/faq";
 import Navbar from '../components/landing/Navbar';
 import { useForm, ValidationError } from '@formspree/react';
 import { Button } from "../components/ui/Button";
-import Link from "next/link";
 
 const ContactPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
