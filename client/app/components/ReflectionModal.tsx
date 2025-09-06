@@ -8,9 +8,12 @@ interface ReflectionModalProps {
   onClose: () => void;
   onSave: (reflection: string) => void;
   isSaving: boolean;
+  title: string;
+  subtitle: string;
+  successAnimation?: string;
 }
 
-const ReflectionModal: React.FC<ReflectionModalProps> = ({ isOpen, onClose, onSave, isSaving }) => {
+const ReflectionModal: React.FC<ReflectionModalProps> = ({ isOpen, onClose, onSave, isSaving, title, subtitle, successAnimation }) => {
   const [reflection, setReflection] = useState("");
 
   if (!isOpen) return null;
