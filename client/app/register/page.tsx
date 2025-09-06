@@ -22,7 +22,7 @@ export default function RegisterPage() {
     errors,
     isSubmitting,
   } = useFormValidation(
-    { name: '', email: '', password: '' },
+    { name: "", email: "", password: "" },
     validateRegister,
     submit
   );
@@ -33,7 +33,11 @@ export default function RegisterPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: values.name, email: values.email, password: values.password }),
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        }),
       });
 
       if (!res.ok) {
@@ -54,26 +58,89 @@ export default function RegisterPage() {
       await getSession(); // Force a session refresh
       router.push("/dashboard");
     } catch (err: unknown) {
-      if (err instanceof Error) setErrorMessage(err.message);
-      else setErrorMessage("Registration failed. Please try again.");
+      if (err instanceof Error) {
+        setErrorMessage("Hmm, something went off track. Let’s try again — your focus space is waiting.");
+      } else {
+        setErrorMessage("Hmm, something went off track. Let’s try again — your focus space is waiting.");
+      }
     }
   }
 
   return (
     <>
       <Head>
-        <title>Create an account · Elevare</title>
+        <title>Start your journey to focus · Elevare</title>
         <meta
           name="description"
-          content="Create your Elevare account to start focusing on your ONE daily task. Fast sign up with email or use Google/GitHub for instant access."
+          content="Sign up to Elevare, the focus and productivity app built on The ONE Thing method. Create your account and start your daily ritual of clarity. Keywords: signup to productivity app, create account for focus app, task manager register."
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "RegisterAction",
+              name: "Register for Elevare",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate: "https://elevareapp.vercel.app/register",
+                actionPlatform: [
+                  "http://schema.org/DesktopWebPlatform",
+                  "http://schema.org/MobileWebPlatform",
+                ],
+              },
+              result: {
+                "@type": "SoftwareApplication",
+                name: "Elevare",
+                applicationCategory: "Productivity",
+                operatingSystem: "Web",
+              },
+              description: "Register for Elevare, the focus and productivity app built on The ONE Thing method. Create your account and start your daily ritual of clarity.",
+              url: "https://elevareapp.vercel.app/register",
+              image: "https://elevareapp.vercel.app/og-image.png",
+               sameAs: [
+              "https://x.com/Gojer27",
+              "https://github.com/Gojer16/Elevare",
+              "https://www.linkedin.com/in/orlando-ascanio-dev/",
+            ],
+              author: {
+                "@type": "Person",
+                name: "Orlando Ascanio",
+              },
+              publisher: {
+                "@type": "Organization",
+                name: "Elevare",
+                logo: {
+                  "@type": "ImageObject",
+                  url: "https://elevareapp.vercel.app/logo.png",
+                },
+              },
+              keywords: [
+                "signup to productivity app",
+                "create account for focus app",
+                "task manager register",
+              ]
+            }),
+          }}
         />
       </Head>
 
       <main className="flex min-h-screen items-center justify-center p-6 bg-gradient-to-b from-violet-50 via-white to-gray-50">
         <div className="w-full max-w-md bg-white rounded-2xl p-8 shadow-lg">
-          <h1 className="text-2xl font-bold text-center mb-1 text-primary">Create your account</h1>
-          <p className="text-center text-gray-600 mb-6">
-            Start building the habit of one focused win per day. Sign up below or use one click social login.
+          {/* Motivational micro-quote */}
+          <p className="text-center text-sm text-gray-500 italic mb-4">
+            “Today is the first step in doing less, but better.”
+          </p>
+
+          <h1 className="text-2xl font-bold text-center mb-1 text-primary">
+            Start your journey to focus
+          </h1>
+          <p className="text-center text-gray-600 mb-2">
+            Every signup is a commitment, not to do more, but to do what matters most.
+          </p>
+          {/* Pull-quote micro teaching moment */}
+          <p className="text-center text-sm text-gray-500 mb-6">
+            “Not everything matters equally. That’s why we help you choose your ONE Thing.”
           </p>
 
           {errorMessage && (
@@ -91,7 +158,7 @@ export default function RegisterPage() {
               {/* Name */}
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Name
+                  Your name <span className="text-gray-400">(so we know who’s building clarity)</span>
                 </label>
                 <input
                   id="name"
@@ -114,7 +181,7 @@ export default function RegisterPage() {
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
+                  Your email <span className="text-gray-400">(where your daily ritual begins)</span>
                 </label>
                 <input
                   id="email"
@@ -137,7 +204,7 @@ export default function RegisterPage() {
               {/* Password */}
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
+                  Password <span className="text-gray-400">(the key to your focus space)</span>
                 </label>
                 <div className="relative mt-1">
                   <input
@@ -198,7 +265,7 @@ export default function RegisterPage() {
                       ></path>
                     </svg>
                   )}
-                  {isSubmitting ? "Creating account…" : "Create account"}
+                  {isSubmitting ? "Setting up your focus ritual…" : "Begin My Focus Ritual"}
                 </Button>
               </div>
             </form>
@@ -206,21 +273,16 @@ export default function RegisterPage() {
 
           {/* Social login */}
           <div className="mt-6">
+            <p className="text-center text-sm text-gray-600 mb-2">
+              Fast track your focus, join with one click:
+            </p>
             <SocialLogin />
           </div>
 
-          <p className="text-center text-sm text-gray-600 mt-6">
-            By signing up, you agree to our{" "}
-            <Link href="/privacy" className="text-primary hover:underline">
-              Privacy Policy
-            </Link>
-            .
-          </p>
-
           <p className="text-center text-sm text-gray-600 mt-4">
-            Already have an account?{" "}
+            Already focusing with Elevare?{" "}
             <Link href="/login" className="text-primary font-medium hover:underline">
-              Log in
+              Log back in
             </Link>
           </p>
         </div>
