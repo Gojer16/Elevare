@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, easeOut } from "framer-motion";
 import { Button } from "../ui/Button";
 
 const containerVariants = {
@@ -12,14 +12,14 @@ const containerVariants = {
       when: "beforeChildren",
       staggerChildren: 0.09,
       duration: 0.6,
-      ease: "easeOut",
+      ease: easeOut,
     },
   },
 };
 
 const lineVariant = {
   hidden: { opacity: 0, y: 8 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.42, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.42, ease: easeOut } },
 };
 
 const ctaVariant = {
