@@ -16,7 +16,6 @@ interface FeatureDetailModalProps {
 const FeatureDetailModal: React.FC<FeatureDetailModalProps> = ({ isOpen, onClose, feature }) => {
   if (!isOpen || !feature) return null;
 
-  const Icon = feature.icon;
 
   const contentVariants = {
     hidden: { opacity: 0, y: 20 },
