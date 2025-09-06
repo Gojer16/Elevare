@@ -10,51 +10,66 @@ import {
 export interface Feature {
   title: string;
   description: string;
+  promise: string;
+  before: string;
+  after: string;
   icon: React.ElementType;
-  image: string;
+  image?: string;
 }
 
 export const features: Feature[] = [
   {
     title: "Focus on Your ONE Thing",
     description:
-      "Inspired by the book The ONE Thing, Elevare helps you identify and commit to the single most important task that makes everything else easier or unnecessary. This laser-focus approach prevents you from feeling overwhelmed by endless to-do lists and ensures you're always working on what truly matters, creating a domino effect of success.",
+      "Inspired by the book The ONE Thing, Elevare helps you identify and commit to the single most important task that makes everything else easier or unnecessary. This laser-focus prevents overwhelm and creates a domino effect of success.",
+    promise: "End decision fatigue. Focus made simple.",
+    before: "Juggling endless to-dos, never knowing what matters most.",
+    after: "One daily priority you can actually celebrate.",
     icon: Target,
-    image: "",
   },
   {
     title: "Simple Daily Planning",
     description:
-      "Forget complicated planning tools. With Elevare, you get a clean, minimalist space to define your ONE Thing for the day. You can add a few supporting tasks if needed, but the emphasis is always on clarity and commitment. This intentional planning process takes only a few minutes but sets the trajectory for a highly effective day.",
+      "Forget complicated tools. With Elevare, you define your ONE Thing in a clean, minimalist space. A few supporting tasks if needed, but the emphasis is clarity and commitment.",
+    promise: "Plan in minutes, win the whole day.",
+    before: "Spending more time planning than doing.",
+    after: "A simple ritual that sets a clear direction every morning.",
     icon: CalendarCheck,
-    image: "",
   },
   {
     title: "Track Progress with Purpose",
     description:
-      "It's not about being busy; it's about being productive. Elevare provides a clear visual representation of your progress, showing your completed ONE Things over time. This focus on momentum helps you see how small, consistent efforts compound into significant achievements, keeping you motivated and focused on the bigger picture.",
+      "Elevare gives you a clear visual history of your completed ONE Things. Small, consistent actions compound into big results, keeping you motivated.",
+    promise: "See momentum build, not just tasks checked.",
+    before: "Feeling stuck despite working hard every day.",
+    after: "A visible streak of meaningful progress you can be proud of.",
     icon: LineChart,
-    image: "",
   },
   {
     title: "Build Lasting Habits",
     description:
-      "True success comes from what you do consistently. By focusing on a single, important task each day, Elevare helps you build the powerful habit of prioritization and execution. This isn't just about getting things done; it's about wiring your brain for success and turning daily actions into long-term personal and professional growth.",
+      "Focusing on one key task each day rewires your brain for success. Over time, this creates a powerful habit of prioritization and execution.",
+    promise: "Consistency becomes your superpower.",
+    before: "Starting strong, but burning out fast.",
+    after: "Daily focus turns into a lasting success habit.",
     icon: Sparkles,
-    image: "",
   },
   {
     title: "Reflect & Learn Fast",
     description:
-      "At the end of each day, Elevare prompts you with a simple reflection. This powerful habit helps you acknowledge your wins, understand what went wrong, and identify what you can do better tomorrow. It’s a cycle of continuous improvement that ensures you’re not just working hard, but also working smarter over time.",
+      "At the end of each day, Elevare prompts you to reflect. This habit ensures you’re not just working hard, but working smarter over time.",
+    promise: "Clarity in minutes, growth for life.",
+    before: "Repeating mistakes without noticing patterns.",
+    after: "Quick reflections that turn experience into insight.",
     icon: Clock,
-    image: "",
   },
   {
     title: "Celebrate Small Wins",
     description:
-      "The journey to extraordinary results is a marathon, not a sprint. Elevare encourages you to acknowledge and celebrate each completed ONE Thing. This practice of recognizing small wins provides a steady stream of motivation, builds confidence, and makes the process of achieving your goals enjoyable and sustainable.",
+      "Every completed ONE Thing is progress. Elevare encourages you to pause, recognize it, and build confidence for tomorrow.",
+    promise: "Progress feels good again.",
+    before: "Always chasing the next task, never satisfied.",
+    after: "Daily wins that fuel motivation and joy.",
     icon: CheckCircle2,
-    image: "",
   },
 ];
