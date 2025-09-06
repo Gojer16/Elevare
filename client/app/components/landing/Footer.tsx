@@ -38,7 +38,7 @@ const Footer = () => {
           {/* Social icons */}
           <div className="flex gap-6">
     <Link
-      href="https://github.com/yourusername"
+      href="https://github.com/gojer16"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="GitHub"
@@ -47,7 +47,7 @@ const Footer = () => {
       <Github size={24} />
     </Link>
     <Link
-      href="https://twitter.com/yourhandle"
+      href="https://x.com/Gojer27"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Twitter"
@@ -56,7 +56,7 @@ const Footer = () => {
       <Twitter size={24} />
     </Link>
     <Link
-      href="https://linkedin.com/in/yourprofile"
+      href="https://www.linkedin.com/in/orlando-ascanio-dev/"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="LinkedIn"
