@@ -1,17 +1,22 @@
+import { BookOpen, CheckCircle, Target } from "lucide-react";
+
 export const features = [
   {
-    title: "Prioritize with Daily Focus",
+    title: "Daily ONE Focus",
     description:
-      "With Elevare, choose your ONE most important task each day. By eliminating distractions, you’ll achieve consistent progress on what truly matters for your goal achievement.",
+      "Start each morning with clarity by committing to a single high-impact task. No clutter. No distractions. Just one clear win.",
+    icon: Target,
   },
   {
-    title: "Automatic Progress Tracking",
+    title: "Completion & Reflection",
     description:
-      "Every completed task in Elevare is instantly archived, creating a simple record of your productivity achievements. See your momentum build day after day towards your goals.",
+      "Mark your task complete and capture insights. Reflection transforms daily effort into lasting lessons and growth.",
+    icon: BookOpen,
   },
   {
-    title: "Build Habits Through Reflection",
+    title: "Progress Archive",
     description:
-      "End each day with mindful reflection in Elevare. Learn from your wins and challenges to sharpen your focus and improve your task management and productivity for tomorrow.",
+      "Look back at your streak of wins. See how small, consistent actions stack into extraordinary results over time.",
+    icon: CheckCircle,
   },
 ];

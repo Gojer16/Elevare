@@ -1,20 +1,25 @@
+import { Palette, Briefcase, BookOpen } from "lucide-react";
+
 export const betaTesters = [
-  {
-    quote:
-      "Be among the first to shape the future — your feedback will directly influence our product.",
-    author: "Beta Testers Wanted",
-    title: "Join our Early Access Program",
-  },
-  {
-    quote:
-      "Exclusive early access, direct input into features, and the chance to shape what comes next.",
-    author: "Be the First to Try",
-    title: "Limited Spots Available",
-  },
-  {
-    quote:
-      "Your ideas matter. Help us build a tool that truly serves people like you.",
-    author: "Early Adopter Invitation",
-    title: "Apply Today",
-  },
-];
+          {
+            segment: "Creators Find Flow",
+            quote:
+              "Before: I started 10 things and finished none. After: I end each day knowing I shipped what mattered.",
+            stars: 5,
+            icon: Palette,
+          },
+          {
+            segment: "Professionals Build Discipline",
+            quote:
+              "Before: Meetings and tasks ruled my calendar. After: I control my day by focusing on my ONE priority.",
+            stars: 5,
+            icon: Briefcase,
+          },
+          {
+            segment: "Students Gain Clarity",
+            quote:
+              "Before: I juggled deadlines and felt overwhelmed. After: I focus on one assignment, finish faster, and stress less.",
+            stars: 5,
+            icon:  BookOpen,
+          },
+        ]
