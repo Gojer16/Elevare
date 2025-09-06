@@ -46,6 +46,7 @@ CREATE TABLE "public"."User" (
     "id" TEXT NOT NULL,
     "name" TEXT,
     "email" TEXT,
+    "emailVerified" TIMESTAMP(3),
     "hashedPassword" TEXT,
     "image" TEXT,
 
