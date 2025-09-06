@@ -10,23 +10,12 @@ import { motion } from "framer-motion";
 import SocialLogin from "../components/SocialLogin";
 import { Button } from "../components/ui/Button";
 
-
-
 export default function LoginPage() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState("");
 
-  const {
-    handleChange,
-    handleSubmit,
-    values,
-    errors,
-    isSubmitting,
-  } = useFormValidation(
-    { email: '', password: '' },
-    validateLogin,
-    submit
-  );
+  const { handleChange, handleSubmit, values, errors, isSubmitting } =
+    useFormValidation({ email: "", password: "" }, validateLogin, submit);
 
   async function submit() {
     setErrorMessage("");
@@ -44,38 +33,94 @@ export default function LoginPage() {
       await getSession(); // Force a session refresh
       router.push("/dashboard");
     } catch (err: unknown) {
-      if (err instanceof Error) setErrorMessage(err.message);
-      else setErrorMessage("Login failed. Please try again.");
+      if (err instanceof Error)
+        setErrorMessage(
+          "Hmm, that didn’t work. Double-check your details and let’s get you back to focus."
+        );
+      else
+        setErrorMessage(
+          "Something went off track. Try again and let’s reset your focus."
+        );
     }
   }
 
   return (
     <>
       <Head>
-        <title>Log in to Elevare | Focus on Your ONE Thing</title>
+        <title>
+          Log in to Elevare | Focus on Your ONE Thing | Productivity App
+        </title>
         <meta
           name="description"
-          content="Log in to Elevare, the productivity app that helps you focus on your most important task each day and track your progress effortlessly."
+          content="Login to Elevare, the focus and productivity app inspired by The ONE Thing. Commit to your most important task daily and track meaningful progress."
+        />
+        <meta
+          name="keywords"
+          content="login to productivity app, focus app login, task manager login, one thing method"
         />
         <meta name="robots" content="index, follow" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LoginAction",
+              target: "https://elevareapp.vercel.app/login",
+              name: "Login to Elevare",
+              description:
+                "Login to Elevare — the productivity and focus app inspired by The ONE Thing.",
+              potentialAction: {
+                "@type": "LoginAction",
+                target: "https://elevareapp.vercel.app/dashboard",
+              },
+              agent: {
+                "@type": "Person",
+                name: "Elevare User",
+              },
+              instrument: {
+                "@type": "EntryPoint",
+                urlTemplate: "https://elevareapp.vercel.app/login",
+                actionPlatform: [
+                  "http://schema.org/DesktopWebPlatform",
+                  "http://schema.org/MobileWebPlatform",
+                ],
+              },
+              result: {
+                "@type": "Person",
+                name: "Elevare User",
+                description:
+                  "A user who has successfully logged into Elevare to enhance their productivity and focus.",
+              },
+              image: "https://elevareapp.vercel.app/og-image.png",
+               sameAs: [
+              "https://x.com/Gojer27",
+              "https://github.com/Gojer16/Elevare",
+              "https://www.linkedin.com/in/orlando-ascanio-dev/",
+            ]
+            }),
+          }}
+        />
       </Head>
 
       <main className="flex min-h-screen flex-col items-center justify-center p-6 sm:p-12 bg-gradient-to-b from-violet-50 via-white to-gray-50 text-gray-900">
         <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+          {/*  Headline + Subtext */}
           <h1 className="text-3xl font-bold mb-2 text-center text-primary">
-            Log in to Elevare
+            Welcome back, let’s focus on your ONE Thing.
           </h1>
           <p className="text-center text-gray-600 mb-6">
-            Stay consistent. Stay focused. Achieve more.
+            Every day is a chance to do less, but better. Log in and commit to
+            what truly matters today.
           </p>
-          
-          {/* ✅ Error Message */}
+
+          {/*  Error Message */}
           {errorMessage && (
             <p className="mb-4 text-sm text-red-600 text-center">
               {errorMessage}
             </p>
           )}
 
+          {/*  Login Form */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -100,9 +145,7 @@ export default function LoginPage() {
                   placeholder="you@example.com"
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.email}
-                  </p>
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
                 )}
               </div>
 
@@ -124,13 +167,11 @@ export default function LoginPage() {
                   placeholder="••••••••••"
                 />
                 {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">
-                    {errors.password}
-                  </p>
+                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
                 )}
               </div>
 
-              {/* Submit */}
+              {/* Submit Button */}
               <Button
                 type="submit"
                 disabled={isSubmitting}
@@ -158,27 +199,32 @@ export default function LoginPage() {
                     ></path>
                   </svg>
                 )}
-                {isSubmitting ? "Logging in..." : "Log In"}
+                {isSubmitting ? "Redirecting you to clarity…" : "Focus In"}
               </Button>
             </form>
           </motion.div>
-          <SocialLogin />
-          {/* Links */}
+
+          {/*  Social Login Section */}
+          <div className="mt-8">
+            <p className="text-center text-sm text-gray-500 mb-3">
+              Fast track your focus, log in with your favorite account:
+            </p>
+            <SocialLogin />
+          </div>
+
+          {/* ✅ Links */}
           <div className="mt-6 text-center text-sm text-gray-600">
-            <Link
-              href="/"
-              className="text-primary hover:underline"
-            >
-              Forgot your password?
-            </Link>
+            {/* <Link href="/" className="text-primary hover:underline">
+              Lost your focus? Reset password here.
+            </Link> */}
           </div>
           <p className="text-center text-sm text-gray-600 mt-4">
-            Don’t have an account?{" "}
+            New here?{" "}
             <Link
               href="/register"
               className="font-semibold text-primary hover:underline"
             >
-              Sign up
+              Join Elevare and start building your daily ritual of clarity.
             </Link>
           </p>
         </div>
