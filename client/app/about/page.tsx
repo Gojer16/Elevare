@@ -11,13 +11,14 @@ const AboutPage = () => {
 <>
       <Navbar />
          <Script
-        id="organization-schema"
+        id="About-schema"
         type="application/ld+json"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
+            "@id": "https://elevareapp.vercel.app/",
             name: "Elevare",
             url: "https://elevareapp.vercel.app/",
             logo: "https://elevareapp.vercel.app/logo.png",
