@@ -20,7 +20,6 @@ export default function DashboardPage() {
     isCompletingTask,
     isSavingReflection,
     showCongratulations,
-    fetchTasks,
     addTask,
     completeTask,
     saveReflection,

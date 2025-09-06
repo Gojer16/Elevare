@@ -10,6 +10,9 @@ interface FeatureDetailModalProps {
     description: string;
     icon: React.ElementType;
     image: string;
+    promise: string;
+    before: string;
+    after: string;
   } | null;
 }
 
