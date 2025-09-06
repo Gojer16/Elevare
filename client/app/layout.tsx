@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: "Elevare: Focus on Your ONE Thing Daily",
     description:
       "A simple daily focus app: pick one task, do it, and succeed. Inspired by The ONE Thing.",
-    url: "",
+    url: "https://elevareapp.vercel.app/",
     siteName: "Elevare",
     type: "website",
   },
@@ -64,7 +64,7 @@ export default function RootLayout({
               name: "Elevare",
               description:
                 "A simple productivity tool to help you focus on what matters most.",
-              url: "https://elevare.app", // TODO: Update with actual URL
+              url: "https://elevareapp.vercel.app/",
               applicationCategory: "ProductivityApplication",
               operatingSystem: "Web",
               author: { "@type": "Organization", name: "Elevare" },
