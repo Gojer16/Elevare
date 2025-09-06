@@ -1,19 +1,12 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "../ui/Button";
+import type { Feature } from "@/types/feature";
 
 interface FeatureDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
-  feature: {
-    title: string;
-    description: string;
-    icon: React.ElementType;
-    image: string;
-    promise: string;
-    before: string;
-    after: string;
-  } | null;
+  feature: (Feature & { promise: string; before: string; after: string }) | null;
 }
 
 const FeatureDetailModal: React.FC<FeatureDetailModalProps> = ({ isOpen, onClose, feature }) => {
