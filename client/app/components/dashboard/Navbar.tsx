@@ -3,6 +3,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
+import { Button } from "../ui/Button";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -21,78 +22,72 @@ export default function Navbar() {
       .toUpperCase();
   }, [session?.user?.name]);
 
-  // Only use image src if it's non-empty string
   const imageSrc =
     typeof session?.user?.image === "string" && session.user.image.trim() !== ""
       ? session.user.image
       : null;
 
   return (
-    <nav className="bg-white shadow">
+    <nav className="bg-white shadow sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand */}
-          <div className="flex items-center">
-            <Link href="/dashboard" className="inline-flex items-center gap-3">
-              <span className="text-2xl font-bold text-gray-800">Elevare</span>
-              <span className="sr-only">Go to dashboard</span>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard"
+              className="inline-flex flex-col sm:flex-row items-start sm:items-center gap-0 sm:gap-2 group"
+              title="Back to your focus ritual dashboard"
+            >
+              <span className="text-2xl font-bold text-gray-800 hover:text-primary transition-colors hover:underline">Elevare</span>
+              <span className="text-sm text-gray-500 italic sm:inline-block pt-1.5 sm:pt-1.5 hover:text-primary transition-colors">
+                — Focus on Your ONE Thing
+              </span>
             </Link>
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-4">
-            {/* show loading text while session loading */}
+          <div className="flex items-center gap-2">
             {loading ? (
-              <p className="text-gray-500">Loading…</p>
+              <div className="w-12 h-12 rounded-full bg-gray-200 animate-pulse"></div>
             ) : session?.user ? (
               <>
                 {/* Avatar */}
                 {imageSrc ? (
-                <Image
-                  src={imageSrc}
-                  width={48}
-                  height={48}
-                  alt={`${session.user.name ?? "User"}'s avatar`}
-                  className="rounded-full object-cover w-12 h-12"
+                  <Image
+                    src={imageSrc}
+                    width={48}
+                    height={48}
+                    alt={`${session.user.name}'s avatar`}
+                    className="rounded-full object-cover w-12 h-12"
+                    title={`This is your focus space, ${session.user.name}.`}
                   />
-                  ) : (
+                ) : (
                   <div
-                    aria-label={session.user.name ?? "User"}
+                    aria-label={session.user.name}
                     role="img"
                     className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold"
+                    title={`This is your focus space, ${session.user.name}`}
                   >
-                  {initials}
+                    {initials}
                   </div>
                 )}
 
+                {/* Greeting */}
                 <p className="text-gray-800 mr-2 hidden sm:block">
-                  Hello, {session.user.name ?? "User"}
+                  Welcome back, {session.user.name}. Ready for today’s ONE Thing?
                 </p>
 
-                <button
+                {/* Logout button */}
+                <Button
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-3 rounded-md"
+                  className="ml-2 bg-secondary hover:bg-secondary/70"
+                  about="End your session"
+                  title="See you tomorrow, success is built daily."
                 >
-                  Logout
-                </button>
+                  End today’s session
+                </Button>
               </>
-            ) : (
-              // not signed in
-              <>
-                <Link
-                  href="/login"
-                  className="text-gray-700 hover:text-gray-900 font-medium"
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/register"
-                  className="ml-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-3 rounded-md font-medium"
-                >
-                  Sign up
-                </Link>
-              </>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
