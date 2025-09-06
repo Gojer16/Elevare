@@ -60,7 +60,7 @@ export default function LoginPage() {
         <meta name="robots" content="index, follow" />
       </Head>
 
-      <main className="flex min-h-screen flex-col items-center justify-center p-6 sm:p-12 bg-gray-50 text-gray-900">
+      <main className="flex min-h-screen flex-col items-center justify-center p-6 sm:p-12 bg-gradient-to-b from-violet-50 via-white to-gray-50 text-gray-900">
         <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
           <h1 className="text-3xl font-bold mb-2 text-center text-primary">
             Log in to Elevare

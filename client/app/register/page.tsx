@@ -10,11 +10,6 @@ import SocialLogin from "../components/SocialLogin";
 import { motion } from "framer-motion";
 import { Button } from "../components/ui/Button";
 
-
-
-// -------------------------
-// Register Page component
-// -------------------------
 export default function RegisterPage() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -74,7 +69,7 @@ export default function RegisterPage() {
         />
       </Head>
 
-      <main className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
+      <main className="flex min-h-screen items-center justify-center p-6 bg-gradient-to-b from-violet-50 via-white to-gray-50">
         <div className="w-full max-w-md bg-white rounded-2xl p-8 shadow-lg">
           <h1 className="text-2xl font-bold text-center mb-1 text-primary">Create your account</h1>
           <p className="text-center text-gray-600 mb-6">
