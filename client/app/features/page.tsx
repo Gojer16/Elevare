@@ -24,7 +24,7 @@ export default function FeaturesPage() {
           className="max-w-4xl mx-auto px-4"
         >
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 text-gray-900">
-            Extraordinary Results Come From <span className="text-primary">Focus</span>
+            <strong className="text-primary">Extraordinary results</strong> don’t come from doing more, they come from doing <strong className="text-primary">the right thing.</strong>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-10">
             Elevare isn’t just another productivity app or task manager. It’s a{" "}
@@ -67,7 +67,7 @@ export default function FeaturesPage() {
                   </div>
                   {activeIndex === index && (
                     <p className="text-xs text-primary/80 mt-2">
-                      Click to learn more →
+                      See how this helps you win today →
                     </p>
                   )}
                 </motion.div>
@@ -131,7 +131,7 @@ export default function FeaturesPage() {
           className="max-w-3xl mx-auto px-4"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-            Be Part of Building the Future of Focus
+            Join the movement that puts clarity over chaos.
           </h2>
           <p className="text-lg text-gray-600 mb-10">
             Don’t just download another productivity app. Join our beta and{" "}
@@ -152,7 +152,7 @@ export default function FeaturesPage() {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
+            "@type": "Features",
             name: "Elevare",
             applicationCategory: "Productivity",
             operatingSystem: "Web",
