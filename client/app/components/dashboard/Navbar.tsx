@@ -63,7 +63,7 @@ export default function Navbar() {
                   />
                 ) : (
                   <div
-                    aria-label={session.user.name}
+                    aria-label={session.user.name || "User avatar"}
                     role="img"
                     className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center font-semibold"
                     title={`This is your focus space, ${session.user.name}`}
