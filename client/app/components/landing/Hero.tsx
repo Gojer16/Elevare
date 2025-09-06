@@ -33,7 +33,7 @@ const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "Elevare",
-    url: "https://SITE_URL", 
+    url: "https://elevareapp.vercel.app/", 
     description:
       "Elevare — a minimalist productivity app that helps you accomplish your single most important task each day and build momentum over time.",
     applicationCategory: "ProductivityApplication",
@@ -42,13 +42,18 @@ const structuredData = {
       "@type": "Offer",
       price: "0.00",
       priceCurrency: "USD",
-      url: "https://SITE_URL",
+      url: "https://elevareapp.vercel.app/",
     },
     author: {
       "@type": "Person",
       name: "Orlando Ascanio", 
     },
-    screenshot: "https://SITE_URL/hero-screenshot.png",
+    keywords: "productivity, focus, task management, one thing, gary keller, elevare",
+    genre: "Productivity",
+    sameAs: [
+      "https://www.linkedin.com/in/orlando-ascanio-dev/",
+    ],
+
   };
 
 
