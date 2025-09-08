@@ -45,7 +45,7 @@ export function useTasks() {
   };
 
   // --- Add a new task ---
-  const addTask = async (newTask: { title: string; description: string }) => {
+  const addTask = async (newTask: { title: string; description: string; tagNames?: string[] }) => {
     try {
       const response = await fetch("/api/tasks", {
         method: "POST",
