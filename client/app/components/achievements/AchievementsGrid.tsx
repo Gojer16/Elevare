@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import AchievementCard, { AchievementLite, AchievementProgress } from './AchievementCard';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export interface GridItem extends AchievementLite {
   progress: AchievementProgress;
