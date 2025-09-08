@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "./providers";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next"
+import '../app/dashboard/theme.css';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
