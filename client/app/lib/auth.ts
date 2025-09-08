@@ -2,9 +2,9 @@ import type { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
-import { prisma } from "./prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+import { prisma } from "./prisma";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -21,55 +21,68 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "jsmith@example.com" },
-        password: { label: "Password", type: "password" },
+        email: { 
+          label: "Email", 
+          type: "text", 
+          placeholder: "jsmith@example.com" 
+        },
+        password: { 
+          label: "Password", 
+          type: "password" 
+        },
       },
       async authorize(credentials) {
-        //  Validate inputs
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
-        //  Find user by email
+        if (!credentials?.email || !credentials?.password) return null;
+
         const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
+          where: { email: credentials.email },
         });
-        //  Check if user exists
-        if (!user || !user.hashedPassword) {
-          return null;
-        }
-        //  Check if password is correct
+
+        if (!user || !user.hashedPassword) return null;
+
         const isCorrectPassword = await bcrypt.compare(
           credentials.password,
           user.hashedPassword
         );
-        
-        if (!isCorrectPassword) {
-          return null;
-        }
+
+        if (!isCorrectPassword) return null;
 
         return user;
       },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-    session: { strategy: "jwt" },
+  session: { strategy: "jwt" },
   pages: { signIn: "/login", error: "/login" },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
-      }
-      return token;
-    },
+  if (user) {
+    token.id = user.id;
+    token.name = user.name;
+    token.email = user.email;
+    token.themePreference = user.themePreference;
+  } else if (token.email) {
+    // fetch fresh themePreference from DB
+    const dbUser = await prisma.user.findUnique({
+      where: { email: token.email as string },
+      select: { themePreference: true },
+    });
+    if (dbUser) {
+      token.themePreference = dbUser.themePreference;
+    }
+  }
+
+  return token;
+},
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.name = token.name;
-        session.user.email = token.email;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.themePreference = token.themePreference as
+          | "MODERN"
+          | "MINIMAL"
+          | undefined;
       }
       return session;
     },
