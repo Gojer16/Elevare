@@ -7,4 +7,5 @@ export interface Task {
   reflection?: string;
   completed?: boolean;
   date?: string;
+  tags?: { id: string; name: string }[];
 }
