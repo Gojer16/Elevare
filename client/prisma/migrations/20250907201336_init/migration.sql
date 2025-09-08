@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "public"."Theme" AS ENUM ('MODERN', 'MINIMAL');
+
 -- CreateTable
 CREATE TABLE "public"."Task" (
     "id" TEXT NOT NULL,
@@ -49,6 +52,7 @@ CREATE TABLE "public"."User" (
     "emailVerified" TIMESTAMP(3),
     "hashedPassword" TEXT,
     "image" TEXT,
+    "themePreference" "public"."Theme" DEFAULT 'MODERN',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

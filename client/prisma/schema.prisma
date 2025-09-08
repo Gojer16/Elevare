@@ -2,6 +2,7 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -20,6 +21,9 @@ model Task {
   userId    String
   tags      Tag[]    @relation("TaskTags")
   completedAt DateTime?
+  reflections Reflection[]
+
+  @@index([userId])
 }
 
 // NextAuth.js Models
@@ -41,6 +45,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Session {
@@ -49,6 +54,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
@@ -61,6 +68,15 @@ model User {
   accounts      Account[]
   sessions      Session[]
   tasks         Task[]
+  reflections Reflection[]
+  streak      Streak?
+  weeklySummaries WeeklySummary[]
+  themePreference Theme  @default(MODERN)
+}
+
+enum Theme {
+  MODERN
+  MINIMAL
 }
 
 model VerificationToken {
@@ -77,4 +93,38 @@ model Tag {
   tasks Task[]   @relation("TaskTags")
 }
 
+model Reflection {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  content     String
+  aiFeedback  String?    // AI-generated response
+  task        Task?      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId      String?
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
 
+  @@index([userId])
+}
+
+model Streak {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String   @unique
+  count      Int      @default(0)
+  longest    Int      @default(0)
+  lastActive DateTime // last day the user logged task+reflection
+
+  @@index([userId])
+}
+
+model WeeklySummary {
+  id        String   @id @default(cuid())
+  weekStart DateTime
+  weekEnd   DateTime
+  summary   String   // AI-generated weekly summary
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@index([userId])
+}
