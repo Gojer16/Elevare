@@ -65,12 +65,14 @@ model User {
   emailVerified  DateTime?
   hashedPassword String?
   image         String?
+  timezone      String?   // IANA timezone, e.g. "America/New_York"
   accounts      Account[]
   sessions      Session[]
   tasks         Task[]
   reflections Reflection[]
   streak      Streak?
   weeklySummaries WeeklySummary[]
+  achievements UserAchievement[]
   themePreference Theme  @default(MODERN)
 }
 
@@ -78,6 +80,14 @@ enum Theme {
   MODERN
   MINIMAL
 }
+
+enum AchievementCategory {
+  TASK
+  STREAK
+  REFLECTION
+  OTHER
+}
+
 
 model VerificationToken {
   identifier String
@@ -127,4 +137,32 @@ model WeeklySummary {
   userId    String
 
   @@index([userId])
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  title       String
+  description String
+  icon        String?
+  category    AchievementCategory @default(OTHER)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id             String      @id @default(cuid())
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  achievement    Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  achievementId  String
+  unlockedAt     DateTime    @default(now())
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@unique([userId, achievementId]) // each achievement only once per user
+  @@index([userId])
+  @@index([achievementId])
 }
