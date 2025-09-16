@@ -99,7 +99,7 @@ model VerificationToken {
 
 model Tag {
   id     String @id @default(cuid())
-  name   String
+  name   String @unique
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   tasks  Task[] @relation("TaskTags")
