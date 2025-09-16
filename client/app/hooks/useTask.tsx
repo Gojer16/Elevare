@@ -158,7 +158,7 @@ export function useTasks() {
           queryClient.setQueryData(["tasks"], context.previous);
         }
       },
-      onSuccess: async (_data, _id) => {
+      onSuccess: async () => {
         // refresh streak and tasks; achievements check will run after reflection save
         try {
           await fetchJson("/api/streak", {

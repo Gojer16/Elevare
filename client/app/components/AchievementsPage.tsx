@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import AchievementsGrid from './achievements/AchievementsGrid';
@@ -19,13 +19,6 @@ interface Achievement {
 interface UserAchievement {
   achievementId: string;
   unlockedAt: string;
-}
-
-interface Stats {
-  tasksCompleted: number;
-  reflectionsWritten: number;
-  streakCount: number;
-  longestStreak: number;
 }
 
 /**
@@ -80,7 +73,7 @@ export default function AchievementsPage() {
    * - Next best achievement scoring
    * - Achievement card data binding
    */
-  const [progressById, setProgressById] = useState<Record<string, { target: number | null; current: number; unlocked: boolean; unlockedAt?: string | null; conditionText?: string | null }>>({});
+  const [progressById] = useState<Record<string, { target: number | null; current: number; unlocked: boolean; unlockedAt?: string | null; conditionText?: string | null }>>({});
   const [nextBestAchievement, setNextBestAchievement] = useState<NextBestAchievementData | null>(null);
 
   useEffect(() => {
@@ -96,7 +89,6 @@ export default function AchievementsPage() {
       const progress = data.progress as Array<Achievement & { target: number | null; current: number; unlocked: boolean; unlockedAt?: string | null; conditionText?: string | null }>;
       setAchievements(progress.map(p => ({ id: p.id, code: p.code, title: p.title, description: p.description, icon: p.icon, category: p.category })));
       setUserAchievements(progress.filter(p => p.unlocked).map(p => ({ achievementId: p.id, unlockedAt: p.unlockedAt || '' })));
-      const map: Record<string, { target: number | null; current: number; unlocked: boolean; unlockedAt?: string | null; conditionText?: string | null }> = {};
 
       // Calculate next best achievement
       const achievementsWithProgress = progress.map(p => ({
@@ -124,9 +116,9 @@ export default function AchievementsPage() {
     }
   };
 
-  const isUnlocked = (achievementId: string) => {
+  const isUnlocked = useCallback((achievementId: string) => {
     return userAchievements.some(ua => ua.achievementId === achievementId);
-  };
+  }, [userAchievements]);
 
   /**
    * totals - Achievement completion statistics
@@ -184,7 +176,7 @@ export default function AchievementsPage() {
     }
     
     return list;
-  }, [achievements, activeCategory, filter, query, userAchievements, isUnlocked]);
+  }, [achievements, activeCategory, filter, query, isUnlocked]);
 
 
   if (status === 'loading' || loading) {

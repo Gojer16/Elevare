@@ -3,10 +3,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FiHome, FiArchive, FiBarChart2, FiChevronLeft, FiChevronRight, FiSettings, FiUser, FiMessageSquare } from 'react-icons/fi';
 import SettingsModal from './SettingsModal';
-import { useTheme } from '../../../contexts/ThemeContext';
 import { FileBarChartIcon } from 'lucide-react';
 
 const Sidebar = ({ isCollapsed, setCollapsed }) => {
+  const pathname = usePathname();
+  const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: FiHome },

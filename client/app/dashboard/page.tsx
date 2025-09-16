@@ -10,7 +10,6 @@ import Confetti from "react-confetti";
 import { dailyPrompts } from "../data/dailyPrompts";
 import { useEffect, useState } from "react";
 import { quotes } from "../data/quotes";
-import { useTheme } from "@/contexts/ThemeContext";
 import { FiTrendingUp } from "react-icons/fi";
 import { AchievementToastContainer } from "@/components/AchievementToast";
 import LoadingSpinner from "../components/LoadingSpinner";

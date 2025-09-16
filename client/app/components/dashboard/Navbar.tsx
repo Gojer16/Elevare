@@ -28,13 +28,13 @@ export default function Navbar() {
       : null;
 
   // Rotating motivational greetings
-  const greetings = [
+  const greetings = useMemo(() => [
     "Ready to focus?",
     "Let’s keep your streak alive!",
     "One small step at a time 💪",
     "Success is built daily.",
     "Stay present. Stay sharp."
-  ];
+  ], []);
   const [greeting, setGreeting] = useState(greetings[0]);
 
   useEffect(() => {
