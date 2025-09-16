@@ -74,6 +74,7 @@ model User {
   weeklySummaries WeeklySummary[]
   achievements UserAchievement[]
   themePreference Theme  @default(MODERN)
+  tags            Tag[] 
 }
 
 enum Theme {
