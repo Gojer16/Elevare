@@ -98,9 +98,13 @@ model VerificationToken {
 }
 
 model Tag {
-  id    String   @id @default(cuid())
-  name  String   @unique
-  tasks Task[]   @relation("TaskTags")
+  id     String @id @default(cuid())
+  name   String
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks  Task[] @relation("TaskTags")
+
+  @@unique([name, userId]) 
 }
 
 model Reflection {
