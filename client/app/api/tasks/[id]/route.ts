@@ -17,18 +17,17 @@ const updateSchema = z.object({
   tagNames: z.array(z.string().trim().min(1)).optional(),
 }).strict();
 
-export async function PUT(
-  request: Request,
-  context: { params?: Record<string, string | string[] | undefined> }
-) {
+export async function PUT(request: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-  // Next's runtime passes params inside context.params; handle string|string[]|undefined safely
-  const rawId = context.params?.id;
-    const id = Array.isArray(rawId) ? rawId[0] : rawId ?? '';
+
+    // Extract dynamic route `id` from the request URL path (last path segment)
+    const url = new URL(request.url);
+    const segments = url.pathname.split('/').filter(Boolean);
+    const id = segments.pop() ?? '';
     const parsedParams = paramsSchema.safeParse({ id });
     if (!parsedParams.success) {
       return NextResponse.json({ error: 'Invalid task id' }, { status: 400 });
