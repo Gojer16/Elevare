@@ -19,7 +19,7 @@ const updateSchema = z.object({
 
 export async function PUT(
   request: Request,
-  context: { params: Promise<{ id: string }> }
+  context: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -27,7 +27,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = await context.params;
+    const { id } = context.params;
     const parsedParams = paramsSchema.safeParse({ id });
     if (!parsedParams.success) {
       return NextResponse.json({ error: 'Invalid task id' }, { status: 400 });
@@ -36,7 +36,7 @@ export async function PUT(
     const body = await request.json();
     const parsed = updateSchema.safeParse(body);
     if (!parsed.success) {
-      const messages = parsed.error.errors.map((e) => e.message).join(', ');
+  const messages = parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', ');
       return NextResponse.json({ error: messages }, { status: 400 });
     }
     const data = parsed.data;
