@@ -19,15 +19,16 @@ const updateSchema = z.object({
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params?: Record<string, string | string[] | undefined> }
 ) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-  const { id } = params;
+  // Next's runtime passes params inside context.params; handle string|string[]|undefined safely
+  const rawId = context.params?.id;
+    const id = Array.isArray(rawId) ? rawId[0] : rawId ?? '';
     const parsedParams = paramsSchema.safeParse({ id });
     if (!parsedParams.success) {
       return NextResponse.json({ error: 'Invalid task id' }, { status: 400 });
