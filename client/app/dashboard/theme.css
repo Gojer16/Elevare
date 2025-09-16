@@ -1,0 +1,157 @@
+/* =========================================
+   Base Theme Variables (defaults to modern)
+   ========================================= */
+:root {
+  /* Core Palette */
+  --color-background: #F3F4F6;
+  --color-darkBackground: #111827;
+  --color-foreground: #333333;
+  --color-primary-accent: #4F46E5; /* Indigo-600 */
+
+  --color-primary: #7C3AED;
+  --color-secondary: #14B8A6;
+  --color-warning: #F59E0B;
+  --color-success: #22C55E;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Layout */
+  --card-radius: 0.75rem;
+  --card-padding: 1rem;
+  --transition-speed: 0.25s;
+
+  /* Typography */
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-heading: "Poppins", system-ui, sans-serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================
+   MODERN THEME
+   ========================================= */
+[data-theme='modern'] {
+  --color-background: #F8FAFC; /* slate-50 */
+  --color-foreground: #0F172A; /* slate-900 */
+  --color-primary-accent: #4F46E5; /* Indigo-600 */
+
+  /* Surfaces */
+  --card-bg: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.05);
+  --dashboard-widget-bg: #ffffff;
+
+  /* Shadows */
+  --elevation: var(--shadow-md);
+}
+
+[data-theme='modern'] body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+}
+
+/* =========================================
+   MINIMAL THEME
+   ========================================= */
+[data-theme='minimal'] {
+  --color-background: #ffffff;
+  --color-foreground: #0F172A; /* slate-900 */
+  --color-primary-accent: #1F2937; /* gray-800 */
+
+  /* Surfaces */
+  --card-bg: #ffffff;
+  --card-border: #e5e5e5;
+  --dashboard-widget-bg: transparent;
+
+  /* Shadows */
+  --elevation: none;
+}
+
+[data-theme='minimal'] body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+}
+
+/* =========================================
+   Generic Components
+   ========================================= */
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+  box-shadow: var(--elevation);
+  transition: background-color var(--transition-speed),
+              color var(--transition-speed),
+              box-shadow var(--transition-speed),
+              border-color var(--transition-speed);
+}
+
+.dashboard-widget {
+  background-color: var(--dashboard-widget-bg);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+  box-shadow: var(--elevation);
+}
+
+/* =========================================
+   Utility
+   ========================================= */
+.text-accent {
+  color: var(--color-primary-accent);
+}
+
+.bg-accent {
+  background-color: var(--color-primary-accent);
+  color: #fff;
+}
+
+.border-accent {
+  border-color: var(--color-primary-accent);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+
+.badge-primary {
+  background-color: var(--color-primary-accent);
+  color: #ffffff;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: background-color var(--transition-speed),
+              color var(--transition-speed),
+              border-color var(--transition-speed);
+}
+
+.btn-primary {
+  background-color: var(--color-primary-accent);
+  color: #fff;
+}
+
+.btn-outline {
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--color-foreground);
+}
+
+.btn-outline:hover {
+  background-color: var(--color-background);
+}
