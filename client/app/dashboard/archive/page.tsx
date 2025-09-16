@@ -124,7 +124,7 @@ export default function ArchivePage() {
             {/* Status Filter */}
             <select
               value={filterBy}
-              onChange={(e) => setFilterBy(e.target.value as any)}
+              onChange={(e) => setFilterBy(e.target.value as 'all' | 'completed' | 'reset')}
               className={`
                 px-3 py-2 rounded-lg border text-sm
                 ${isMinimal 
@@ -143,7 +143,7 @@ export default function ArchivePage() {
             {/* Sort Options */}
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as 'date' | 'title' | 'completion')}
               className={`
                 px-3 py-2 rounded-lg border text-sm
                 ${isMinimal 

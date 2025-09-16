@@ -7,9 +7,6 @@ import { useTheme } from '../../../contexts/ThemeContext';
 import { FileBarChartIcon } from 'lucide-react';
 
 const Sidebar = ({ isCollapsed, setCollapsed }) => {
-  const pathname = usePathname();
-  const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
-  const { theme } = useTheme();
 
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', icon: FiHome },

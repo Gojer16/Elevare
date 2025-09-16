@@ -83,7 +83,12 @@ export class NextBestAchievementService {
    */
   private static calculateAchievementScore(
     achievement: AchievementLite & { progress: AchievementProgress },
-    userStats?: any
+    userStats?: {
+      tasksCompleted: number;
+      reflectionsWritten: number;
+      streakCount: number;
+      longestStreak: number;
+    }
   ): number {
     const { progress, category, code } = achievement;
     let score = 0;
@@ -159,7 +164,12 @@ export class NextBestAchievementService {
    */
   private static getMomentumScore(
     achievement: AchievementLite & { progress: AchievementProgress },
-    userStats?: any
+    userStats?: {
+      tasksCompleted: number;
+      reflectionsWritten: number;
+      streakCount: number;
+      longestStreak: number;
+    }
   ): number {
     if (!userStats) return 0;
 
@@ -207,7 +217,12 @@ export class NextBestAchievementService {
   private static getReason(
     achievement: AchievementLite & { progress: AchievementProgress },
     score: number,
-    userStats?: any
+    userStats?: {
+      tasksCompleted: number;
+      reflectionsWritten: number;
+      streakCount: number;
+      longestStreak: number;
+    }
   ): string {
     const { code, progress } = achievement;
     
@@ -241,8 +256,7 @@ export class NextBestAchievementService {
    * Generates AI-powered suggestions for achieving the target
    */
   private static generateSuggestion(
-    achievement: AchievementLite & { progress: AchievementProgress },
-    userStats?: any
+    achievement: AchievementLite & { progress: AchievementProgress }
   ): string {
     const { code, progress } = achievement;
 

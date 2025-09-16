@@ -121,7 +121,7 @@ export function useTasks() {
         setError(null);
         await queryClient.cancelQueries({ queryKey: ["tasks"] });
       },
-      onError: (err: any) => {
+      onError: (err: Error) => {
         setError(err.message || "Failed to add task");
       },
       onSettled: () => {
@@ -151,14 +151,14 @@ export function useTasks() {
 
         return { previous };
       },
-      onError: (err: any, _id, context) => {
+      onError: (err: Error, _id, context) => {
         setError(err.message || "Failed to complete task");
         // rollback
         if (context?.previous) {
           queryClient.setQueryData(["tasks"], context.previous);
         }
       },
-      onSuccess: async (_data, id) => {
+      onSuccess: async (_data, _id) => {
         // refresh streak and tasks; achievements check will run after reflection save
         try {
           await fetchJson("/api/streak", {
@@ -198,10 +198,10 @@ export function useTasks() {
         setReflectionModalOpen(false);
         await queryClient.cancelQueries({ queryKey: ["tasks"] });
       },
-      onError: (err: any) => {
+      onError: (err: Error) => {
         setError(err.message || "Failed to save reflection");
       },
-      onSuccess: async (_data) => {
+      onSuccess: async () => {
         // refresh tasks & streak, then check achievements
         await queryClient.invalidateQueries({ queryKey: ["tasks"] });
         await queryClient.invalidateQueries({ queryKey: ["streak"] });
@@ -237,7 +237,7 @@ export function useTasks() {
         setError(null);
         await queryClient.cancelQueries({ queryKey: ["tasks"] });
       },
-      onError: (err: any) => {
+      onError: (err: Error) => {
         setError(err.message || "Failed to update task");
       },
       onSettled: () => {

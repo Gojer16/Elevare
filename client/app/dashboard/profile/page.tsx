@@ -55,7 +55,7 @@ export default function ProfilePage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ timezone: tz }),
         });
-      } catch (err) {
+      } catch {
         // non-blocking
       }
     }

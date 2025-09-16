@@ -47,13 +47,20 @@ export async function PUT(
       const existing = await tx.task.findUnique({ where: { id } });
       if (!existing || existing.userId !== session.user.id) {
         // Throwing causes the transaction to rollback
-        const e: any = new Error('NOT_FOUND_OR_FORBIDDEN');
+        const e: Error & { code?: string } = new Error('NOT_FOUND_OR_FORBIDDEN');
         e.code = 'NOT_FOUND_OR_FORBIDDEN';
         throw e;
       }
 
       // Build update payload carefully (don't let client set completedAt)
-      const updateData: any = {};
+      const updateData: {
+        title?: string;
+        description?: string | null;
+        reflection?: string | null;
+        isDone?: boolean;
+        completedAt?: Date | null;
+        tags?: { set: { id: string }[] };
+      } = {};
 
       if (data.title !== undefined) updateData.title = data.title;
       if (Object.prototype.hasOwnProperty.call(data, 'description'))
@@ -112,9 +119,9 @@ export async function PUT(
 
     // Success
     return NextResponse.json(updatedTask);
-  } catch (err: any) {
+  } catch (err: unknown) {
     // Handle ownership / not found explicitly
-    if (err?.code === 'NOT_FOUND_OR_FORBIDDEN') {
+    if (err && typeof err === 'object' && 'code' in err && err.code === 'NOT_FOUND_OR_FORBIDDEN') {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
 

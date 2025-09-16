@@ -1,4 +1,5 @@
 import type { NextAuthOptions } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
@@ -11,7 +12,7 @@ import { prisma } from "./prisma";
  * Accepts the `token` object previously stored in the JWT.
  * Returns a token object with refreshed accessToken, accessTokenExpires, and refreshToken.
  */
-async function refreshAccessToken(token: any) {
+async function refreshAccessToken(token: JWT) {
   try {
     if (!token?.refreshToken || !token.provider) {
       throw new Error("No refresh token or provider available");
@@ -122,9 +123,9 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account }) {
       // Initial sign in (user + account present)
       if (account && user) {
-        token.id = (user as any).id;
-        token.name = (user as any).name;
-        token.email = (user as any).email;
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
 
         // Save provider + tokens (if present)
         if (account.access_token) token.accessToken = account.access_token;
@@ -172,9 +173,9 @@ export const authOptions: NextAuthOptions = {
       }
 
       // Expose a short-lived access token for calling your own APIs if needed.
-      if ((token as any).accessToken && (token as any).accessTokenExpires) {
-        session.accessToken = (token as any).accessToken;
-        session.accessTokenExpires = (token as any).accessTokenExpires;
+      if (typeof token.accessToken === 'string' && typeof token.accessTokenExpires === 'number') {
+        session.accessToken = token.accessToken;
+        session.accessTokenExpires = token.accessTokenExpires;
       }
 
       return session;

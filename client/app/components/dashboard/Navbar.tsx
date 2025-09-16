@@ -42,7 +42,7 @@ export default function Navbar() {
       const random = greetings[Math.floor(Math.random() * greetings.length)];
       setGreeting(random);
     }
-  }, [session?.user]);
+  }, [session?.user, greetings]);
 
   return (
     <nav

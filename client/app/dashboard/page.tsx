@@ -4,7 +4,7 @@ import TaskInput from "../components/TaskInput";
 import TaskDisplay from "../components/TaskDisplay";
 import ReflectionModal from "../components/ReflectionModal";
 import EditTaskModal from "../components/EditTaskModal";
-import { useTasks } from "../hooks/useTask";
+import { useTasks, Task } from "../hooks/useTask";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { dailyPrompts } from "../data/dailyPrompts";
@@ -28,7 +28,6 @@ export default function DashboardPage() {
     showCongratulations,
     error,
     fetchTasks,
-    fetchStreak,
     addTask,
     completeTask,
     saveReflection,
@@ -37,8 +36,6 @@ export default function DashboardPage() {
     achievementToasts,
     removeAchievementToast,
   } = useTasks();
-
-  const { theme } = useTheme();
   const [quote, setQuote] = useState<{ text: string; author: string } | null>(
     null
   );
@@ -50,7 +47,7 @@ export default function DashboardPage() {
     setQuote(random);
   }, []);
 
-  const handleEditSave = async (updatedTask: Partial<any>) => {
+  const handleEditSave = async (updatedTask: Partial<Task>) => {
     try {
       setIsSavingEdit(true);
       await editTask(updatedTask);

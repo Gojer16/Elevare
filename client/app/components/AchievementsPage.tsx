@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import AchievementsGrid from './achievements/AchievementsGrid';
 import NextBestAchievement from './achievements/NextBestAchievement';
-import { getNextBestAchievement } from '@/app/lib/nextBestAchievement';
+import { getNextBestAchievement, NextBestAchievementData } from '@/app/lib/nextBestAchievement';
 import { useTheme } from '@/contexts/ThemeContext';
 
 interface Achievement {
@@ -54,7 +54,6 @@ export default function AchievementsPage() {
   const [userAchievements, setUserAchievements] = useState<UserAchievement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<Stats | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
   const [filter, setFilter] = useState<'ALL' | 'UNLOCKED' | 'LOCKED'>('ALL');
   const [query, setQuery] = useState('');
@@ -82,7 +81,7 @@ export default function AchievementsPage() {
    * - Achievement card data binding
    */
   const [progressById, setProgressById] = useState<Record<string, { target: number | null; current: number; unlocked: boolean; unlockedAt?: string | null; conditionText?: string | null }>>({});
-  const [nextBestAchievement, setNextBestAchievement] = useState<any>(null);
+  const [nextBestAchievement, setNextBestAchievement] = useState<NextBestAchievementData | null>(null);
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.id) {
@@ -93,18 +92,11 @@ export default function AchievementsPage() {
   const fetchAchievements = async () => {
     try {
       setError(null);
-      const res = await fetch('/api/achievements/progress', { cache: 'no-store' });
-      if (!res.ok) throw new Error('Failed to load achievements');
       const data = await res.json();
       const progress = data.progress as Array<Achievement & { target: number | null; current: number; unlocked: boolean; unlockedAt?: string | null; conditionText?: string | null }>;
       setAchievements(progress.map(p => ({ id: p.id, code: p.code, title: p.title, description: p.description, icon: p.icon, category: p.category })));
       setUserAchievements(progress.filter(p => p.unlocked).map(p => ({ achievementId: p.id, unlockedAt: p.unlockedAt || '' })));
-      setStats({ tasksCompleted: 0, reflectionsWritten: 0, streakCount: 0, longestStreak: 0 });
-      const map: Record<string, any> = {};
-      for (const p of progress) {
-        map[p.id] = { target: p.target, current: p.current, unlocked: p.unlocked, unlockedAt: p.unlockedAt, conditionText: p.conditionText };
-      }
-      setProgressById(map);
+      const map: Record<string, { target: number | null; current: number; unlocked: boolean; unlockedAt?: string | null; conditionText?: string | null }> = {};
 
       // Calculate next best achievement
       const achievementsWithProgress = progress.map(p => ({
@@ -192,7 +184,7 @@ export default function AchievementsPage() {
     }
     
     return list;
-  }, [achievements, activeCategory, filter, query, userAchievements]);
+  }, [achievements, activeCategory, filter, query, userAchievements, isUnlocked]);
 
 
   if (status === 'loading' || loading) {
@@ -286,7 +278,7 @@ export default function AchievementsPage() {
           aria-label="Filter by status" 
           className="btn btn-outline" 
           value={filter} 
-          onChange={e=>setFilter(e.target.value as any)}
+          onChange={e=>setFilter(e.target.value as 'ALL' | 'UNLOCKED' | 'LOCKED')}
           >
             <option value="ALL">All</option>
             <option value="UNLOCKED">Unlocked</option>
