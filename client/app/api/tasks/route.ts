@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const parsed = taskSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: parsed.error.errors.map(e => e.message).join(', ') }, { status: 400 });
+      return NextResponse.json({ error: parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', ') }, { status: 400 });
     }
     const { title, description, isDone, tagNames = [] } = parsed.data;
 
@@ -70,19 +70,20 @@ export async function POST(request: Request) {
 
     // Atomic operation: upsert tags + create task
     const task = await prisma.$transaction(async (tx) => {
-      let tagConnections: { id: number }[] = [];
+      // Tag connections use string ids (cuid)
+      let tagConnections: { id: string }[] = [];
 
       if (tagNames.length > 0) {
         const tags = await Promise.all(
-          tagNames.map(name =>
+          tagNames.map((name: string) =>
             tx.tag.upsert({
-              where: { name },
+              where: { name_userId: { name, userId: session.user.id } },
               update: {},
-              create: { name }
+              create: { name, user: { connect: { id: session.user.id } } },
             })
           )
         );
-        tagConnections = tags.map(tag => ({ id: tag.id }));
+        tagConnections = tags.map((tag) => ({ id: tag.id }));
       }
 
       return tx.task.create({
@@ -91,7 +92,7 @@ export async function POST(request: Request) {
           description,
           isDone: isDone ?? false,
           user: { connect: { id: session.user.id } },
-          tags: { connect: tagConnections }
+          tags: { connect: tagConnections },
         },
       });
     });
