@@ -85,6 +85,11 @@ export default function AchievementsPage() {
   const fetchAchievements = async () => {
     try {
       setError(null);
+      const res = await fetch('/api/achievements/progress');
+      if (!res.ok) {
+        const text = await res.text().catch(() => null);
+        throw new Error(`Failed to fetch achievements: ${res.status} ${res.statusText} ${text ?? ''}`);
+      }
       const data = await res.json();
       const progress = data.progress as Array<Achievement & { target: number | null; current: number; unlocked: boolean; unlockedAt?: string | null; conditionText?: string | null }>;
       setAchievements(progress.map(p => ({ id: p.id, code: p.code, title: p.title, description: p.description, icon: p.icon, category: p.category })));
