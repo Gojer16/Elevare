@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "./ui/Button";
-import { Task } from "../hooks/useTask";
+import type { Task } from "../../types/task";
 
 interface EditTaskModalProps {
   isOpen: boolean;
