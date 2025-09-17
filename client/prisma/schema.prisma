@@ -1,32 +1,29 @@
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
-
 generator client {
   provider = "prisma-client-js"
 }
 
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
 model Task {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String       @id @default(cuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   title       String
   description String?
-  isDone    Boolean  @default(false)
-  reflection String?
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-  tags      Tag[]    @relation("TaskTags")
+  isDone      Boolean      @default(false)
+  reflection  String?
+  userId      String
   completedAt DateTime?
   reflections Reflection[]
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tags        Tag[]        @relation("TaskTags")
 
   @@index([userId])
 }
-
-// NextAuth.js Models
 
 model Account {
   id                String  @id @default(cuid())
@@ -34,15 +31,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -59,22 +55,103 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified  DateTime?
-  hashedPassword String?
-  image         String?
-  timezone      String?   // IANA timezone, e.g. "America/New_York"
-  accounts      Account[]
-  sessions      Session[]
-  tasks         Task[]
-  reflections Reflection[]
-  streak      Streak?
+  id              String            @id @default(cuid())
+  name            String?
+  email           String?           @unique
+  emailVerified   DateTime?
+  hashedPassword  String?
+  image           String?
+  themePreference Theme             @default(MODERN)
+  timezone        String?
+  accounts        Account[]
+  reflections     Reflection[]
+  sessions        Session[]
+  streak          Streak?
+  tasks           Task[]
+  tags            Tag[]
+  achievements    UserAchievement[]
   weeklySummaries WeeklySummary[]
-  achievements UserAchievement[]
-  themePreference Theme  @default(MODERN)
-  tags            Tag[] 
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Tag {
+  id     String @id @default(cuid())
+  name   String
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks  Task[] @relation("TaskTags")
+
+  @@unique([name, userId])
+}
+
+model Reflection {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  content    String
+  aiFeedback String?
+  taskId     String?
+  userId     String
+  task       Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Streak {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  count      Int      @default(0)
+  longest    Int      @default(0)
+  lastActive DateTime
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model WeeklySummary {
+  id        String   @id @default(cuid())
+  weekStart DateTime
+  weekEnd   DateTime
+  summary   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Achievement {
+  id               String              @id @default(cuid())
+  code             String              @unique
+  title            String
+  description      String
+  icon             String?
+  category         AchievementCategory @default(OTHER)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  achievementId String
+  unlockedAt    DateTime    @default(now())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+  @@index([achievementId])
 }
 
 enum Theme {
@@ -87,87 +164,4 @@ enum AchievementCategory {
   STREAK
   REFLECTION
   OTHER
-}
-
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
-model Tag {
-  id     String @id @default(cuid())
-  name   String @unique
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks  Task[] @relation("TaskTags")
-
-  @@unique([name, userId]) 
-}
-
-model Reflection {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  content     String
-  aiFeedback  String?    // AI-generated response
-  task        Task?      @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  taskId      String?
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-
-  @@index([userId])
-}
-
-model Streak {
-  id         String   @id @default(cuid())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String   @unique
-  count      Int      @default(0)
-  longest    Int      @default(0)
-  lastActive DateTime // last day the user logged task+reflection
-
-  @@index([userId])
-}
-
-model WeeklySummary {
-  id        String   @id @default(cuid())
-  weekStart DateTime
-  weekEnd   DateTime
-  summary   String   // AI-generated weekly summary
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String
-
-  @@index([userId])
-}
-
-model Achievement {
-  id          String   @id @default(cuid())
-  code        String   @unique
-  title       String
-  description String
-  icon        String?
-  category    AchievementCategory @default(OTHER)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  userAchievements UserAchievement[]
-}
-
-model UserAchievement {
-  id             String      @id @default(cuid())
-  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId         String
-  achievement    Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
-  achievementId  String
-  unlockedAt     DateTime    @default(now())
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-
-  @@unique([userId, achievementId]) // each achievement only once per user
-  @@index([userId])
-  @@index([achievementId])
 }
