@@ -19,7 +19,6 @@ export default function Providers({ children, session }: ProvidersProps) {
         queries: {
           // tune these based on your app needs
           staleTime: 1000 * 60, // 1 minute
-          cacheTime: 1000 * 60 * 5, // 5 minutes
           retry: 1, // single retry on failure
           refetchOnWindowFocus: false, // matches your current auth behavior
           refetchOnReconnect: true,
