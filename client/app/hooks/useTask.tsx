@@ -2,9 +2,9 @@
 "use client";
 import { useCallback, useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Task, Tag } from "../../types/task";
+import type { Task } from "../../types/task";
 
-export type { Task, Tag };
+export type { Task };
 
 interface Achievement {
   id: string;
@@ -57,50 +57,52 @@ export function useTasks() {
   const [error, setError] = useState<string | null>(null);
 
   // --- Queries --- //
-  const tasksQuery = useQuery<Task[], Error>(
-    ["tasks"],
-    ({ signal }) => fetchJson("/api/tasks", { signal }),
-    {
-      staleTime: 1000 * 60, // 1 minute
-      cacheTime: 1000 * 60 * 5,
-      retry: 2,
-      onError: (err) => {
-        setError(err.message);
-        console.error("useTasks: fetch tasks error", err);
-      },
-    }
-  );
+  const tasksQuery = useQuery<Task[], Error>({
+    queryKey: ["tasks"],
+    queryFn: async ({ signal }: { signal?: AbortSignal }) => {
+      try {
+        return await fetchJson("/api/tasks", { signal });
+      } catch (e) {
+        setError((e as Error).message);
+        throw e;
+      }
+    },
+    staleTime: 1000 * 60, // 1 minute
+    retry: 2,
+  });
 
-  const streakQuery = useQuery<Streak | null, Error>(
-    ["streak"],
-    ({ signal }) => fetchJson("/api/streak", { signal }),
-    {
-      staleTime: 1000 * 60,
-      retry: 1,
-      onError: (err) => {
+  const streakQuery = useQuery<Streak | null, Error>({
+    queryKey: ["streak"],
+    queryFn: async ({ signal }: { signal?: AbortSignal }) => {
+      try {
+        return await fetchJson("/api/streak", { signal });
+      } catch (e) {
         // Streak failures are non-blocking UX wise
-        console.error("useTasks: fetch streak error", err);
-      },
-    }
-  );
+        console.error("useTasks: fetch streak error", e);
+        throw e;
+      }
+    },
+    staleTime: 1000 * 60,
+    retry: 1,
+  });
 
   // Derived UI state from tasks query
-  const activeTask = useMemo(() => tasksQuery.data?.find((t) => !t.isDone) ?? null, [tasksQuery.data]);
+  const tasks = useMemo(() => (tasksQuery.data ?? []) as Task[], [tasksQuery.data]);
+
+  const activeTask = useMemo(() => tasks.find((t: Task) => !t.isDone) ?? null, [tasks]);
 
   const archive = useMemo(() => {
-    const tasks = tasksQuery.data ?? [];
-    if (!activeTask) return tasks.filter((t) => t.isDone);
-    return tasks.filter((t) => t.id !== activeTask.id);
-  }, [tasksQuery.data, activeTask]);
+    if (!activeTask) return tasks.filter((t: Task) => t.isDone);
+    return tasks.filter((t: Task) => t.id !== activeTask.id);
+  }, [tasks, activeTask]);
 
   const today = useMemo(() => new Date().toDateString(), []);
   const showCongratulations = useMemo(() => {
-    const tasks = tasksQuery.data ?? [];
     const todaysCompleted = tasks.find(
-      (t) => t.isDone && new Date(t.createdAt).toDateString() === today
+      (t: Task) => t.isDone && new Date(t.createdAt).toDateString() === today
     );
     return !activeTask && !!todaysCompleted;
-  }, [tasksQuery.data, activeTask, today]);
+  }, [tasks, activeTask, today]);
 
   // Flags mapped from react-query states
   const isLoading = tasksQuery.isLoading;
@@ -109,14 +111,14 @@ export function useTasks() {
   // --- Mutations --- //
 
   // Add Task (no optimistic update - simple create then invalidate)
-  const addTaskMutation = useMutation(
-    (newTask: { title: string; description: string; tagNames?: string[] }) =>
-      fetchJson("/api/tasks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...newTask, isDone: false }),
-      }),
+  const addTaskMutation = useMutation<Task, Error, { title: string; description: string; tagNames?: string[] }>(
     {
+      mutationFn: async (newTask) =>
+        fetchJson("/api/tasks", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...newTask, isDone: false }),
+        }),
       onMutate: async () => {
         setError(null);
         await queryClient.cancelQueries({ queryKey: ["tasks"] });
@@ -131,14 +133,14 @@ export function useTasks() {
   );
 
   // Complete Task (optimistic update with rollback)
-  const completeTaskMutation = useMutation(
-    (id: string) =>
-      fetchJson(`/api/tasks/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isDone: true }),
-      }),
+  const completeTaskMutation = useMutation<Task, Error, string, { previous?: Task[] }>(
     {
+      mutationFn: async (id) =>
+        fetchJson(`/api/tasks/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ isDone: true }),
+        }),
       onMutate: async (id) => {
         setError(null);
         await queryClient.cancelQueries({ queryKey: ["tasks"] });
@@ -151,7 +153,7 @@ export function useTasks() {
 
         return { previous };
       },
-      onError: (err: Error, _id, context) => {
+      onError: (err: Error, _id: string, context) => {
         setError(err.message || "Failed to complete task");
         // rollback
         if (context?.previous) {
@@ -185,14 +187,14 @@ export function useTasks() {
   );
 
   // Save Reflection (no optimistic update; after success, check achievements)
-  const saveReflectionMutation = useMutation(
-    ({ id, reflection }: { id: string; reflection: string }) =>
-      fetchJson(`/api/tasks/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reflection }),
-      }),
+  const saveReflectionMutation = useMutation<void, Error, { id: string; reflection: string }>(
     {
+      mutationFn: async ({ id, reflection }) =>
+        fetchJson(`/api/tasks/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reflection }),
+        }),
       onMutate: async () => {
         setError(null);
         setReflectionModalOpen(false);
@@ -225,14 +227,14 @@ export function useTasks() {
   );
 
   // Edit Task (simple update -> invalidate)
-  const editTaskMutation = useMutation(
-    ({ id, payload }: { id: string; payload: Partial<Task> }) =>
-      fetchJson(`/api/tasks/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }),
+  const editTaskMutation = useMutation<Task, Error, { id: string; payload: Partial<Task> }>(
     {
+      mutationFn: async ({ id, payload }) =>
+        fetchJson(`/api/tasks/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }),
       onMutate: async () => {
         setError(null);
         await queryClient.cancelQueries({ queryKey: ["tasks"] });
@@ -297,8 +299,8 @@ export function useTasks() {
     // flags
     isLoading,
     isRefetching,
-    isCompletingTask: completeTaskMutation.isLoading,
-    isSavingReflection: saveReflectionMutation.isLoading,
+  isCompletingTask: completeTaskMutation.status === "pending",
+  isSavingReflection: saveReflectionMutation.status === "pending",
     showCongratulations,
     error,
     // actions
