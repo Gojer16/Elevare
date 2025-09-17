@@ -36,7 +36,7 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const parsed = updateSchema.safeParse(body);
     if (!parsed.success) {
-  const messages = parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', ');
+      const messages = parsed.error.issues.map((e: z.ZodIssue) => e.message).join(', ');
       return NextResponse.json({ error: messages }, { status: 400 });
     }
     const data = parsed.data;
@@ -90,12 +90,21 @@ export async function PUT(request: Request) {
           updateData.tags = { set: [] };
         } else {
           // upsert tags and set relation
+          // Find or create tags for this specific user
           const tags = await Promise.all(
             tagNames.map((name: string) =>
               tx.tag.upsert({
-                where: { name },
+                where: {
+                  name_userId: {
+                    name,
+                    userId: session.user.id
+                  }
+                },
                 update: {},
-                create: { name },
+                create: {
+                  name,
+                  userId: session.user.id
+                },
               })
             )
           );
