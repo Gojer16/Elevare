@@ -67,7 +67,7 @@ export class NextBestAchievementService {
       progress: best.progress,
       priority: best.priority,
       reason: best.reason,
-      suggestion: this.generateSuggestion(best, userStats)
+      suggestion: this.generateSuggestion(best)
     };
   }
 
@@ -245,7 +245,7 @@ export class NextBestAchievementService {
       return 'Build momentum with a 3-day streak - consistency is key!';
     }
 
-    if (code.startsWith('tasks_10') && userStats?.tasksCompleted < 10) {
+    if (code.startsWith('tasks_10') && (userStats?.tasksCompleted ?? 0) < 10) { 
       return 'You\'re making progress! Keep completing tasks to reach 10.';
     }
 

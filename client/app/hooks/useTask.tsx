@@ -249,7 +249,7 @@ export function useTasks() {
   );
 
   // --- Helper actions exposed by the hook --- //
-  const fetchTasks = useCallback(() => queryClient.invalidateQueries({ queryKey: ["tasks"] }), [queryClient]);
+  const fetchTasks = useCallback((force?: boolean) => queryClient.invalidateQueries({ queryKey: ["tasks"] }), [queryClient]);
   const fetchStreak = useCallback(() => queryClient.invalidateQueries({ queryKey: ["streak"] }), [queryClient]);
 
   const addTask = useCallback(

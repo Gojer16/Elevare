@@ -1,5 +1,5 @@
-import type { NextAuthOptions } from "next-auth";
-import { JWT } from "next-auth/jwt";
+import type { NextAuthOptions, Session } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
@@ -26,13 +26,17 @@ async function refreshAccessToken(token: JWT) {
       params.set("client_id", process.env.GOOGLE_CLIENT_ID!);
       params.set("client_secret", process.env.GOOGLE_CLIENT_SECRET!);
       params.set("grant_type", "refresh_token");
-      params.set("refresh_token", token.refreshToken);
+      if (typeof token.refreshToken === 'string') {
+        params.set("refresh_token", token.refreshToken);
+      }
     } else if (token.provider === "github") {
       url = "https://github.com/login/oauth/access_token";
       params.set("client_id", process.env.GITHUB_CLIENT_ID!);
       params.set("client_secret", process.env.GITHUB_CLIENT_SECRET!);
       params.set("grant_type", "refresh_token");
-      params.set("refresh_token", token.refreshToken);
+      if (typeof token.refreshToken === 'string') {
+        params.set("refresh_token", token.refreshToken);
+      }
     } else {
       throw new Error(`Refresh not implemented for provider: ${token.provider}`);
     }
@@ -71,6 +75,25 @@ async function refreshAccessToken(token: JWT) {
       error: "RefreshAccessTokenError",
     };
   }
+}
+
+// Extended token shape used in callbacks
+interface AppToken extends JWT {
+  id?: string;
+  name?: string | null;
+  email?: string | null;
+  provider?: string;
+  refreshToken?: string;
+  accessToken?: string;
+  accessTokenExpires?: number;
+  themePreference?: "MODERN" | "MINIMAL" | undefined;
+  error?: string;
+}
+
+interface AuthUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -121,55 +144,64 @@ export const authOptions: NextAuthOptions = {
      * - On subsequent calls, if access token expired, try to refresh using refreshAccessToken.
      */
     async jwt({ token, user, account }) {
+      // Narrow the token/user/account to app-specific shapes
+      const t = token as AppToken;
+      const u = user as AuthUser | undefined;
+      const acct = account as Record<string, unknown> | null | undefined;
+
       // Initial sign in (user + account present)
-      if (account && user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
+      if (acct && u) {
+        t.id = u.id;
+        if (u.name) t.name = u.name;
+        if (u.email) t.email = u.email;
 
         // Save provider + tokens (if present)
-        if (account.access_token) token.accessToken = account.access_token;
-        if (account.refresh_token) token.refreshToken = account.refresh_token;
-        token.provider = account.provider;
+        const access = acct['access_token'] ?? acct['accessToken'];
+        const refresh = acct['refresh_token'] ?? acct['refreshToken'];
+        const provider = acct['provider'];
+
+        if (typeof access === 'string') t.accessToken = access;
+        if (typeof refresh === 'string') t.refreshToken = refresh;
+        if (typeof provider === 'string') t.provider = provider;
 
         // account.expires_at is usually seconds since epoch (provider-dependent)
-        if (account.expires_at) {
-          token.accessTokenExpires = Number(account.expires_at) * 1000;
-        } else if (account.expires_in) {
-          token.accessTokenExpires = Date.now() + Number(account.expires_in) * 1000;
+        const expiresAt = acct['expires_at'] ?? acct['expiresAt'];
+        const expiresIn = acct['expires_in'] ?? acct['expiresIn'];
+        if (typeof expiresAt === 'number' || typeof expiresAt === 'string') {
+          t.accessTokenExpires = Number(expiresAt) * 1000;
+        } else if (typeof expiresIn === 'number' || typeof expiresIn === 'string') {
+          t.accessTokenExpires = Date.now() + Number(expiresIn) * 1000;
         } else {
           // default to 1 hour if provider didn't give expiry
-          token.accessTokenExpires = Date.now() + 60 * 60 * 1000;
+          t.accessTokenExpires = Date.now() + 60 * 60 * 1000;
         }
 
-        return token;
+        return t;
       }
 
       // Subsequent requests: if no provider access token present, just return token.
-      if (!token.accessToken || !token.accessTokenExpires) return token;
+      if (!t.accessToken || !t.accessTokenExpires) return t;
 
       // If access token still valid, return it
-      if (Date.now() < token.accessTokenExpires) {
-        return token;
+      if (typeof t.accessTokenExpires === 'number' && Date.now() < t.accessTokenExpires) {
+        return t;
       }
 
       // Access token expired -> attempt to refresh
-      return await refreshAccessToken(token);
+      return await refreshAccessToken(t);
     },
     /**
      * Session callback:
      * Attach minimal, safe info to the session object available client-side.
      * Avoid leaking refreshToken or secrets to the client.
      */
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: AppToken }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.name = token.name as string;
-        session.user.email = token.email as string;
-        session.user.themePreference = token.themePreference as
-          | "MODERN"
-          | "MINIMAL"
-          | undefined;
+        // Token fields may be undefined; only overwrite when present
+        if (token.id) session.user.id = token.id;
+        if (token.name) session.user.name = token.name as string;
+        if (token.email) session.user.email = token.email as string;
+        session.user.themePreference = token.themePreference ?? session.user.themePreference;
       }
 
       // Expose a short-lived access token for calling your own APIs if needed.
