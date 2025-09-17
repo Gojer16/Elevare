@@ -5,7 +5,13 @@ import { FiHome, FiArchive, FiBarChart2, FiChevronLeft, FiChevronRight, FiSettin
 import SettingsModal from './SettingsModal';
 import { FileBarChartIcon } from 'lucide-react';
 
-const Sidebar = ({ isCollapsed, setCollapsed }) => {
+type SidebarProps = {
+  isCollapsed: boolean;
+  setCollapsed: (val: boolean) => void;
+};
+
+// cSpell:ignore Elevare
+const Sidebar = ({ isCollapsed, setCollapsed }: SidebarProps) => {
   const pathname = usePathname();
   const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
 
