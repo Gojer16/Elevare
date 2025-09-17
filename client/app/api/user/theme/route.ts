@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../lib/auth";
 import { prisma } from "../../../lib/prisma";
+import { Theme as PrismaTheme } from '@prisma/client';
 import { z } from "zod";
 
 const ThemeSchema = z.enum(["modern", "minimal"]);
@@ -17,9 +18,12 @@ export async function PATCH(req: Request) {
     const body = await req.json();
     const theme = ThemeSchema.parse(body.theme);
 
+    // Prisma enum values are uppercase (e.g. 'MODERN', 'MINIMAL')
+    const themeValue = theme.toUpperCase() as unknown as PrismaTheme;
+
     const updated = await prisma.user.update({
       where: { id: session.user.id }, 
-      data: { themePreference: theme.toUpperCase() },
+      data: { themePreference: themeValue },
     });
 
     return NextResponse.json({ theme: updated.themePreference });
@@ -30,7 +34,7 @@ export async function PATCH(req: Request) {
 
     if (err instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Invalid theme", details: err.errors },
+        { error: "Invalid theme", details: err.issues },
         { status: 400 }
       );
     }
@@ -68,7 +72,7 @@ export async function PUT(req: Request) {
 
     if (err instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Invalid timezone", details: err.errors },
+        { error: "Invalid timezone", details: err.issues },
         { status: 400 }
       );
     }
