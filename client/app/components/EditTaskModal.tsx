@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "./ui/Button";
 import { Task } from "../hooks/useTask";
@@ -8,7 +8,7 @@ import { Task } from "../hooks/useTask";
 interface EditTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (updatedTask: Partial<Task>) => void;
+  onSave: (updatedTask: Partial<Task> & { tagNames?: string[] }) => void;
   task: Task | null;
   isSaving: boolean;
 }
@@ -28,7 +28,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
   );
 
   // Reset form when task changes
-  useState(() => {
+    useEffect(() => {
     if (task) {
       setTitle(task.title);
       setDescription(task.description || "");
@@ -50,12 +50,15 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
+  // onSave expects Partial<Task> but we also send tagNames (client-side helper)
   const handleSave = () => {
     onSave({
       title,
       description,
+  // tagNames is a UI-only helper passed to the parent handler
+  // parent should accept this shape and handle creating/updating tags
       tagNames: tags,
-    });
+    } as Partial<Task> & { tagNames?: string[] });
   };
 
   return (
