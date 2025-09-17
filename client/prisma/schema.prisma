@@ -67,8 +67,8 @@ model User {
   reflections     Reflection[]
   sessions        Session[]
   streak          Streak?
-  tasks           Task[]
   tags            Tag[]
+  tasks           Task[]
   achievements    UserAchievement[]
   weeklySummaries WeeklySummary[]
 }
