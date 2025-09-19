@@ -1,4 +1,19 @@
-import { AchievementLite, AchievementProgress } from '@/app/components/achievements/AchievementCard';
+// Minimal local types to avoid depending on UI component types
+export interface AchievementProgress {
+  current: number;
+  target: number | null;
+  unlocked: boolean;
+}
+
+export interface AchievementLite {
+  id: string;
+  code: string;
+  title: string;
+  description: string;
+  icon: string | null;
+  category: string;
+  progress: AchievementProgress;
+}
 
 export interface NextBestAchievementData {
   achievement: AchievementLite;
@@ -62,6 +77,7 @@ export class NextBestAchievementService {
         title: best.title,
         description: best.description,
         icon: best.icon,
+        progress: best.progress,
         category: best.category
       },
       progress: best.progress,

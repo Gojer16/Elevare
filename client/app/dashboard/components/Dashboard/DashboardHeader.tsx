@@ -22,7 +22,7 @@ export function DashboardHeader({ quote }: DashboardHeaderProps) {
           transition={{ duration: 0.6 }}
           className="mt-6 max-w-lg mx-auto text-center"
         >
-          <p className="text-lg font-medium">"{quote.text}"</p>
+          <p className="text-lg font-medium">{"\""}{quote.text}{"\""}</p>
           <p className="text-sm mt-2 opacity-70">— {quote.author}</p>
         </motion.div>
       )}
