@@ -51,5 +51,8 @@ export const quotes = [
 {
     text: "Every great change starts like falling dominoes.",
     author: "BJ Thornton"
+}, {
+  text: "One day. One task. One step closer.",
+  author: "The One Thing"
 }
 ];
