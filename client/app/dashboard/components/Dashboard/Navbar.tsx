@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState, useEffect } from 'react';
 import { Button } from '../../../components/ui/Button';
-import { Menu } from 'lucide-react'; // simple hamburger icon
+import { Menu } from 'lucide-react';
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -59,10 +59,10 @@ export default function Navbar() {
               title="Back to your focus ritual dashboard"
             >
               <span className="text-2xl font-bold text-[var(--color-foreground)] hover:text-primary transition-colors hover:underline">
-                Elevare
+              Elevare
               </span>
               <span className="text-sm italic sm:inline-block pt-1.5 sm:pt-1.5 text-[var(--color-foreground)] opacity-70 group-hover:text-primary transition-colors">
-                — Focus on Your ONE Thing
+              — Focus on Your ONE Thing
               </span>
             </Link>
           </div>
@@ -102,7 +102,7 @@ export default function Navbar() {
 
                 {/* Greeting */}
                 <p className="hidden md:block text-[var(--color-foreground)]">
-                  Welcome back, {session.user.name}. {greeting}
+                Welcome back, {session.user.name}. {greeting}
                 </p>
 
                 {/* Desktop logout */}
@@ -112,7 +112,7 @@ export default function Navbar() {
                   className="hidden sm:inline-flex ml-2 bg-BrandSecondary text-white hover:bg-BrandSecondary/90"
                   title="See you tomorrow, success is built daily."
                 >
-                  End Session
+                End Session
                 </Button>
 
                 {/* Mobile hamburger menu */}
@@ -122,7 +122,7 @@ export default function Navbar() {
                     aria-label="Logout of Elevare"
                     className="p-2 rounded-md text-[var(--color-foreground)] hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    <Menu className="w-6 h-6" />
+                  <Menu className="w-6 h-6" />
                   </button>
                 </div>
               </>
