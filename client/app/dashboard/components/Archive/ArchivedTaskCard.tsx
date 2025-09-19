@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { Quote, Calendar, CheckCircle, XCircle } from "lucide-react";
-import type { Task, Tag } from "../../types/task";
+import type { Task, Tag } from "../../../../types/task";
 import { useTheme } from "@/contexts/ThemeContext";
 
 interface ArchivedTaskCardProps {

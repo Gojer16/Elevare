@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { useTheme } from "../../contexts/ThemeContext";
+import { useTheme } from "../../../../contexts/ThemeContext";
 import { FiEdit2 } from "react-icons/fi";
 
 interface Task {

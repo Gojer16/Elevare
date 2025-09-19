@@ -1,10 +1,10 @@
 "use client";
 import { Suspense } from "react";
-import TaskInput from "../components/TaskInput";
-import TaskDisplay from "../components/TaskDisplay";
-import ReflectionModal from "../components/ReflectionModal";
-import EditTaskModal from "../components/EditTaskModal";
-import { useTasks, Task } from "../hooks/useTask";
+import TaskInput from "./components/Tasks/TaskInput";
+import TaskDisplay from "./components/Tasks/TaskDisplay";
+import ReflectionModal from "./components/Tasks/ReflectionModal";
+import EditTaskModal from "./components/Tasks/EditTaskModal";
+import { useTasks, Task } from "../dashboard/hooks/useTask";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { dailyPrompts } from "../data/dailyPrompts";

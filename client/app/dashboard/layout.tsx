@@ -2,8 +2,8 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Navbar from '../components/dashboard/Navbar';
-import Sidebar from '../components/dashboard/Sidebar';
+import Navbar from './components/Dashboard/Navbar';
+import Sidebar from './components/Dashboard/Sidebar';
 import { ThemeProvider, useTheme } from '../../contexts/ThemeContext';
 import Loading from '../loading';
 

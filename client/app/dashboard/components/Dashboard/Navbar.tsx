@@ -3,7 +3,7 @@ import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo, useState, useEffect } from 'react';
-import { Button } from '../ui/Button';
+import { Button } from '../../../components/ui/Button';
 import { Menu } from 'lucide-react'; // simple hamburger icon
 
 export default function Navbar() {

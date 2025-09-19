@@ -1,7 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
-import ArchiveList from "../../components/ArchiveList";
-import { useTasks } from "../../hooks/useTask";
+import ArchiveList from "../components/Archive/ArchiveList";
+import { useTasks } from "../hooks/useTask";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { useTheme } from "@/contexts/ThemeContext";
 

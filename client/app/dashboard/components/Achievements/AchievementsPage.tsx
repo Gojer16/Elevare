@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { motion } from 'framer-motion';
-import AchievementsGrid from './achievements/AchievementsGrid';
-import NextBestAchievement from './achievements/NextBestAchievement';
+import AchievementsGrid from './AchievementsGrid';
+import NextBestAchievement from './NextBestAchievement';
 import { getNextBestAchievement, NextBestAchievementData } from '@/app/lib/nextBestAchievement';
 import { useTheme } from '@/contexts/ThemeContext';
 

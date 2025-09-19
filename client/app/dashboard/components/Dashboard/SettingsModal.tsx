@@ -16,7 +16,7 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-const SECTIONS = ["Appearance", "Account", "Notifications"] as const;
+const SECTIONS = ["Appearance", "Account", "Notifications",  "Support Elevare"] as const;
 type Section = (typeof SECTIONS)[number];
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
@@ -52,6 +52,24 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <h3 className="text-lg font-medium mb-4">Notifications</h3>
             <p className="text-sm opacity-70">Coming soon…</p>
           </div>
+      )
+      case "Support Elevare":
+      return (
+        <div className="flex flex-col items-start gap-4">
+          <h3 className="text-lg font-medium">Love Elevare?</h3>
+          <p className="text-sm opacity-80">
+            Elevare will always be free. If it’s helping you focus, you can
+            support its growth here. 💜
+          </p>
+          <a
+            href="https://www.paypal.com/paypalme/orlandodev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 rounded-md bg-[var(--color-primary)] text-white font-semibold hover:bg-[var(--color-primary)]/90 transition"
+          >
+            💜 Support Elevare
+          </a>
+        </div>    
         );
     }
   };

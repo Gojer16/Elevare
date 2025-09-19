@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
-import ReflectionPrompts from "@/app/components/reflection/ReflectionPrompts";
-import ReflectionHistory from "@/app/components/reflection/ReflectionHistory";
-import ChatMessages from "@/app/components/reflection/ChatMessages";
-import InputArea from "@/app/components/reflection/InputArea";
+import ReflectionPrompts from "@/app/dashboard/components/Reflection/ReflectionPrompts";
+import ReflectionHistory from "@/app/dashboard/components/Reflection/ReflectionHistory";
+import ChatMessages from "@/app/dashboard/components/Reflection/ChatMessages";
+import InputArea from "@/app/dashboard/components/Reflection/InputArea";
 
 interface Message {
   id: string;

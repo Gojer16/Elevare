@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import ArchivedTaskCard from "./ArchivedTaskCard";
-import type { Task } from "../../types/task";
+import type { Task } from "../../../../types/task";
 import { useTheme } from "@/contexts/ThemeContext";
 
 interface ArchiveListProps {

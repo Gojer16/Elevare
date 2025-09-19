@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Button } from "./ui/Button";
-import type { Task } from "../../types/task";
+import { Button } from "../../../components/ui/Button";
+import type { Task } from "../../../../types/task";
 
 interface EditTaskModalProps {
   isOpen: boolean;
