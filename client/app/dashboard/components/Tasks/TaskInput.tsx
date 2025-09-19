@@ -1,21 +1,26 @@
 "use client";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface TaskInputProps {
   onSubmit: (task: { title: string; description: string; tagNames?: string[] }) => void;
 }
 
 const TaskInput: React.FC<TaskInputProps> = ({ onSubmit }) => {
-  const { theme } = useTheme();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
+  const titleInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAddTag = (e: React.FormEvent | React.KeyboardEvent) => {
-    e.preventDefault();
+  // Auto-focus on mount
+  useEffect(() => {
+    titleInputRef.current?.focus();
+  }, []);
+
+  const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
       setTags([...tags, tagInput.trim()]);
       setTagInput("");
@@ -26,163 +31,174 @@ const TaskInput: React.FC<TaskInputProps> = ({ onSubmit }) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (title.trim()) {
-      onSubmit({ title, description, tagNames: tags });
-      setTitle("");
-      setDescription("");
-      setTags([]);
-      setTagInput("");
+    if (title.trim() && !isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        onSubmit({ title, description, tagNames: tags });
+        // Reset form
+        setTitle("");
+        setDescription("");
+        setTags([]);
+        setTagInput("");
+        setShowDescription(false);
+      } catch (error) {
+        console.error("Failed to submit task:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
-  // 🎨 Theme-based styles
-  const layoutClasses = {
-    modern: "bg-[var(--card-bg)] rounded-xl shadow-md p-6 md:p-8 border border-[var(--card-border)]",
-    minimal: "border-b border-[var(--card-border)] pb-6",
-  };
-
-  const inputClasses = {
-    modern:
-      "w-full p-2 bg-transparent border-b-2 border-[var(--card-border)] focus:outline-none focus:border-[var(--color-primary-accent)] transition-colors text-[var(--color-foreground)] placeholder:text-gray-400",
-    minimal:
-      "w-full bg-transparent focus:outline-none text-lg md:text-xl text-[var(--color-foreground)] placeholder:text-gray-400 font-light",
-  };
-
-  const buttonClasses = {
-    modern:
-      "w-full bg-[var(--color-primary-accent)] hover:brightness-110 text-white font-semibold py-3 px-4 rounded-lg transition-colors shadow-sm hover:shadow-md disabled:opacity-50",
-    minimal:
-      "mt-4 px-4 py-2 text-sm rounded-md border border-[var(--card-border)] text-[var(--color-foreground)] hover:bg-[var(--color-background)] transition disabled:opacity-50",
-  };
-
-  const tagClasses = {
-    modern:
-      "inline-flex items-center px-3 py-1 mr-2 mb-2 text-sm font-medium bg-[var(--color-primary-accent)]/10 text-[var(--color-primary-accent)] rounded-full transition",
-    minimal:
-      "inline-flex items-center mr-2 mb-2 text-xs uppercase tracking-wide border border-[var(--card-border)] px-2 py-0.5 rounded-sm text-[var(--color-foreground)]/70 hover:bg-[var(--color-background)] transition",
-  };
-
-  const tagInputClasses = {
-    modern:
-      "flex-1 p-2 bg-transparent border-b-2 border-[var(--card-border)] focus:outline-none focus:border-[var(--color-primary-accent)] transition-colors text-[var(--color-foreground)] placeholder:text-gray-400",
-    minimal:
-      "flex-1 bg-transparent focus:outline-none text-[var(--color-foreground)] placeholder:text-gray-400 text-sm",
-  };
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className={layoutClasses[theme]}
-    >
-      <form onSubmit={handleSubmit} className="w-full">
-        {/* Title */}
-        <div className="mb-6">
-          {theme === "modern" && (
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-[var(--color-foreground)] mb-1"
-            >
-              Today&apos;s ONE Thing
-            </label>
-          )}
+    <div className="w-full max-w-md mx-auto">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Main Task Input - Chatbot Style */}
+        <div className="relative">
           <input
+            ref={titleInputRef}
             type="text"
-            id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className={inputClasses[theme]}
-            placeholder="What is your most important task?"
+            placeholder="What's your ONE thing today?"
+            className="w-full px-4 py-3 pr-12 bg-[var(--card-bg)] border border-[var(--border-color)] 
+                       rounded-2xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]/50 
+                       focus:border-[var(--color-secondary)] transition-all duration-200
+                       text-[var(--color-foreground)] placeholder:text-[var(--color-foreground)]/50"
           />
-        </div>
-
-        {/* Description */}
-        <div className="mb-8">
-          {theme === "modern" && (
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-[var(--color-foreground)] mb-1"
-            >
-              Description (Optional)
-            </label>
-          )}
-          <textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className={inputClasses[theme]}
-            rows={theme === "minimal" ? 1 : 3}
-            placeholder="Add a little more detail..."
-          ></textarea>
-        </div>
-
-        {/* Tags */}
-        <div className="mb-6">
-          {theme === "modern" && (
-            <label
-              htmlFor="tagInput"
-              className="block text-sm font-medium text-[var(--color-foreground)] mb-1"
-            >
-              Tags (Optional)
-            </label>
-          )}
-          <div className="flex items-center">
-            <input
-              type="text"
-              id="tagInput"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              className={tagInputClasses[theme]}
-              placeholder="Add tags (e.g. #work, #health)"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleAddTag(e);
-              }}
-            />
-            <button
-              type="button"
-              onClick={handleAddTag}
-              className={`ml-2 px-3 py-1 rounded-md ${
-                theme === "modern"
-                  ? "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
-                  : "text-sm text-[var(--color-foreground)]/70 hover:underline"
+          
+          {/* Send Button */}
+          <button
+            type="submit"
+            disabled={!title.trim() || isSubmitting}
+            className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl transition-all duration-200
+              ${title.trim() && !isSubmitting
+                ? 'bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/80 text-white shadow-md hover:shadow-lg'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
-            >
-              Add
-            </button>
-          </div>
+          >
+            {isSubmitting ? (
+              <motion.div
+                className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              />
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            )}
+          </button>
+        </div>
 
-          {/* Display Tags */}
+        {/* Quick Actions */}
+        <div className="flex gap-2 text-sm">
+          <button
+            type="button"
+            onClick={() => setShowDescription(!showDescription)}
+            className="px-3 py-1.5 bg-[var(--card-bg)] hover:bg-[var(--color-secondary)]/10 
+                       border border-[var(--border-color)] rounded-full transition-colors
+                       text-[var(--color-foreground)]/70 hover:text-[var(--color-secondary)]"
+          >
+            {showDescription ? '− Description' : '+ Add Description'}
+          </button>
+        </div>
+
+        {/* Description - Expandable */}
+        <AnimatePresence>
+          {showDescription && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Add more details about your task..."
+                rows={3}
+                className="w-full px-4 py-3 bg-[var(--card-bg)] border border-[var(--border-color)] 
+                           rounded-2xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]/50 
+                           focus:border-[var(--color-secondary)] transition-all duration-200 resize-none
+                           text-[var(--color-foreground)] placeholder:text-[var(--color-foreground)]/50"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Tags Input */}
+        <div className="flex gap-2">
+          <input
+            id="tag-input"
+            type="text"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAddTag();
+              }
+            }}
+            placeholder="Add a tag..."
+            className="flex-1 px-4 py-2 bg-[var(--card-bg)] border border-[var(--border-color)] 
+                       rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]/50 
+                       focus:border-[var(--color-secondary)] transition-all duration-200
+                       text-[var(--color-foreground)] placeholder:text-[var(--color-foreground)]/50"
+          />
+          <button
+            type="button"
+            onClick={handleAddTag}
+            disabled={!tagInput.trim()}
+            className={`px-4 py-2 rounded-xl font-medium transition-all duration-200
+              ${tagInput.trim()
+                ? 'bg-[var(--color-secondary)]/10 hover:bg-[var(--color-secondary)]/20 text-[var(--color-secondary)] border border-[var(--color-secondary)]/30'
+                : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
+              }`}
+          >
+            Add
+          </button>
+        </div>
+
+        {/* Display Tags */}
+        <AnimatePresence>
           {tags.length > 0 && (
-            <div className="mt-3 flex flex-wrap">
-              {tags.map((tag, index) => (
-                <span key={index} className={tagClasses[theme]}>
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="flex flex-wrap gap-2"
+            >
+              {tags.map((tag) => (
+                <motion.span
+                  key={tag}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 bg-[var(--color-secondary)]/10 
+                             text-[var(--color-secondary)] rounded-full text-sm border border-[var(--color-secondary)]/20"
+                >
                   {tag}
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="ml-2 hover:text-red-500 transition"
+                    className="hover:text-red-400 transition-colors text-sm"
                   >
-                    &times;
+                    ×
                   </button>
-                </span>
+                </motion.span>
               ))}
-            </div>
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          className={buttonClasses[theme]}
-          disabled={!title.trim()}
-        >
-          Set Today&apos;s Task
-        </button>
+        {/* Keyboard Hint */}
+        <p className="text-center text-xs text-[var(--color-foreground)]/50">
+          Press <kbd className="px-1.5 py-0.5 bg-[var(--card-bg)] border border-[var(--border-color)] rounded text-xs">Enter</kbd> to submit or add tags
+        </p>
       </form>
-    </motion.div>
+    </div>
   );
 };
 
