@@ -248,7 +248,17 @@ export function useTasks() {
   );
 
   // --- Helper actions exposed by the hook --- //
-  const fetchTasks = useCallback((force?: boolean) => queryClient.invalidateQueries({ queryKey: ["tasks"] }), [queryClient]);
+  const fetchTasks = useCallback(
+    (force?: boolean) => {
+      // When force=true we want to actively refetch even inactive queries;
+      // otherwise just invalidate (allowing typical refetch behavior).
+      if (force) {
+        return queryClient.invalidateQueries({ queryKey: ["tasks"], refetchType: "all" });
+      }
+      return queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+    [queryClient]
+  );
   const fetchStreak = useCallback(() => queryClient.invalidateQueries({ queryKey: ["streak"] }), [queryClient]);
 
   const addTask = useCallback(

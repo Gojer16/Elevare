@@ -53,7 +53,7 @@ export function TaskSection({
       <div className="text-center space-y-6">
         <div className="space-y-3">
           <h2 className="text-2xl font-bold text-[var(--color-primary)]">
-          What's your ONE Thing today?
+          What&apos;s your ONE Thing today?
           </h2>
           <div className="max-w-md mx-auto">
             <p className="text-base italic opacity-90 leading-relaxed">
@@ -76,9 +76,9 @@ export function TaskSection({
     <section className="w-full max-w-2xl">
       {/* Task Section Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--card-bg)] border border-[var(--border-color)] mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--card-bg)] border border-[var(--border-color)] mb-4">
           <div className="w-2 h-2 rounded-full bg-[var(--color-secondary)] animate-pulse"></div>
-          <span className="text-sm font-medium opacity-80">Today's Focus</span>
+          <span className="text-sm font-medium opacity-80">Today&apos;s Focus</span>
         </div>
       </div>
 
