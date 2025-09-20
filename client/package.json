@@ -8,7 +8,17 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "node prisma/seed.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --run --coverage",
+    "test:unit": "vitest --run tests/unit",
+    "test:api": "vitest --run tests/api",
+    "test:integration": "vitest --run tests/integration",
+    "test:e2e": "playwright test",
+    "db:test:reset": "prisma migrate reset --force --skip-generate --skip-seed"
+
   },
   "dependencies": {
     "@auth/prisma-adapter": "2.10.0",
@@ -20,8 +30,8 @@
     "@radix-ui/react-label": "2.1.7",
     "@radix-ui/react-radio-group": "1.3.8",
     "@tailwindcss/forms": "0.5.10",
-    "@tanstack/react-query": "^5.87.4",
-    "@tanstack/react-query-devtools": "^5.87.4",
+    "@tanstack/react-query": "5.87.4",
+    "@tanstack/react-query-devtools": "5.87.4",
     "@vercel/analytics": "1.5.0",
     "bcrypt": "6.0.0",
     "blueimp-md5": "2.19.0",
@@ -46,16 +56,20 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "3",
+    "@playwright/test": "1.55.0",
     "@tailwindcss/postcss": "4",
     "@types/bcrypt": "6.0.0",
     "@types/blueimp-md5": "2.18.2",
-    "@types/node": "20",
+    "@types/node": "20.19.17",
     "@types/react": "19",
     "@types/react-dom": "19",
+    "@vitest/ui": "3.2.4",
     "eslint": "9",
     "eslint-config-next": "15.5.2",
+    "supertest": "7.1.4",
     "tailwindcss": "4",
     "tw-animate-css": "1.3.8",
-    "typescript": "5"
+    "typescript": "5",
+    "vitest": "3.2.4"
   }
 }
