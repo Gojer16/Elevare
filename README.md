@@ -1,6 +1,7 @@
 # Elevare: Your Success List, Elevated.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![codecov](https://codecov.io/gh/Gojer16/Elevare/branch/main/graph/badge.svg)](https://codecov.io/gh/Gojer16/Elevare)
+
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
@@ -35,7 +36,7 @@ Unlike endless to-do lists, Elevare helps you cut through the noise by identifyi
 - ✅ **Completion & Reflection** — Mark tasks as complete and reflect to build awareness and growth.
 - 📊 **Archive & Progress** — See your journey unfold through archived tasks and reflections.
 - 🔐 **Secure Authentication** — Built with NextAuth.js + Prisma for safe, private accounts.
-- 🏷️ **Tags** *(Roadmap)* — Organize tasks by life area (#Health, #Work, #Relationships).
+- 🏷️ **Tags** — Organize tasks by life area (#Health, #Work, #Relationships).
 - 🏆 **Gamification** *(Planned)* — Rewards and streaks to keep you consistent.
 
 ## Getting Started
