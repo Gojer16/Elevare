@@ -17,14 +17,14 @@ const model = new ChatGoogleGenerativeAI({
 
 let suggestionChain: RunnableSequence | null = null;
 
-export const getSuggestionChain = (): RunnableSequence<{ task: string }, string> => {
+export const getSuggestionChain = (): RunnableSequence<any, string> => {
   if (!suggestionChain) {
     suggestionChain = RunnableSequence.from([
       SUGGESTION_PROMPT_TEMPLATE,
       model,
     ]);
   }
-  return suggestionChain;
+  return suggestionChain as RunnableSequence<any, string>;
 };
 
 // streaming for real-time suggestions 
