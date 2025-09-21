@@ -15,6 +15,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@langchain/community": "^0.3.55",
+    "@langchain/google-genai": "^0.2.18",
     "axios": "^1.11.0",
     "dotenv": "^16.4.5",
     "express": "^5.1.0",
