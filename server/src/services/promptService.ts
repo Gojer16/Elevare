@@ -35,16 +35,22 @@ export const formatFeedbackHistory = (
     .join("\n")}`;
 };
 
-export const buildSuggestionPromptInput = (
-  taskName?: string,
-  taskPriority?: string | number,
-  userPrompt?: string,
-  feedbackHistory: AIFeedbackRequest[] = []
-): SuggestionPromptInput => {
+export function buildSuggestionPromptInput(taskName: string, priority: number, prompt: string, history: any[]) {
   return {
     taskName: taskName?.trim() || "Unnamed task",
-    taskPriority: String(taskPriority ?? "normal"),
-    userPrompt: userPrompt?.trim() || "No additional context",
-    feedbackHistory: formatFeedbackHistory(feedbackHistory),
+    taskPriority: String(priority ?? "normal"),
+    userPrompt: prompt?.trim() || "No additional context",
+    feedbackHistory: formatFeedbackHistory(history),
   };
-};
+}
+
+// Replace the previous alias with a 3-arg-friendly wrapper
+export function generateSuggestionPrompt(
+  task: string | { name?: string; priority?: number },
+  userPrompt: string,
+  history: any[] = []
+) {
+  const taskName = typeof task === "string" ? task : task?.name ?? "Task";
+  const priority = typeof task === "string" ? 1 : (typeof task.priority === "number" ? task.priority : 1);
+  return buildSuggestionPromptInput(taskName, priority, userPrompt, history);
+}

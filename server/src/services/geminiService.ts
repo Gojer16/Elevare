@@ -27,10 +27,21 @@ export const getSuggestionChain = (): RunnableSequence<any, string> => {
   return suggestionChain as RunnableSequence<any, string>;
 };
 
-// streaming for real-time suggestions 
 export const streamSuggestion = async (input: any) => {
   const stream = await model.stream(input);
   for await (const chunk of stream) {
     console.log(chunk.content);
   }
 };
+
+// Add a small convenience wrapper used by tests
+export async function generateGeminiContent(prompt: string | object): Promise<string> {
+  // keep types loose because chain response shapes vary
+  const chain = getSuggestionChain();
+  const result: any = await chain.invoke(prompt as any);
+  if (typeof result === "string") return result;
+  // try common shapes first
+  if (result?.content) return result.content?.[0]?.text ?? String(result);
+  if (result?.text) return result.text;
+  return String(result);
+}
