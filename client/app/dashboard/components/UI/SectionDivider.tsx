@@ -30,6 +30,6 @@ export function SectionDivider({ label, variant = 'default' }: SectionDividerPro
   }
 
   return (
-    <div className={`w-full max-w-2xl h-px border-t ${getVariantStyles()} my-8`} />
+    <div className={`w-full max-w-3xl h-px border-t ${getVariantStyles()} my-6`} />
   );
 }
