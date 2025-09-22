@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { ReflectionJournal } from "../components/Reflection/ReflectionJournal";
@@ -36,7 +36,7 @@ export default function ReflectionPage() {
   });
   const [selectedReflection, setSelectedReflection] = useState<Reflection | null>(null);
 
-  const loadReflections = async () => {
+  const loadReflections = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/reflection?limit=50');
@@ -45,7 +45,7 @@ export default function ReflectionPage() {
         const reflectionsData = data.reflections || [];
         
         // Process reflections with additional data
-        const processedReflections = reflectionsData.map((reflection: any) => ({
+        const processedReflections = reflectionsData.map((reflection: Reflection) => ({
           ...reflection,
           wordCount: reflection.content.trim().split(/\s+/).filter((word: string) => word.length > 0).length,
           tags: extractTags(reflection.content)
@@ -59,7 +59,7 @@ export default function ReflectionPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const extractTags = (content: string): string[] => {
     // Simple tag extraction based on keywords
@@ -90,7 +90,7 @@ export default function ReflectionPage() {
 
   useEffect(() => {
     loadReflections();
-  }, []);
+  }, [loadReflections]);
 
   const handleSaveReflection = async (content: string) => {
     setIsSaving(true);

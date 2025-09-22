@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { Crown, Check, Sparkles, Zap } from "lucide-react";
-import { PLAN_METADATA, FEATURES, getUpgradeFeatures } from "@/lib/features";
+import { PLAN_METADATA, FEATURES } from "@/lib/features";
 import { useFeatureAccess } from "@/app/hooks/useFeatureAccess";
 
 const FEATURE_DESCRIPTIONS = {

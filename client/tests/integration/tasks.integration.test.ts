@@ -47,18 +47,10 @@ async function createTask(userId: string, title: string, options: { isDone?: boo
   })
 }
 
-// Helper to create tags
-async function createTag(userId: string, name: string) {
-  return await testPrisma.tag.create({
-    data: {
-      name,
-      userId,
-    },
-  })
-}
+
 
 describe("Tasks API Integration Tests", () => {
-  let user: any
+  let user: { id: string; name: string | null; email: string | null }
 
   beforeEach(async () => {
     user = await createUser()
@@ -105,9 +97,9 @@ describe("Tasks API Integration Tests", () => {
     })
 
     it("should return tasks ordered by creation date (newest first)", async () => {
-      const task1 = await createTask(user.id, "First Task")
+      await createTask(user.id, "First Task")
       await new Promise(resolve => setTimeout(resolve, 10)) // Small delay
-      const task2 = await createTask(user.id, "Second Task")
+      await createTask(user.id, "Second Task")
 
       const response = await GET()
       const data = await response.json()
@@ -429,7 +421,7 @@ describe("Tasks API Integration Tests", () => {
   })
 
   describe("PUT /api/tasks/[id]", () => {
-    let task: any
+    let task: { id: string; title: string; userId: string }
 
     beforeEach(async () => {
       task = await createTask(user.id, "Test Task")
@@ -474,8 +466,8 @@ describe("Tasks API Integration Tests", () => {
 
       expect(response.status).toBe(200)
       expect(data.tags).toHaveLength(2)
-      expect(data.tags.map((t: any) => t.name)).toContain("updated")
-      expect(data.tags.map((t: any) => t.name)).toContain("tags")
+      expect(data.tags.map((t: { name: string }) => t.name)).toContain("updated")
+      expect(data.tags.map((t: { name: string }) => t.name)).toContain("tags")
     })
 
     it("should clear reflection when marking task as not done", async () => {
@@ -772,7 +764,7 @@ describe("Tasks API Integration Tests", () => {
 
       expect(response.status).toBe(200)
       expect(data.tags).toHaveLength(4)
-      expect(data.tags.map((t: any) => t.name)).toEqual(expect.arrayContaining(specialTags))
+      expect(data.tags.map((t: { name: string }) => t.name)).toEqual(expect.arrayContaining(specialTags))
     })
   })
 

@@ -133,7 +133,7 @@ export function EnhancedReflectionModal({
                                     {taskTitle && (
                                         <div className="mt-4 p-3 bg-[var(--color-secondary)]/10 rounded-xl border border-[var(--color-secondary)]/20">
                                             <p className="text-sm text-[var(--color-foreground)]/80">
-                                                Reflecting on: <span className="font-medium">"{taskTitle}"</span>
+                                                Reflecting on: <span className="font-medium">&quot;{taskTitle}&quot;</span>
                                             </p>
                                         </div>
                                     )}
@@ -190,7 +190,7 @@ export function EnhancedReflectionModal({
                                         Your Reflection
                                     </h2>
                                     <p className="text-[var(--color-foreground)]/70">
-                                        Take your time. There's no rush to perfect thoughts.
+                                        Take your time. There&apos;s no rush to perfect thoughts.
                                     </p>
                                 </div>
 

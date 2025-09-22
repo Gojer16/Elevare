@@ -78,11 +78,11 @@ export function EditConfirmationModal({
               {/* Message */}
               <div className="mb-6">
                 <p className="text-[var(--color-foreground)]/70 mb-4 leading-relaxed">
-                You're about to edit your current focus task:
+                You&apos;re about to edit your current focus task:
                 </p>
                 <div className="p-4 bg-[var(--color-secondary)]/5 border border-[var(--color-secondary)]/20 rounded-2xl">
                   <p className="font-semibold text-[var(--color-foreground)] text-lg">
-                  "{taskTitle}"
+                  &quot;{taskTitle}&quot;
                   </p>
                 </div>
                 <p className="text-sm text-[var(--color-foreground)]/60 mt-4">

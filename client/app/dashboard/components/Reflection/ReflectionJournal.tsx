@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Search, Filter, BookOpen, Sparkles, Heart, Brain, Target } from "lucide-react";
+import { Search, BookOpen, Sparkles, Heart, Brain, Target } from "lucide-react";
 
 interface Reflection {
   id: string;
@@ -58,16 +58,6 @@ export function ReflectionJournal({ reflections, onReflectionSelect }: Reflectio
       case 'okay': return '😐';
       case 'challenging': return '💪';
       default: return '💭';
-    }
-  };
-
-  const getMoodColor = (mood?: string) => {
-    switch (mood) {
-      case 'great': return 'text-yellow-500';
-      case 'good': return 'text-green-500';
-      case 'okay': return 'text-blue-500';
-      case 'challenging': return 'text-purple-500';
-      default: return 'text-gray-500';
     }
   };
 

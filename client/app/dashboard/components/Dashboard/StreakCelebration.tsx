@@ -83,7 +83,7 @@ export function StreakCelebration({ streak, isVisible, onClose }: StreakCelebrat
                                         🎉 New Personal Record!
                                     </div>
                                     <div className="text-sm text-[var(--color-foreground)]/70">
-                                        You've beaten your previous best of {streak.longest - 1} days
+                                        You&apos;ve beaten your previous best of {streak.longest - 1} days
                                     </div>
                                 </motion.div>
                             ) : (

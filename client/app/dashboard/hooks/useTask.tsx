@@ -64,7 +64,7 @@ export function useTasks() {
       } catch (e) {
         // If the fetch was aborted (react-query cancel / component unmount),
         // don't surface a user-visible error — it's expected behavior.
-        if ((e as any)?.name === "AbortError") {
+        if ((e as Error)?.name === "AbortError") {
           // Let react-query handle the abort; don't set global error state.
           throw e;
         }

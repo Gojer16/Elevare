@@ -63,7 +63,7 @@ export function EnhancedTaskDisplay({
                             <div className="flex items-center gap-3 mb-3">
                                 <div className="w-3 h-3 rounded-full bg-[var(--color-secondary)] animate-pulse" />
                                 <span className="text-sm font-medium text-[var(--color-secondary)] uppercase tracking-wide">
-                                Today's Focus
+                                Today&apos;s Focus
                                 </span>
                             </div>
 
@@ -171,7 +171,7 @@ export function EnhancedTaskDisplay({
                                 <span className="text-sm font-semibold text-[var(--color-primary)]">Reflection</span>
                             </div>
                             <p className="text-[var(--color-foreground)]/80 italic leading-relaxed">
-                            "{task.reflection}"
+                            &quot;{task.reflection}&quot;
                             </p>
                         </div>
                     )}

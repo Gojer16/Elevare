@@ -86,7 +86,8 @@ function replaceDatabaseInUrl(urlStr: string, newDb: string) {
     const u = new URL(urlStr)
     u.pathname = `/${newDb}`
     return u.toString()
-  } catch (err) {
+  } catch {
+    // Ignore parsing errors and use fallback
     return urlStr.replace(/(postgres(?:ql)?:\/\/[^/]+)\/[^?]+/, `$1/${newDb}`)
   }
 }
