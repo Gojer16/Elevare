@@ -1,5 +1,5 @@
 "use client";
-import ReflectionModal from "../Tasks/ReflectionModal";
+import { EnhancedReflectionModal } from "../Reflection/EnhancedReflectionModal";
 import EditTaskModal from "../Tasks/EditTaskModal";
 import { Task } from "../../hooks/useTask";
 
@@ -31,14 +31,14 @@ export function DashboardModals({
 }: DashboardModalsProps) {
   return (
     <>
-      <ReflectionModal
+      <EnhancedReflectionModal
         isOpen={isReflectionOpen}
         onClose={onCloseReflection}
         onSave={onSaveReflection}
         isSaving={isSavingReflection}
         title="How did today's focus go?"
         subtitle="What's one lesson you'll carry into tomorrow?"
-        successAnimation="stars"
+        taskTitle={task?.title}
       />
 
       <EditTaskModal
