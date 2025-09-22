@@ -4,7 +4,15 @@ import { authOptions } from '../../lib/auth';
 import { prisma } from '../../../app/lib/prisma';
 import { z } from 'zod';
 
-// Zod schema for POST validation
+/**
+ * Task creation payload validation
+ *
+ * Fields
+ * - title: required, non-empty string (trimmed)
+ * - description: optional string
+ * - isDone: optional boolean (defaults to false)
+ * - tagNames: optional array of tag names (strings); tags are upserted per user
+ */
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required').trim(),
   description: z.string().optional(),
@@ -12,6 +20,16 @@ const taskSchema = z.object({
   tagNames: z.array(z.string()).optional(),
 });
 
+/**
+ * GET /api/tasks
+ *
+ * Auth: required (NextAuth session)
+ * Behavior: Returns the authenticated user's tasks ordered by createdAt desc.
+ * Response: 200 JSON array of tasks: { id, title, description, isDone, createdAt, reflection, tags[{id,name}] }
+ * Errors:
+ *  - 401 when unauthenticated
+ *  - 500 on unexpected errors
+ */
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -43,6 +61,20 @@ export async function GET() {
   }
 }
 
+/**
+ * POST /api/tasks
+ *
+ * Auth: required (NextAuth session)
+ * Body: { title: string; description?: string; isDone?: boolean; tagNames?: string[] }
+ * Rules:
+ *  - Only one active (isDone=false) task per user at a time
+ *  - Tags are upserted per-user and connected atomically in a transaction
+ * Success: 200 task JSON
+ * Errors:
+ *  - 400 invalid body or when an active task already exists
+ *  - 401 unauthenticated
+ *  - 500 on unexpected errors/malformed JSON
+ */
 export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -64,8 +96,23 @@ export async function POST(request: Request) {
       },
     });
 
+    // Also prevent creating a new task if the user already completed a task today
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const todayCompleted = await prisma.task.findFirst({
+      where: {
+        userId: session.user.id,
+        isDone: true,
+        completedAt: { gte: startOfToday },
+      },
+    });
+
     if (existingActiveTask) {
       return NextResponse.json({ error: 'You can only have one active task at a time.' }, { status: 400 });
+    }
+
+    if (todayCompleted) {
+      return NextResponse.json({ error: 'You already completed your daily task today.' }, { status: 400 });
     }
 
     // Atomic operation: upsert tags + create task

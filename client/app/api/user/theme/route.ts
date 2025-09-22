@@ -8,6 +8,41 @@ import { z } from "zod";
 const ThemeSchema = z.enum(["modern", "minimal"]);
 const TimezoneSchema = z.string().min(1);
 
+/**
+ * @swagger
+ * /api/user/theme:
+ *   patch:
+ *     summary: Update user theme preference
+ *     description: Updates the theme preference for the authenticated user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               theme:
+ *                 type: string
+ *                 enum: [modern, minimal]
+ *                 description: The desired theme.
+ *     responses:
+ *       200:
+ *         description: Successfully updated theme preference.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 theme:
+ *                   type: string
+ *                   description: The updated theme preference.
+ *       400:
+ *         description: Invalid theme provided.
+ *       401:
+ *         description: Unauthorized. User is not authenticated.
+ *       500:
+ *         description: Internal server error.
+ */
 export async function PATCH(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -46,6 +81,43 @@ export async function PATCH(req: Request) {
   }
 }
 
+/**
+ * @swagger
+ * /api/user/theme:
+ *   put:
+ *     summary: Update user timezone
+ *     description: Updates the timezone for the authenticated user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               timezone:
+ *                 type: string
+ *                 description: The desired timezone.
+ *     responses:
+ *       200:
+ *         description: Successfully updated timezone.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   description: The user ID.
+ *                 timezone:
+ *                   type: string
+ *                   description: The updated timezone.
+ *       400:
+ *         description: Invalid timezone provided.
+ *       401:
+ *         description: Unauthorized. User is not authenticated.
+ *       500:
+ *         description: Internal server error.
+ */
 export async function PUT(req: Request) {
   try {
     const session = await getServerSession(authOptions);

@@ -6,6 +6,37 @@ import { checkAndUnlockAchievements } from '@/app/lib/achievements';
 import { prisma } from '@/app/lib/prisma';
 import { toZonedTime } from 'date-fns-tz';
 
+/**
+ * @swagger
+ * /api/achievements/check:
+ *   post:
+ *     summary: Checks and unlocks achievements for the user
+ *     description: Evaluates the user's progress, updates their streak, and unlocks any new achievements they have earned.
+ *     tags:
+ *       - Achievements
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully checked for achievements.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 streak:
+ *                   type: integer
+ *                   description: The user's current streak count.
+ *                 newlyUnlocked:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Achievement'
+ *                   description: A list of newly unlocked achievements.
+ *       401:
+ *         description: Unauthorized.
+ *       500:
+ *         description: Internal server error.
+ */
 export async function POST() {
   try {
     const session = await getServerSession(authOptions);
@@ -16,10 +47,10 @@ export async function POST() {
     
     const userId = session.user.id;
     
-    // Update streak
+    // Update user's daily streak
     const streak = await updateStreak(userId);
     
-    // Get user stats for achievement checking
+    // Gather statistics for achievement evaluation
     const [tasksCompleted, reflections, latestCompleted] = await Promise.all([
       prisma.task.count({
         where: { 
@@ -41,15 +72,15 @@ export async function POST() {
       })
     ]);
     
-    // Check and unlock achievements
-    // Convert latest completion to user's timezone (if set)
+    // Adjust timestamp for user's timezone if available
     const user = await prisma.user.findUnique({ where: { id: userId }, select: { timezone: true } });
     let latestForEval: Date | null = latestCompleted?.completedAt ?? null;
     if (latestForEval && user?.timezone) {
-      // Convert UTC timestamp to user's zone; hour extraction happens in lib using Date.getHours()
+      // Convert UTC timestamp to user's zone for accurate 'early bird'/'night owl' type achievements
       latestForEval = toZonedTime(latestForEval, user.timezone);
     }
 
+    // Check for and unlock any new achievements
     const newlyUnlocked = await checkAndUnlockAchievements(userId, {
       tasksCompleted,
       streak: streak.count,

@@ -4,26 +4,68 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Registers a new user
+ *     description: Validates input, checks for existing users, hashes the password, and creates a new user in the database.
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User created successfully. Returns the new user object (without password).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Bad request (e.g., missing fields, user already exists).
+ *       500:
+ *         description: Internal server error.
+ */
 export async function POST(request: Request) {
   try {
     const { name, email, password } = await request.json();
 
+    // Validate request body
     if (!name || !email || !password) {
-      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+      return NextResponse.json({ error: 'Name, email, and password are required' }, { status: 400 });
     }
 
-    const exist = await prisma.user.findUnique({
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
       where: {
         email: email,
       },
     });
 
-    if (exist) {
-      return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+    if (existingUser) {
+      return NextResponse.json({ error: 'User with this email already exists' }, { status: 400 });
     }
 
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create the new user
     const user = await prisma.user.create({
       data: {
         name,
@@ -32,9 +74,12 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(user);
+    // Do not return the password hash
+    const { hashedPassword: _, ...userWithoutPassword } = user;
+
+    return NextResponse.json(userWithoutPassword, { status: 201 });
   } catch (error) {
-    console.error(error);
+    console.error('Registration API error:', error);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

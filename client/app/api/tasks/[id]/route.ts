@@ -4,10 +4,24 @@ import { authOptions } from '../../../lib/auth';
 import { prisma } from '../../../lib/prisma';
 import { z } from 'zod';
 
+/**
+ * URL params validation
+ * - id: task id as non-empty string
+ */
 const paramsSchema = z.object({
   id: z.string().min(1),
 });
 
+/**
+ * Task update payload validation
+ *
+ * Optional fields (partial update):
+ * - title: non-empty string (trimmed)
+ * - description: string | null
+ * - isDone: boolean (server manages completedAt & reflection clearing)
+ * - reflection: string | null
+ * - tagNames: array of non-empty strings; will upsert & set associations
+ */
 const updateSchema = z.object({
   title: z.string().trim().min(1).optional(),
   description: z.string().nullable().optional(),
@@ -17,6 +31,24 @@ const updateSchema = z.object({
   tagNames: z.array(z.string().trim().min(1)).optional(),
 }).strict();
 
+/**
+ * PUT /api/tasks/[id]
+ *
+ * Auth: required (NextAuth session)
+ * Body: Partial task fields (see updateSchema)
+ * Behavior:
+ *  - Validates route param id and body
+ *  - Ensures the task exists and belongs to the current user
+ *  - If isDone=false: clears reflection and completedAt
+ *  - If isDone=true and not previously completed: sets completedAt
+ *  - Upserts tagNames for the user and sets relations (if provided)
+ * Success: 200 updated task JSON (includes tags[{id,name}])
+ * Errors:
+ *  - 400 invalid id/body
+ *  - 401 unauthenticated
+ *  - 404 task not found or not owned by user
+ *  - 500 on unexpected errors/malformed JSON
+ */
 export async function PUT(request: Request) {
   try {
     const session = await getServerSession(authOptions);
