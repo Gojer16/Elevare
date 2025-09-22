@@ -1,8 +1,5 @@
 # Elevare: Your Success List, Elevated.
 
-[![codecov](https://codecov.io/gh/Gojer16/Elevare/branch/main/graph/badge.svg)](https://codecov.io/gh/Gojer16/Elevare)
-
-
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma" />
