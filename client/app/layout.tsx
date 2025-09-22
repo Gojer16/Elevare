@@ -1,20 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {Roboto } from "next/font/google"
 import "./globals.css";
 import Providers from "./providers";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next"
 import '../app/dashboard/theme.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+})
 
 export const metadata: Metadata = {
   title: "Elevare: Focus on Your ONE Thing Daily",
@@ -34,7 +29,7 @@ export const metadata: Metadata = {
     title: "Elevare: Focus on Your ONE Thing Daily",
     description:
       "A simple daily focus app: pick one task, do it, and succeed. Inspired by The ONE Thing.",
-    url: "https://elevareapp.vercel.app/",
+    url: "https://elevareapp.vercel.app",
     siteName: "Elevare",
     type: "website",
   },
@@ -73,11 +68,39 @@ export default function RootLayout({
             }),
           }}
         />
+        <Script
+          id="gtm-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','GTM-NLQ7D3LQ');
+            `,
+          }}
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#4F46E5" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/pfp.jpg" />
+        <link rel="preconnect" href="https://va.vercel-scripts.com"
+        />
         <Analytics />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${roboto.className} antialiased`}
       >
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-NLQ7D3LQ"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
         <Providers>{children}</Providers>
       </body>
     </html>
