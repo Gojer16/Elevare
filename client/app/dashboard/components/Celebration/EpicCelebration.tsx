@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
-import { Sparkles, Trophy, Target, Zap, Heart, Star, Crown, Rocket } from "lucide-react";
+import { Sparkles, Trophy, Target, Zap, Crown, Rocket } from "lucide-react";
 
 interface Task {
     id: string;
@@ -178,7 +178,7 @@ export function EpicCelebration({ task, streak, onContinue, onAddReflection }: E
                                         <span className="font-semibold text-[var(--color-foreground)]">You Completed:</span>
                                     </div>
                                     <p className="text-lg font-bold text-[var(--color-foreground)]">
-                                        "{task.title}"
+                                        &quot;{task.title}&quot;
                                     </p>
                                     {task.tags && task.tags.length > 0 && (
                                         <div className="flex justify-center gap-2 mt-3">
@@ -271,7 +271,7 @@ export function EpicCelebration({ task, streak, onContinue, onAddReflection }: E
                                 className="py-8"
                             >
                                 <h3 className="text-2xl font-bold text-[var(--color-foreground)] mb-6">
-                                    What's Next?
+                                    What&apos;s Next?
                                 </h3>
 
                                 <div className="space-y-4">
@@ -298,12 +298,12 @@ export function EpicCelebration({ task, streak, onContinue, onAddReflection }: E
                                rounded-2xl transition-all duration-200 font-medium"
                                     >
                                         <Target className="w-5 h-5" />
-                                        Plan Tomorrow's Focus
+                                        Plan Tomorrow&apos;s Focus
                                     </motion.button>
                                 </div>
 
                                 <p className="text-sm text-[var(--color-foreground)]/60 mt-6 italic">
-                                    🌟 Remember: Consistency beats perfection. You're building something amazing!
+                                    🌟 Remember: Consistency beats perfection. You&apos;re building something amazing!
                                 </p>
                             </motion.div>
                         )}

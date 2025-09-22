@@ -13,7 +13,10 @@ export function CelebrationSounds({ isPlaying, volume = 0.3 }: CelebrationSounds
     // Create celebration sound sequence
     const playSound = (frequency: number, duration: number, delay: number = 0) => {
       setTimeout(() => {
-        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+  type AudioContextConstructor = new (options?: AudioContextOptions) => AudioContext;
+  type WindowWithWebkit = Window & { AudioContext?: AudioContextConstructor; webkitAudioContext?: AudioContextConstructor };
+  const AudioCtor: AudioContextConstructor | undefined = (window as WindowWithWebkit).AudioContext ?? (window as WindowWithWebkit).webkitAudioContext;
+  const audioContext = new (AudioCtor ?? (AudioContext as unknown as AudioContextConstructor))();
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 

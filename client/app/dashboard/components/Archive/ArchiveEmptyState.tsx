@@ -21,7 +21,7 @@ export function ArchiveEmptyState({ hasSearchQuery = false, searchQuery = "" }: 
             No matches found
           </h3>
           <p className="text-[var(--color-foreground)]/70 mb-6">
-            We couldn't find any tasks matching "{searchQuery}". 
+            We couldn&apos;t find any tasks matching &quot;{searchQuery}&quot;. 
             Try adjusting your search terms or filters.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -97,7 +97,7 @@ export function ArchiveEmptyState({ hasSearchQuery = false, searchQuery = "" }: 
         <div className="bg-gradient-to-r from-[var(--color-secondary)]/5 to-[var(--color-primary)]/5 
                         border border-[var(--color-secondary)]/20 rounded-2xl p-6 mb-8">
           <h4 className="font-semibold text-[var(--color-foreground)] mb-3">
-            What you'll see here:
+            What you&apos;ll see here:
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-[var(--color-foreground)]/80">
             <div className="flex items-center gap-2">

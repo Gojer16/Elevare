@@ -54,7 +54,7 @@ export function AnalyticsSection() {
         <div className="bg-gray-50 rounded-lg p-4">
           <h3 className="font-medium text-gray-900 mb-3">Weekly Progress</h3>
           <div className="space-y-2">
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => (
+            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
               <div key={day} className="flex items-center gap-3">
                 <span className="text-sm font-medium text-gray-600 w-8">{day}</span>
                 <div className="flex-1 bg-gray-200 rounded-full h-2">

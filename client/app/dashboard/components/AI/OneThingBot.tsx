@@ -106,7 +106,9 @@ export function OneThingBot({ onTaskSuggestion, isVisible, onToggle }: OneThingB
         }
     };
 
-    const generateBotResponse = async (userInput: string, context: Message[]) => {
+    const generateBotResponse = async (userInput: string, _context: Message[]) => {
+        // Mark `_context` as used to satisfy linter (real API will use the context)
+        void _context;
         // This would be replaced with actual AI API call
         const input = userInput.toLowerCase();
 
@@ -332,9 +334,9 @@ export function OneThingBot({ onTaskSuggestion, isVisible, onToggle }: OneThingB
                                     <Send className="w-4 h-4" />
                                 </button>
                             </div>
-                            <p className="text-xs text-[var(--color-foreground)]/50 mt-2 text-center">
-                            I'll help you discover your most important task
-                            </p>
+                                            <p className="text-xs text-[var(--color-foreground)]/50 mt-2 text-center">
+                                            I&apos;ll help you discover your most important task
+                                            </p>
                         </div>
                     </motion.div>
                 )}

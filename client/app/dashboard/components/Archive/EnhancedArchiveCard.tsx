@@ -178,7 +178,7 @@ export function EnhancedArchiveCard({ task, index }: EnhancedArchiveCardProps) {
                   <div className="relative">
                     <div className="absolute left-0 top-0 w-1 h-full bg-[var(--color-secondary)]/30 rounded-full" />
                     <blockquote className="pl-4 text-[var(--color-foreground)]/80 italic leading-relaxed whitespace-pre-wrap">
-                      "{task.reflection}"
+                      &quot;{task.reflection}&quot;
                     </blockquote>
                   </div>
                 </div>

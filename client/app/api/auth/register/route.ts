@@ -74,8 +74,10 @@ export async function POST(request: Request) {
       },
     });
 
-    // Do not return the password hash
-    const { hashedPassword: _, ...userWithoutPassword } = user;
+  // Do not return the password hash — keep a reference and mark it used so linters
+  // don't complain about unused destructured variables.
+  const { hashedPassword: _hashedPassword, ...userWithoutPassword } = user;
+  void _hashedPassword;
 
     return NextResponse.json(userWithoutPassword, { status: 201 });
   } catch (error) {
