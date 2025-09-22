@@ -68,7 +68,7 @@ const generateMockUsers = () => [
  *         description: Internal server error.
  */
 export const GET = withDeveloperAccess(
-  async (user: any, request: NextRequest) => {
+  async (user: { id: string; email?: string; isDeveloper?: boolean }, request: NextRequest) => {
     try {
       const { searchParams } = new URL(request.url);
       const page = parseInt(searchParams.get("page") || "1");
@@ -156,7 +156,7 @@ export const GET = withDeveloperAccess(
  *         description: Internal server error.
  */
 export const PUT = withDeveloperAccess(
-  async (user: any, request: NextRequest) => {
+  async (user: { id: string; email?: string; isDeveloper?: boolean }, request: NextRequest) => {
     try {
       const body = await request.json();
       const { userId, plan } = body;

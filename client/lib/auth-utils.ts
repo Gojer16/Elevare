@@ -37,7 +37,9 @@ export interface AuthenticatedUser {
  * @param req - Optional `NextRequest` (not required by `getServerSession`, included for parity with other helpers)
  * @returns The authenticated user or `null` if unauthenticated
  */
-export async function getAuthenticatedUser(req?: NextRequest): Promise<AuthenticatedUser | null> {
+// _req is accepted for API parity but intentionally unused
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function getAuthenticatedUser(_req?: NextRequest): Promise<AuthenticatedUser | null> {
   try {
     const session = await getServerSession(authOptions);
 
@@ -45,14 +47,20 @@ export async function getAuthenticatedUser(req?: NextRequest): Promise<Authentic
       return null;
     }
 
-    const user = session.user as any;
-    const plan = (user.plan as UserPlan) || "free";
-    const email = user.email || "";
+    const rawUser = session.user as unknown as {
+      id?: string;
+      email?: string;
+      name?: string;
+      plan?: UserPlan;
+    };
+
+    const plan = rawUser.plan ?? "free";
+    const email = rawUser.email ?? "";
 
     return {
-      id: user.id,
+      id: rawUser.id ?? "",
       email,
-      name: user.name,
+      name: rawUser.name,
       plan,
       isDeveloper: isDevUser(email),
     };
@@ -106,10 +114,15 @@ export async function requireFeatureAccess(
  * @returns A higher-order handler that enforces access control
  */
 export function withFeatureAccess(feature: Feature) {
-  return function <T extends any[]>(
+  return function <T extends unknown[]>(
     handler: (user: AuthenticatedUser, ...args: T) => Promise<Response>
   ) {
-    return async function (req: NextRequest, ...args: T): Promise<Response> {
+    // Return a loosely typed handler so the result is compatible with Next.js
+    // route handler signatures (which may include `request` and an optional
+    // `context` object). At runtime we treat the first argument as
+    // `NextRequest` and forward remaining args to the provided handler.
+    return async (...args: unknown[]): Promise<Response> => {
+      const req = args[0] as NextRequest | undefined;
       try {
         const { user, hasAccess } = await requireFeatureAccess(feature, req);
 
@@ -125,7 +138,8 @@ export function withFeatureAccess(feature: Feature) {
           );
         }
 
-        return handler(user, ...args);
+        // Forward user plus any remaining args (e.g. request, context)
+  return handler(user, ...(args.slice(1) as unknown as T));
       } catch (error) {
         if (error instanceof Error && error.message === "Authentication required") {
           return Response.json(
@@ -177,13 +191,15 @@ export async function requireDeveloperAccess(req?: NextRequest): Promise<Authent
  * @param handler - The secured route handler expecting `(user, ...args)`
  * @returns A handler that enforces developer-only access
  */
-export function withDeveloperAccess<T extends any[]>(
+export function withDeveloperAccess<T extends unknown[]>(
   handler: (user: AuthenticatedUser, ...args: T) => Promise<Response>
 ) {
-  return async function (req: NextRequest, ...args: T): Promise<Response> {
+  // Return a loosely typed handler compatible with Next.js route exports.
+  return async (...args: unknown[]): Promise<Response> => {
+    const req = args[0] as NextRequest | undefined;
     try {
       const user = await requireDeveloperAccess(req);
-      return handler(user, ...args);
+      return handler(user, ...(args.slice(1) as unknown as T));
     } catch (error) {
       if (error instanceof Error) {
         if (error.message === "Authentication required") {

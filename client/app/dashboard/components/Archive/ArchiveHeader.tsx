@@ -2,18 +2,19 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { ArchiveExport } from "./ArchiveExport";
+import type { Task } from '../../../../types/task';
 
 interface ArchiveHeaderProps {
     totalTasks: number;
     completedTasks: number;
     searchQuery: string;
     onSearchChange: (query: string) => void;
-    sortBy: string;
-    onSortChange: (sort: string) => void;
-    filterBy: string;
-    onFilterChange: (filter: string) => void;
+    sortBy: 'date' | 'title' | 'completion';
+    onSortChange: (sort: 'date' | 'title' | 'completion') => void;
+    filterBy: 'all' | 'completed' | 'reset';
+    onFilterChange: (filter: 'all' | 'completed' | 'reset') => void;
     filteredCount: number;
-    allTasks: any[]; // For export functionality
+    allTasks: Task[]; // For export functionality
 }
 
 export function ArchiveHeader({
@@ -47,7 +48,7 @@ export function ArchiveHeader({
 
                 <p className="text-lg text-[var(--color-foreground)]/70 mb-6 max-w-2xl mx-auto">
                     Every completed task is proof that focus works. This is your collection of wins,
-                    reflections, and the momentum you've built one day at a time.
+                    reflections, and the momentum you&apos;ve built one day at a time.
                 </p>
 
                 {/* Stats Cards */}
@@ -144,7 +145,7 @@ export function ArchiveHeader({
                                 </label>
                                 <select
                                     value={filterBy}
-                                    onChange={(e) => onFilterChange(e.target.value)}
+                                    onChange={(e) => onFilterChange(e.target.value as 'all' | 'completed' | 'reset')}
                                     className="w-full px-4 py-2 bg-[var(--card-bg)] border border-[var(--border-color)] 
                              rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]/50 
                              text-[var(--color-foreground)]"
@@ -162,7 +163,7 @@ export function ArchiveHeader({
                                 </label>
                                 <select
                                     value={sortBy}
-                                    onChange={(e) => onSortChange(e.target.value)}
+                                    onChange={(e) => onSortChange(e.target.value as 'date' | 'title' | 'completion')}
                                     className="w-full px-4 py-2 bg-[var(--card-bg)] border border-[var(--border-color)] 
                              rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]/50 
                              text-[var(--color-foreground)]"

@@ -97,7 +97,8 @@ export default function DashboardPage() {
   const handleCompleteTask = async () => {
     if (task) {
       setCompletedTask(task); // Store the completed task for celebration
-      await completeTask();
+      const result = await completeTask();
+      return result;
     }
   };
 

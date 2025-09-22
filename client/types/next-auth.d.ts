@@ -10,6 +10,8 @@ declare module "next-auth" {
       id: string
       /** Optional theme preference stored on the user (e.g., 'MODERN'|'MINIMAL') */
       themePreference?: string | null
+      /** Optional plan (free, premium, pro) */
+      plan?: string | null
     } & DefaultSession["user"]
     // Optional short-lived access token (populated server-side)
     accessToken?: string;

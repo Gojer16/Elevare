@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import type { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -72,8 +73,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    // Do not return the password hash
-    const { hashedPassword, ...userWithoutPassword } = user;
+  // Do not return the password hash - destructure and mark as used to satisfy lint
+  const { hashedPassword, ...userWithoutPassword } = user as User;
+  void hashedPassword; // mark deliberately unused
 
     return NextResponse.json(userWithoutPassword);
   } catch (error) {

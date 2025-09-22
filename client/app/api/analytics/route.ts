@@ -42,7 +42,7 @@ const generateAnalyticsData = (userId: string) => ({
  *         description: Internal server error.
  */
 export const GET = withFeatureAccess(FEATURES.ANALYTICS)(
-  async (user: any) => {
+  async (user: { id: string; plan?: string }) => {
     try {
       // Generate mock analytics data for the authenticated user
       const analyticsData = generateAnalyticsData(user.id);
@@ -95,7 +95,7 @@ export const GET = withFeatureAccess(FEATURES.ANALYTICS)(
  *         description: Internal server error.
  */
 export const POST = withFeatureAccess(FEATURES.ANALYTICS)(
-  async (user: any, request: NextRequest) => {
+  async (user: { id: string; plan?: string }, request: NextRequest) => {
     try {
       const body = await request.json();
       const { event, properties } = body;

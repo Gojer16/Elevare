@@ -124,10 +124,10 @@ async function ensureDatabaseExists(dbUrl: string) {
 
     await adminPrisma.$disconnect()
     return
-  } catch (err) {
+  } catch (_err) {
     console.warn(
       'Creating database via admin Prisma client failed (will attempt psql fallback):',
-      (err as Error).message ?? err
+      (_err as Error).message ?? _err
     )
   }
 
@@ -194,9 +194,9 @@ beforeAll(async () => {
 
 afterAll(async () => {
   try {
-    if (testPrisma) await testPrisma.$disconnect()
-    // Reset global prisma client
-    delete globalThis.prisma
+  if (testPrisma) await testPrisma.$disconnect()
+  // Reset global prisma client if present
+  Reflect.deleteProperty(globalThis, 'prisma')
     console.log('Test database disconnected')
   } catch (error) {
     console.error('Error during test database cleanup:', error)
