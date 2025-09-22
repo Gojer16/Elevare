@@ -10,7 +10,7 @@ interface ThemeContextProps {
   setTheme: (theme: Theme) => void;
 }
 
-const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
+export const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export const ThemeProvider = ({
   children,
