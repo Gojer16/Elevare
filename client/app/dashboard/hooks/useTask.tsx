@@ -62,6 +62,13 @@ export function useTasks() {
       try {
         return await fetchJson("/api/tasks", { signal });
       } catch (e) {
+        // If the fetch was aborted (react-query cancel / component unmount),
+        // don't surface a user-visible error — it's expected behavior.
+        if ((e as any)?.name === "AbortError") {
+          // Let react-query handle the abort; don't set global error state.
+          throw e;
+        }
+
         setError((e as Error).message);
         throw e;
       }
