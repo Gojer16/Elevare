@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FiAward, FiCheckCircle, FiMessageSquare, FiTrendingUp } from "react-icons/fi";
 import Image from "next/image";
 import md5 from "blueimp-md5";
+import { UnifiedLoadingSpinner } from "../../components/UnifiedLoadingSpinner";
 
 interface Stats {
   tasksCompleted: number;
@@ -65,7 +66,7 @@ export default function ProfilePage() {
   if (status === "loading" || loading) {
     return (
       <div className="flex justify-center items-center h-full">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        <UnifiedLoadingSpinner message="Loading profile..." size="lg" />
       </div>
     );
   }
@@ -238,7 +239,7 @@ function AchievementsSummary() {
       <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-foreground)' }}>Achievements</h2>
       {loading ? (
         <div className="flex items-center justify-center py-6">
-          <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"></div>
+          <UnifiedLoadingSpinner message="" size="sm" />
         </div>
       ) : (
         <>
