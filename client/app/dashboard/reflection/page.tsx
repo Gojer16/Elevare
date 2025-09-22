@@ -1,196 +1,224 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useTheme } from "@/contexts/ThemeContext";
-import ReflectionPrompts from "@/app/dashboard/components/Reflection/ReflectionPrompts";
-import ReflectionHistory from "@/app/dashboard/components/Reflection/ReflectionHistory";
-import ChatMessages from "@/app/dashboard/components/Reflection/ChatMessages";
-import InputArea from "@/app/dashboard/components/Reflection/InputArea";
-
-interface Message {
-  id: string;
-  content: string;
-  role: "user" | "ai";
-  timestamp: Date;
-}
+import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
+import { ReflectionJournal } from "../components/Reflection/ReflectionJournal";
+import { EnhancedReflectionModal } from "../components/Reflection/EnhancedReflectionModal";
+import { DashboardBackground } from "../components/UI/DashboardBackground";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 interface Reflection {
   id: string;
   content: string;
   createdAt: string;
+  mood?: 'great' | 'good' | 'okay' | 'challenging';
+  tags?: string[];
+  wordCount?: number;
+}
+
+interface ReflectionStats {
+  total: number;
+  thisWeek: number;
+  averageLength: number;
+  longestStreak: number;
 }
 
 export default function ReflectionPage() {
-  const { theme } = useTheme();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showHistory, setShowHistory] = useState(false);
-  const [reflectionHistory, setReflectionHistory] = useState<Reflection[]>([]);
-  const [showPrompts, setShowPrompts] = useState(false);
-  
-  // Theme-based layout adjustments
-  const isMinimal = theme === 'minimal';
-  const containerClass = isMinimal 
-    ? "w-full max-w-4xl mx-auto px-4 py-6" 
-    : "w-full max-w-2xl mx-auto px-4 py-12";
-  const chatHeight = isMinimal ? "h-[400px]" : "h-[500px]";
+  const [reflections, setReflections] = useState<Reflection[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [stats, setStats] = useState<ReflectionStats>({
+    total: 0,
+    thisWeek: 0,
+    averageLength: 0,
+    longestStreak: 0
+  });
+  const [selectedReflection, setSelectedReflection] = useState<Reflection | null>(null);
 
-  const loadReflectionHistory = async () => {
+  const loadReflections = async () => {
+    setIsLoading(true);
     try {
-      const response = await fetch('/api/reflection?limit=10');
+      const response = await fetch('/api/reflection?limit=50');
       if (response.ok) {
         const data = await response.json();
-        setReflectionHistory(data.reflections || []);
+        const reflectionsData = data.reflections || [];
+        
+        // Process reflections with additional data
+        const processedReflections = reflectionsData.map((reflection: any) => ({
+          ...reflection,
+          wordCount: reflection.content.trim().split(/\s+/).filter((word: string) => word.length > 0).length,
+          tags: extractTags(reflection.content)
+        }));
+        
+        setReflections(processedReflections);
+        calculateStats(processedReflections);
       }
     } catch (error) {
-      console.error('Error loading reflection history:', error);
+      console.error('Error loading reflections:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Load reflection history on component mount
+  const extractTags = (content: string): string[] => {
+    // Simple tag extraction based on keywords
+    const keywords = ['grateful', 'learned', 'challenge', 'growth', 'insight', 'goal', 'success', 'difficult'];
+    return keywords.filter(keyword => 
+      content.toLowerCase().includes(keyword)
+    ).slice(0, 3);
+  };
+
+  const calculateStats = (reflectionsData: Reflection[]) => {
+    const now = new Date();
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    
+    const thisWeekReflections = reflectionsData.filter(r => 
+      new Date(r.createdAt) >= weekAgo
+    );
+    
+    const totalWords = reflectionsData.reduce((sum, r) => sum + (r.wordCount || 0), 0);
+    const averageLength = reflectionsData.length > 0 ? Math.round(totalWords / reflectionsData.length) : 0;
+    
+    setStats({
+      total: reflectionsData.length,
+      thisWeek: thisWeekReflections.length,
+      averageLength,
+      longestStreak: 0 // TODO: Calculate actual streak
+    });
+  };
+
   useEffect(() => {
-    loadReflectionHistory();
+    loadReflections();
   }, []);
 
-  // Handle sending a message
-  const handleSend = async () => {
-    if (!inputValue.trim() || isLoading) return;
-
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: inputValue,
-      role: "user",
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setInputValue("");
-    setIsLoading(true);
-    setError(null);
-
+  const handleSaveReflection = async (content: string) => {
+    setIsSaving(true);
     try {
-      // Call real AI service
       const response = await fetch('/api/reflection', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          message: inputValue,
-          conversationId: null // Could be used to link to specific tasks
+          message: content,
+          conversationId: null
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get AI response');
+        throw new Error('Failed to save reflection');
       }
 
-      const data = await response.json();
-      
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: data.aiResponse,
-        role: "ai",
-        timestamp: new Date(),
-      };
-
-      setMessages((prev) => [...prev, aiMessage]);
+      // Reload reflections to show the new one
+      await loadReflections();
+      setIsModalOpen(false);
     } catch (error) {
-      console.error('Error sending message:', error);
-      setError('Failed to send message. Please try again.');
-      
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: "Sorry, I couldn't process that right now. Please try again.",
-        role: "ai",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      console.error('Error saving reflection:', error);
+      throw error;
     } finally {
-      setIsLoading(false);
+      setIsSaving(false);
     }
   };
 
-  // Handle Enter key press
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
-  // Handle prompt selection
-  const handlePromptSelect = (prompt: string) => {
-    setInputValue(prompt);
-  };
-
-  // Handle input change
-  const handleInputChange = (value: string) => {
-    setInputValue(value);
-  };
+  if (isLoading) {
+    return (
+      <div className="relative min-h-screen flex items-center justify-center">
+        <DashboardBackground variant="archive" />
+        <LoadingSpinner message="Loading your reflections..." />
+      </div>
+    );
+  }
 
   return (
-    <main className={`flex min-h-screen flex-col items-center bg-[var(--color-background)] text-[var(--color-foreground)] transition-colors duration-300`}>
-      <div className={containerClass}>
-        <div className={`text-center ${isMinimal ? 'mb-6' : 'mb-8'}`}>
-          <h1 className={`${isMinimal ? 'text-2xl' : 'text-3xl sm:text-4xl'} font-bold mb-3`}>
-            {isMinimal ? 'Reflection' : 'Daily Reflection'}
-          </h1>
-          <p className={`${isMinimal ? 'text-sm' : 'text-base'} opacity-80`}>
-            {isMinimal 
-              ? 'Process your thoughts with AI guidance.' 
-              : 'Chat with your AI coach to process today\'s progress and plan ahead.'
-            }
-          </p>
-        </div>
-
-        {/* Error Display */}
-        {error && (
-          <div className={`${isMinimal ? 'mb-4' : 'mb-6'} p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800`}>
-            <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+    <div className="relative min-h-screen">
+      <DashboardBackground variant="archive" />
+      
+      <div className="relative z-10 container mx-auto px-6 py-12">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <h1 className="text-4xl font-bold text-[var(--color-foreground)]">
+            Reflection Space
+            </h1>
           </div>
-        )}
-
-        {/* Action Buttons */}
-        <div className={`${isMinimal ? 'mb-4' : 'mb-6'} flex flex-wrap gap-2 justify-center`}>
-          <ReflectionPrompts
-            showPrompts={showPrompts}
-            onToggle={() => setShowPrompts(!showPrompts)}
-            onPromptSelect={handlePromptSelect}
-          />
           
-          <ReflectionHistory
-            showHistory={showHistory}
-            onToggle={() => setShowHistory(!showHistory)}
-            reflections={reflectionHistory}
-          />
-        </div>
+          <p className="text-lg text-[var(--color-foreground)]/70 mb-8 max-w-2xl mx-auto">
+          Your personal space for growth, insights, and self-discovery. 
+          Reflect on your journey and capture the wisdom you gain along the way.
+          </p>
 
-        {/* Chat Container */}
-        <div className={`
-          mb-6 rounded-lg
-          ${isMinimal 
-            ? 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700' 
-            : 'card'
-          }
-        `}>
-          <ChatMessages
-            messages={messages}
-            isLoading={isLoading}
-            chatHeight={chatHeight}
-          />
-          
-          <InputArea
-            inputValue={inputValue}
-            onInputChange={handleInputChange}
-            onSend={handleSend}
-            onKeyDown={handleKeyDown}
-            isLoading={isLoading}
-          />
-        </div>
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 
+                         border border-blue-200 dark:border-blue-800 rounded-2xl p-4 text-center"
+            >
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.total}</div>
+              <div className="text-sm text-[var(--color-foreground)]/70">Total Reflections</div>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 
+                         border border-green-200 dark:border-green-800 rounded-2xl p-4 text-center"
+            >
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.thisWeek}</div>
+              <div className="text-sm text-[var(--color-foreground)]/70">This Week</div>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 
+                         border border-purple-200 dark:border-purple-800 rounded-2xl p-4 text-center"
+            >
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.averageLength}</div>
+              <div className="text-sm text-[var(--color-foreground)]/70">Avg Words</div>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 
+                         border border-orange-200 dark:border-orange-800 rounded-2xl p-4 text-center"
+            >
+              <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{stats.longestStreak}</div>
+              <div className="text-sm text-[var(--color-foreground)]/70">Best Streak</div>
+            </motion.div>
+          </div>
+
+          {/* Action Button */}
+          <motion.button
+            onClick={() => setIsModalOpen(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-primary)] 
+                       hover:shadow-lg hover:shadow-[var(--color-secondary)]/25 text-white rounded-2xl 
+                       transition-all duration-200 font-semibold text-lg"
+          >
+            <Plus className="w-6 h-6" />
+            New Reflection
+          </motion.button>
+        </motion.div>
+
+        {/* Reflection Journal */}
+        <ReflectionJournal 
+          reflections={reflections}
+          onReflectionSelect={setSelectedReflection}
+        />
+
+        {/* Enhanced Reflection Modal */}
+        <EnhancedReflectionModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSaveReflection}
+          isSaving={isSaving}
+        />
       </div>
-    </main>
+    </div>
   );
 }
