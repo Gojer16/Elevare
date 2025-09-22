@@ -187,7 +187,11 @@ export const authOptions: NextAuthOptions = {
         return t;
       }
 
-      // Access token expired -> attempt to refresh
+      // Access token expired -> attempt to refresh only if we have provider & refresh token
+      if (!t.provider || !t.refreshToken) {
+        // No way to refresh (e.g., credentials sign-in). Keep token and let APIs handle 401s.
+        return t;
+      }
       return await refreshAccessToken(t);
     },
     /**
