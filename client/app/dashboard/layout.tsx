@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Navbar from './components/Dashboard/Navbar';
 import Sidebar from './components/Dashboard/Sidebar';
 import { ThemeProvider, useTheme } from '../../contexts/ThemeContext';
-import Loading from '../loading';
+import { FullscreenSpinner } from '../components/UnifiedLoadingSpinner';
 
 function DashboardInner({
   children,
@@ -68,7 +68,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   if (status === 'loading' || !mounted) {
-    return <Loading />;
+    return <FullscreenSpinner message="Preparing your dashboard..." size="lg" />;
   }
 
   // Derive theme preference safely.
