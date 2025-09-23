@@ -2,6 +2,7 @@
 import { Suspense, useState, useEffect, useMemo } from "react";
 import { useTasks, Task } from "../dashboard/hooks/useTask";
 import { useQuote } from "./hooks/useQuote";
+import { useDailyPrompt } from "./hooks/useDailyPrompt"; 
 import { AchievementToastContainer } from "@/components/AchievementToast";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { DashboardHeader } from "./components/Dashboard/DashboardHeader";
@@ -47,6 +48,7 @@ export default function DashboardPage() {
   }, [error, archive]);
 
   const { quote } = useQuote();
+  const { prompt } = useDailyPrompt(); 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isSavingEdit, setIsSavingEdit] = useState(false);
   const [showStreakCelebration, setShowStreakCelebration] = useState(false);
@@ -175,6 +177,7 @@ export default function DashboardPage() {
             onShowBot={!task && !hasCompletedDailyTask ? showBot : undefined}
             onContinueAfterCelebration={handleContinueAfterCelebration}
             hasCompletedDailyTask={hasCompletedDailyTask}
+            dailyPrompt={prompt ?? undefined} 
           />
         </div>
 
