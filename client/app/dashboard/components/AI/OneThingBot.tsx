@@ -18,7 +18,14 @@ interface OneThingBotProps {
 }
 
 export function OneThingBot({ onTaskSuggestion, isVisible, onToggle }: OneThingBotProps) {
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<Message[]>([
+        {
+            id: 'initial-welcome',
+            content: "Hello! I'm your ONE Thing assistant. What's on your mind? Let's find your most important task for today.",
+            role: 'bot',
+            timestamp: new Date(),
+        }
+    ]);
     const [inputValue, setInputValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
