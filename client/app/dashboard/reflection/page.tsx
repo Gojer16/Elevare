@@ -11,7 +11,6 @@ interface Reflection {
   id: string;
   content: string;
   createdAt: string;
-  mood?: 'great' | 'good' | 'okay' | 'challenging';
   tags?: string[];
   wordCount?: number;
 }
