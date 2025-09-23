@@ -4,7 +4,6 @@ import TaskInput from "./TaskInput";
 import { EnhancedTaskDisplay } from "./EnhancedTaskDisplay";
 import { EditConfirmationModal } from "./EditConfirmationModal";
 import { Task } from "../../hooks/useTask";
-import { dailyPrompts } from "../../../data/dailyPrompts";
 import { LoadingCard } from "../Dashboard/LoadingCard";
 import { EpicCelebration } from "../Celebration/EpicCelebration";
 import { CelebrationSounds } from "../Celebration/CelebrationSounds";
@@ -24,6 +23,7 @@ interface TaskSectionProps {
   onShowBot?: () => void;
   onContinueAfterCelebration?: () => void;
   hasCompletedDailyTask?: boolean;
+  dailyPrompt?: string;
 }
 
 export function TaskSection({
@@ -40,6 +40,7 @@ export function TaskSection({
   onShowBot,
   onContinueAfterCelebration,
   hasCompletedDailyTask,
+  dailyPrompt,
 }: TaskSectionProps) {
   const [showEditConfirmation, setShowEditConfirmation] = useState(false);
 
@@ -124,7 +125,7 @@ export function TaskSection({
           </h2>
           <div className="max-w-md mx-auto">
             <p className="text-base italic opacity-90 leading-relaxed">
-            {dailyPrompts[Math.floor(Math.random() * dailyPrompts.length)]}
+            {dailyPrompt}
             </p>
             <p className="text-sm font-medium mt-2 text-[var(--color-secondary)]">
             Type it below, clarity begins with commitment.
