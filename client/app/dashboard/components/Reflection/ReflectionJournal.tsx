@@ -19,7 +19,6 @@ interface ReflectionJournalProps {
 
 export function ReflectionJournal({ reflections, onReflectionSelect }: ReflectionJournalProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedMood, setSelectedMood] = useState<string>("all");
   const [sortBy, setSortBy] = useState<'date' | 'length'>('date');
   const [filteredReflections, setFilteredReflections] = useState<Reflection[]>([]);
 
@@ -34,13 +33,8 @@ export function ReflectionJournal({ reflections, onReflectionSelect }: Reflectio
       );
     }
 
-    // Apply mood filter
-    if (selectedMood !== 'all') {
-      filtered = filtered.filter(reflection => reflection.mood === selectedMood);
-    }
-
     // Apply sorting
-    filtered.sort((a, b) => {
+    const sorted = [...filtered].sort((a, b) => {
       if (sortBy === 'date') {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       } else {
@@ -48,18 +42,8 @@ export function ReflectionJournal({ reflections, onReflectionSelect }: Reflectio
       }
     });
 
-    setFilteredReflections(filtered);
-  }, [reflections, searchQuery, selectedMood, sortBy]);
-
-  const getMoodIcon = (mood?: string) => {
-    switch (mood) {
-      case 'great': return '🌟';
-      case 'good': return '😊';
-      case 'okay': return '😐';
-      case 'challenging': return '💪';
-      default: return '💭';
-    }
-  };
+    setFilteredReflections(sorted);
+  }, [reflections, searchQuery, sortBy]);
 
   if (reflections.length === 0) {
     return (
@@ -129,20 +113,6 @@ export function ReflectionJournal({ reflections, onReflectionSelect }: Reflectio
           {/* Filters */}
           <div className="flex flex-wrap gap-3">
             <select
-              value={selectedMood}
-              onChange={(e) => setSelectedMood(e.target.value)}
-              className="px-4 py-2 bg-[var(--card-bg)] border border-[var(--border-color)] 
-                         rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]/50 
-                         text-[var(--color-foreground)]"
-            >
-              <option value="all">All Moods</option>
-              <option value="great">🌟 Great</option>
-              <option value="good">😊 Good</option>
-              <option value="okay">😐 Okay</option>
-              <option value="challenging">💪 Challenging</option>
-            </select>
-
-            <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'date' | 'length')}
               className="px-4 py-2 bg-[var(--card-bg)] border border-[var(--border-color)] 
@@ -179,7 +149,6 @@ export function ReflectionJournal({ reflections, onReflectionSelect }: Reflectio
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">{getMoodIcon(reflection.mood)}</span>
                   <div>
                     <div className="text-sm text-[var(--color-foreground)]/60">
                       {new Date(reflection.createdAt).toLocaleDateString("en-US", {
