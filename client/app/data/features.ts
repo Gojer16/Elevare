@@ -15,6 +15,7 @@ export interface Feature {
   after: string;
   icon: React.ElementType;
   image?: string;
+  tier: "Free" | "Pro";
 }
 
 export const features: Feature[] = [
@@ -26,6 +27,7 @@ export const features: Feature[] = [
     before: "Juggling endless to-dos, never knowing what matters most.",
     after: "One daily priority you can actually celebrate.",
     icon: Target,
+    tier: "Free",
   },
   {
     title: "Simple Daily Planning",
@@ -35,6 +37,7 @@ export const features: Feature[] = [
     before: "Spending more time planning than doing.",
     after: "A simple ritual that sets a clear direction every morning.",
     icon: CalendarCheck,
+    tier: "Free",
   },
   {
     title: "Track Progress with Purpose",
@@ -44,6 +47,7 @@ export const features: Feature[] = [
     before: "Feeling stuck despite working hard every day.",
     after: "A visible streak of meaningful progress you can be proud of.",
     icon: LineChart,
+    tier: "Free",
   },
   {
     title: "Build Lasting Habits",
@@ -53,6 +57,7 @@ export const features: Feature[] = [
     before: "Starting strong, but burning out fast.",
     after: "Daily focus turns into a lasting success habit.",
     icon: Sparkles,
+    tier: "Free",
   },
   {
     title: "Reflect & Learn Fast",
@@ -62,6 +67,7 @@ export const features: Feature[] = [
     before: "Repeating mistakes without noticing patterns.",
     after: "Quick reflections that turn experience into insight.",
     icon: Clock,
+    tier: "Free",
   },
   {
     title: "Celebrate Small Wins",
@@ -71,5 +77,38 @@ export const features: Feature[] = [
     before: "Always chasing the next task, never satisfied.",
     after: "Daily wins that fuel motivation and joy.",
     icon: CheckCircle2,
+    tier: "Free",
+  },
+
+  // Example Premium Features
+  {
+    title: "Unlimited AI Guidance",
+    description:
+      "Go beyond daily limits with AI-powered task prioritization and insights whenever you need them.",
+    promise: "AI that scales with your ambition.",
+    before: "Hitting a cap when you need clarity most.",
+    after: "Unlimited guidance to keep you moving forward.",
+    icon: Target,
+    tier: "Pro",
+  },
+  {
+    title: "Advanced Analytics",
+    description:
+      "Discover trends, streaks, and focus patterns to improve your productivity over time.",
+    promise: "Clarity backed by data.",
+    before: "Working blindly without feedback.",
+    after: "Insightful analytics that reveal your growth patterns.",
+    icon: LineChart,
+    tier: "Pro",
+  },
+  {
+    title: "Reminders & Integrations",
+    description:
+      "Sync with your calendar and favorite tools, and get timely nudges to stay on track.",
+    promise: "Stay aligned, wherever you work.",
+    before: "Forgetting important focus sessions.",
+    after: "Timely reminders and smooth integrations that keep you consistent.",
+    icon: CalendarCheck,
+    tier: "Pro",
   },
 ];

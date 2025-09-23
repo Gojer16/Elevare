@@ -24,7 +24,8 @@ export default function FeaturesPage() {
           className="max-w-4xl mx-auto px-4"
         >
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 text-gray-900">
-            <strong className="text-primary">Extraordinary results</strong> don’t come from doing more, they come from doing <strong className="text-primary">the right thing.</strong>
+            <strong className="text-primary">Extraordinary results</strong> don’t come from doing more, they come from doing{" "}
+            <strong className="text-primary">the right thing.</strong>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-10">
             Elevare isn’t just another productivity app or task manager. It’s a{" "}
@@ -58,11 +59,16 @@ export default function FeaturesPage() {
                       }`}
                     />
                     <h2
-                      className={`text-xl md:text-2xl font-bold transition-colors duration-300 ${
+                      className={`text-xl md:text-2xl font-bold transition-colors duration-300 flex items-center gap-2 ${
                         activeIndex === index ? "text-gray-900" : "text-gray-600"
                       }`}
                     >
                       {feature.title}
+                      {feature.tier === "Pro" && (
+                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-semibold">
+                          Pro
+                        </span>
+                      )}
                     </h2>
                   </div>
                   {activeIndex === index && (
@@ -75,7 +81,7 @@ export default function FeaturesPage() {
             </div>
 
             {/* Right Column: Feature Details */}
-            <div className="relative h-[500px] bg-white/50 rounded-2xl shadow-lg overflow-hidden">
+            <div className="relative h-[520px] bg-white/50 rounded-2xl shadow-lg overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeIndex}
@@ -85,35 +91,56 @@ export default function FeaturesPage() {
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                   className="absolute inset-0 p-8 md:p-12 flex flex-col justify-center"
                 >
+                  {/* Title + Badge */}
                   <div className="flex items-center space-x-4 mb-4">
                     {(() => {
                       const Icon = features[activeIndex].icon;
                       return <Icon className="w-10 h-10 text-primary" />;
                     })()}
-                    <h2 className="text-3xl font-bold text-primary">
+                    <h2 className="text-3xl font-bold text-primary flex items-center gap-2">
                       {features[activeIndex].title}
+                      {features[activeIndex].tier === "Pro" && (
+                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-semibold">
+                          Pro
+                        </span>
+                      )}
                     </h2>
                   </div>
-                  <p className="text-gray-700 text-lg leading-relaxed">
+
+                  {/* Description */}
+                  <p className="text-gray-700 text-lg leading-relaxed mb-4">
                     {features[activeIndex].description}
                   </p>
-                </motion.div>
-              </AnimatePresence>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeIndex + "-image"}
-                  initial={{ opacity: 0, scale: 1.1 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.1 }}
-                  transition={{ duration: 0.6, ease: "easeInOut" }}
-                  className="absolute inset-0"
-                >
-                  {/* <Image
-                    src={features[activeIndex].image}
-                    alt={features[activeIndex].title}
-                    fill
-                    className="object-cover opacity-20"
-                  /> */}
+
+                  {/* Promise */}
+                  {features[activeIndex].promise && (
+                    <p className="text-sm font-medium text-gray-800 mb-3">
+                      {features[activeIndex].promise}
+                    </p>
+                  )}
+
+                  {/* Before/After */}
+                  <div className="text-xs text-gray-500 space-y-1">
+                    {features[activeIndex].before && (
+                      <p>
+                        <span className="font-semibold">Before:</span>{" "}
+                        {features[activeIndex].before}
+                      </p>
+                    )}
+                    {features[activeIndex].after && (
+                      <p>
+                        <span className="font-semibold">After:</span>{" "}
+                        {features[activeIndex].after}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Optional micro-copy for Pro */}
+                  {features[activeIndex].tier === "Pro" && (
+                    <p className="text-xs text-gray-400 mt-3 text-center">
+                      Upgrade to Pro to unlock this feature
+                    </p>
+                  )}
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -172,7 +199,7 @@ export default function FeaturesPage() {
               name: "Orlando Ascanio",
             },
             keywords: "productivity, focus, task management, one thing, gary keller, elevare",
-          genre: "Productivity",
+            genre: "Productivity",
           }),
         }}
       />
