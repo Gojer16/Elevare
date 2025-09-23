@@ -27,10 +27,10 @@ export const faqs = [
   {
     question: "Is Elevare free to use?",
     answer: `
-      Yep! Elevare is free. 
-      Later we’ll add premium features (like reminders, integrations, and insights, etc.), 
-      but the core focus will always be accessible. 
-    `,
+    Yep! Elevare is free, the core focus (choosing and completing your most important task, reflection, and archiving achievements) will always be accessible. 
+    Later, we’ll add premium features like unlimited AI requests, advanced analytics, reminders, integrations, and enhanced achievements for those who want extra power and insights. 
+    This way, you can focus on your ONE THING no matter what.
+`
   },
   {
     question: "Will there be a mobile app?",

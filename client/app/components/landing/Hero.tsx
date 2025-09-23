@@ -98,6 +98,14 @@ const structuredData = {
           Keller’s <em>The ONE Thing</em>, Elevare helps you cut through the noise,
           focus on your <strong>most important task</strong>, and build momentum that
           compounds into extraordinary results.
+
+          <motion.p 
+          variants={lineVariant} 
+          className="mt-4 text-sm text-gray-500"
+          >
+          Elevare’s core focus, choosing and completing your most important task is free forever. 
+          Upgrade to Pro anytime for unlimited AI guidance, advanced analytics, reminders, and enhanced achievements.
+          </motion.p>
         </motion.h2>
 
         {/* CTAs */}

@@ -71,12 +71,28 @@ const Features = () => {
                 <div className="flex justify-center mb-4">
                   <Icon className="w-10 h-10 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-primary">
+                
+                {/* Feature title with optional Pro badge */}
+                <h3 className="text-xl font-bold mb-1 text-primary flex items-center justify-center gap-2">
                   {feature.title}
+                  {feature.tier === "Pro" && (
+                    <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-semibold">
+                      Pro
+                    </span>
+                  )}
                 </h3>
+
+                {/* Feature description */}
                 <p className="text-gray-600 leading-relaxed">
                   {feature.description}
                 </p>
+
+                {/* Optional micro-copy for Pro value */}
+                {feature.tier === "Pro" && (
+                  <p className="text-xs text-gray-400 mt-1 text-center">
+                    Upgrade to Pro to unlock this feature
+                  </p>
+                )}
               </motion.div>
             );
           })}
