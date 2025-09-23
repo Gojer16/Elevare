@@ -23,7 +23,7 @@ export default function UpgradePage() {
   const { userPlan, isDeveloper } = useFeatureAccess();
   
   const handleUpgrade = (plan: string) => {
-    // TODO: Implement Stripe integration
+    // TODO: Implement Paypal integration
     console.log(`Upgrading to ${plan}`);
     alert(`Upgrade to ${plan} - Integration with Stripe coming soon!`);
   };
