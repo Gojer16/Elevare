@@ -76,7 +76,7 @@ const Features = () => {
                 <h3 className="text-xl font-bold mb-1 text-primary flex items-center justify-center gap-2">
                   {feature.title}
                   {feature.tier === "Pro" && (
-                    <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-semibold">
+                    <span className="text-xs bg-BrandSecondary text-white px-2 py-0.5 rounded-full font-semibold">
                       Pro
                     </span>
                   )}
@@ -90,7 +90,7 @@ const Features = () => {
                 {/* Optional micro-copy for Pro value */}
                 {feature.tier === "Pro" && (
                   <p className="text-xs text-gray-400 mt-1 text-center">
-                    Upgrade to Pro to unlock this feature
+                  Upgrade to Pro to unlock this feature.
                   </p>
                 )}
               </motion.div>

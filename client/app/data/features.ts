@@ -5,6 +5,9 @@ import {
   Sparkles,
   Clock,
   CheckCircle2,
+  Infinity,
+  ChartPie, 
+  BellRing, 
 } from "lucide-react";
 
 export interface Feature {
@@ -79,8 +82,6 @@ export const features: Feature[] = [
     icon: CheckCircle2,
     tier: "Free",
   },
-
-  // Example Premium Features
   {
     title: "Unlimited AI Guidance",
     description:
@@ -88,7 +89,7 @@ export const features: Feature[] = [
     promise: "AI that scales with your ambition.",
     before: "Hitting a cap when you need clarity most.",
     after: "Unlimited guidance to keep you moving forward.",
-    icon: Target,
+    icon: Infinity,
     tier: "Pro",
   },
   {
@@ -98,7 +99,7 @@ export const features: Feature[] = [
     promise: "Clarity backed by data.",
     before: "Working blindly without feedback.",
     after: "Insightful analytics that reveal your growth patterns.",
-    icon: LineChart,
+    icon: ChartPie,
     tier: "Pro",
   },
   {
@@ -108,7 +109,7 @@ export const features: Feature[] = [
     promise: "Stay aligned, wherever you work.",
     before: "Forgetting important focus sessions.",
     after: "Timely reminders and smooth integrations that keep you consistent.",
-    icon: CalendarCheck,
+    icon: BellRing,
     tier: "Pro",
   },
 ];

@@ -1,4 +1,4 @@
-import { BookOpen, CheckCircle, Target } from "lucide-react";
+import { BookOpen, CheckCircle, Target, ChartPie, BellRing, Infinity } from "lucide-react";
 
 export const features = [
   {
@@ -26,21 +26,21 @@ export const features = [
     title: "Unlimited AI Guidance",
     description:
       "Get enhanced AI support to prioritize and plan your most important tasks without daily limits.",
-    icon: Target,
+    icon: Infinity,
     tier: "Pro",
   },
   {
     title: "Advanced Analytics",
     description:
       "Discover patterns, trends, and insights from your daily progress to improve focus and productivity.",
-    icon: BookOpen,
+    icon: ChartPie,
     tier: "Pro",
   },
   {
     title: "Reminders & Integrations",
     description:
       "Connect Elevare with your calendar and apps, and get timely reminders to stay on track.",
-    icon: CheckCircle, 
+    icon: BellRing, 
     tier: "Pro",
   },
 ];

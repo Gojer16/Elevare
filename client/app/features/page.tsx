@@ -25,7 +25,7 @@ export default function FeaturesPage() {
         >
           <h1 className="text-5xl md:text-7xl font-extrabold mb-6 text-gray-900">
             <strong className="text-primary">Extraordinary results</strong> don’t come from doing more, they come from doing{" "}
-            <strong className="text-primary">the right thing.</strong>
+            <strong className="text-primary">the right thing</strong>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-10">
             Elevare isn’t just another productivity app or task manager. It’s a{" "}
@@ -65,7 +65,7 @@ export default function FeaturesPage() {
                     >
                       {feature.title}
                       {feature.tier === "Pro" && (
-                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-semibold">
+                        <span className="text-xs bg-BrandSecondary text-white px-2 py-0.5 rounded-full font-semibold">
                           Pro
                         </span>
                       )}
@@ -73,7 +73,7 @@ export default function FeaturesPage() {
                   </div>
                   {activeIndex === index && (
                     <p className="text-xs text-primary/80 mt-2">
-                      See how this helps you win today →
+                    See how this helps you win today →
                     </p>
                   )}
                 </motion.div>
@@ -100,7 +100,7 @@ export default function FeaturesPage() {
                     <h2 className="text-3xl font-bold text-primary flex items-center gap-2">
                       {features[activeIndex].title}
                       {features[activeIndex].tier === "Pro" && (
-                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-semibold">
+                        <span className="text-xs bg-BrandSecondary text-white px-2 py-0.5 rounded-full font-semibold">
                           Pro
                         </span>
                       )}
@@ -138,7 +138,7 @@ export default function FeaturesPage() {
                   {/* Optional micro-copy for Pro */}
                   {features[activeIndex].tier === "Pro" && (
                     <p className="text-xs text-gray-400 mt-3 text-center">
-                      Upgrade to Pro to unlock this feature
+                    Upgrade to Pro to unlock this feature.
                     </p>
                   )}
                 </motion.div>

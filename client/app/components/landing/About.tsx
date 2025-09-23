@@ -97,17 +97,17 @@ const About = () => {
             <div className="p-6 bg-white rounded-xl shadow-sm">
               <h4 className="font-bold text-gray-800 mb-2">Before Elevare</h4>
               <ul className="space-y-2 text-gray-600 list-disc list-inside">
-                <li>Scattered priorities</li>
-                <li>Constant overwhelm</li>
-                <li>Busy but unproductive</li>
+                <li>Scattered priorities.</li>
+                <li>Constant overwhelm.</li>
+                <li>Busy but unproductive.</li>
               </ul>
             </div>
             <div className="p-6 bg-primary/5 rounded-xl shadow-sm">
               <h4 className="font-bold text-primary mb-2">After Elevare</h4>
               <ul className="space-y-2 text-gray-700 list-disc list-inside">
-                <li>Clarity and focus</li>
-                <li>Confidence in progress</li>
-                <li>Momentum that compounds</li>
+                <li>Clarity and focus.</li>
+                <li>Confidence in progress.</li>
+                <li>Momentum that compounds.</li>
               </ul>
             </div>
           </motion.div>
