@@ -17,25 +17,6 @@ interface OneThingBotProps {
     onToggle: () => void;
 }
 
-const quickPrompts = [
-    "What should I focus on today?",
-    "I'm feeling overwhelmed, help me prioritize",
-    "What's the most important thing I can do right now?",
-    "I have many tasks, which ONE should I choose?",
-    "Help me find my focus for today"
-];
-
-const botPersonality = {
-    greeting: "Hi! I'm here to help you discover your ONE thing today. What's on your mind? 🎯",
-    followUpQuestions: [
-        "What are your main goals this week?",
-        "What's been weighing on your mind lately?",
-        "What would make today feel successful?",
-        "What's the biggest challenge you're facing?",
-        "What opportunity excites you most right now?"
-    ]
-};
-
 export function OneThingBot({ onTaskSuggestion, isVisible, onToggle }: OneThingBotProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState("");
@@ -43,20 +24,6 @@ export function OneThingBot({ onTaskSuggestion, isVisible, onToggle }: OneThingB
     const [isMinimized, setIsMinimized] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        if (isVisible && messages.length === 0) {
-            // Add greeting message when first opened
-            const greetingMessage: Message = {
-                id: "greeting",
-                content: botPersonality.greeting,
-                role: "bot",
-                timestamp: new Date(),
-                suggestions: quickPrompts.slice(0, 3)
-            };
-            setMessages([greetingMessage]);
-        }
-    }, [isVisible, messages.length]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -78,21 +45,40 @@ export function OneThingBot({ onTaskSuggestion, isVisible, onToggle }: OneThingB
         setIsLoading(true);
 
         try {
-            // Simulate AI response (replace with actual API call)
-            const response = await generateBotResponse(text, messages);
+            const response = await fetch("https://elevare-ai-assistant.vercel.app/api/ai/suggest", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ prompt: text, currentTasks: [] })
+            });
 
-            setTimeout(() => {
-                const botMessage: Message = {
-                    id: (Date.now() + 1).toString(),
-                    content: response.content,
-                    role: "bot",
-                    timestamp: new Date(),
-                    suggestions: response.suggestions
-                };
-                setMessages(prev => [...prev, botMessage]);
-                setIsLoading(false);
-            }, 1000 + Math.random() * 1000); // Simulate thinking time
+            if (!response.ok) {
+                throw new Error("API request failed");
+            }
 
+            const data = await response.json();
+
+            let messageContent = "";
+            let messageSuggestions: string[] | undefined = [];
+
+            if (data.mode === 'exploration' && data.exploration) {
+                messageContent = data.exploration.content;
+                messageSuggestions = data.exploration.suggestions;
+            } else if (data.mode === 'task-suggestion' && data.suggestion) {
+                messageContent = `Here's a task suggestion for you: "${data.suggestion.name}". ${data.suggestion.rationale}`;
+            } else {
+                throw new Error("Invalid API response structure");
+            }
+
+            const botMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                content: messageContent,
+                role: "bot",
+                timestamp: new Date(),
+                suggestions: messageSuggestions
+            };
+            setMessages(prev => [...prev, botMessage]);
         } catch (error) {
             console.error('Error getting bot response:', error);
             const errorMessage: Message = {
@@ -102,72 +88,15 @@ export function OneThingBot({ onTaskSuggestion, isVisible, onToggle }: OneThingB
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, errorMessage]);
+        } finally {
             setIsLoading(false);
         }
     };
 
-    const generateBotResponse = async (userInput: string, _context: Message[]) => {
-        // Mark `_context` as used to satisfy linter (real API will use the context)
-        void _context;
-        // This would be replaced with actual AI API call
-        const input = userInput.toLowerCase();
 
-        if (input.includes("overwhelmed") || input.includes("too much") || input.includes("many tasks")) {
-            return {
-                content: "I understand feeling overwhelmed! Let's break this down. The key is finding the ONE thing that, if completed, would make everything else easier or unnecessary. What's the biggest challenge or opportunity you're facing right now?",
-                suggestions: [
-                    "Focus on what moves the needle most",
-                    "Choose the task that unlocks other tasks",
-                    "Pick something that reduces future stress"
-                ]
-            };
-        }
-
-        if (input.includes("focus") || input.includes("important") || input.includes("priority")) {
-            return {
-                content: "Great question! Your ONE thing should be something that: 1) Aligns with your bigger goals, 2) Has the highest impact, and 3) Can realistically be completed today. What area of your life or work needs the most attention right now?",
-                suggestions: [
-                    "Work on my biggest goal",
-                    "Handle something I've been avoiding",
-                    "Do something that energizes me"
-                ]
-            };
-        }
-
-        if (input.includes("goal") || input.includes("success") || input.includes("achieve")) {
-            return {
-                content: "Perfect! When we align our daily actions with our bigger goals, magic happens. Think about your most important goal right now. What's ONE specific action you could take today that moves you closer to it?",
-                suggestions: [
-                    "Take the next step on my main project",
-                    "Remove a blocker that's slowing me down",
-                    "Connect with someone who can help"
-                ]
-            };
-        }
-
-        // Default response
-        return {
-            content: "Here's how I think about finding your ONE thing: Ask yourself 'What's the ONE thing I can do today such that by doing it, everything else becomes easier or unnecessary?' What comes to mind?",
-            suggestions: [
-                "Something I've been putting off",
-                "The most important project step",
-                "Something that will reduce future stress"
-            ]
-        };
-    };
 
     const handleSuggestionClick = (suggestion: string) => {
-        if (suggestion.startsWith("Focus on") || suggestion.startsWith("Choose") || suggestion.startsWith("Pick") ||
-            suggestion.startsWith("Work on") || suggestion.startsWith("Handle") || suggestion.startsWith("Do") ||
-            suggestion.startsWith("Take") || suggestion.startsWith("Remove") || suggestion.startsWith("Connect") ||
-            suggestion.startsWith("Something")) {
-            // This is a task suggestion
-            onTaskSuggestion(suggestion);
-            onToggle(); // Close the bot
-        } else {
-            // This is a conversation prompt
-            handleSend(suggestion);
-        }
+        handleSend(suggestion);
     };
 
     if (!isVisible) {
