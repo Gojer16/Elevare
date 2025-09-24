@@ -57,6 +57,9 @@ export default function DashboardPage() {
   const [showBotIntro, setShowBotIntro] = useState(false);
   const [hasSeenIntro, setHasSeenIntro] = useState(false);
 
+  // Track which task the reflection is for (important when reflecting after task completion)
+  const [reflectionTaskId, setReflectionTaskId] = useState<string | null>(null);
+
   // Show bot intro for new users when they don't have a task and haven't completed daily task
   useEffect(() => {
     if (!hasSeenBot && !task && !isLoading && !showCongratulations && !hasSeenIntro && !hasCompletedDailyTask) {
@@ -99,6 +102,7 @@ export default function DashboardPage() {
   const handleCompleteTask = async () => {
     if (task) {
       setCompletedTask(task); // Store the completed task for celebration
+      setReflectionTaskId(task.id); // Store task ID for reflection saving
       const result = await completeTask();
       return result;
     }
@@ -106,6 +110,23 @@ export default function DashboardPage() {
 
   const handleContinueAfterCelebration = () => {
     setCompletedTask(null); // Clear completed task to return to normal state
+  };
+
+  // Enhanced handler to open reflection modal with a specific task ID
+  const handleOpenReflection = (taskId?: string) => {
+    setReflectionTaskId(taskId || null); // Store task ID for later use in saving
+    setReflectionModalOpen(true);
+  };
+
+  // Enhanced handler to save reflection using the correct task ID
+  const handleSaveReflection = async (content: string) => {
+    if (reflectionTaskId) {
+      // Save to the specific task that was completed
+      await saveReflection(content, reflectionTaskId);
+    } else {
+      // Fallback to current active task if no specific ID was set
+      await saveReflection(content);
+    }
   };
 
   return (
@@ -172,7 +193,7 @@ export default function DashboardPage() {
             streak={streak || undefined}
             onAddTask={addTask}
             onCompleteTask={handleCompleteTask}
-            onOpenReflection={() => setReflectionModalOpen(true)}
+            onOpenReflection={handleOpenReflection}
             onEditTask={() => setIsEditModalOpen(true)}
             onShowBot={!task && !hasCompletedDailyTask ? showBot : undefined}
             onContinueAfterCelebration={handleContinueAfterCelebration}
@@ -185,8 +206,11 @@ export default function DashboardPage() {
         {/* Modals */}
         <DashboardModals
           isReflectionOpen={isReflectionModalOpen}
-          onCloseReflection={() => setReflectionModalOpen(false)}
-          onSaveReflection={saveReflection}
+          onCloseReflection={() => {
+            setReflectionModalOpen(false);
+            setReflectionTaskId(null); // Reset task ID when closing
+          }}
+          onSaveReflection={handleSaveReflection}
           isSavingReflection={isSavingReflection}
           isEditOpen={isEditModalOpen}
           onCloseEdit={() => setIsEditModalOpen(false)}
