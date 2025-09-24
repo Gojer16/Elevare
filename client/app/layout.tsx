@@ -5,6 +5,8 @@ import Providers from "./providers";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next"
 import '../app/dashboard/theme.css';
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -89,6 +91,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://va.vercel-scripts.com"
         />
         <Analytics />
+        <SpeedInsights />
       </head>
       <body
         className={`${roboto.className} antialiased`}
