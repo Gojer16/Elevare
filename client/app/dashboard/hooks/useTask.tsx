@@ -189,6 +189,8 @@ export function useTasks() {
         return { previous };
       },
       onError: (err: Error, _id: string, context) => {
+        // mark `_id` as intentionally unused to satisfy lint rules
+        void _id;
         setError(err.message || "Failed to complete task");
         // rollback
         if (context?.previous) {
@@ -196,6 +198,8 @@ export function useTasks() {
         }
       },
       onSuccess: async (_, taskId) => {
+        // mark `taskId` as intentionally unused in this handler
+        void taskId;
         // refresh streak and tasks; achievements check will run after reflection save
         try {
           await fetchJson("/api/streak", {

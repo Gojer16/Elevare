@@ -285,6 +285,15 @@ export default function ReflectionPage() {
           onSave={handleSaveReflection}
           isSaving={isSaving}
         />
+
+        {/* Selected reflection preview (keeps selectedReflection state used) */}
+        {selectedReflection && (
+          <div className="fixed bottom-6 left-6 z-50 max-w-sm bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl p-4 shadow-lg">
+            <div className="text-sm text-[var(--color-foreground)]/60 mb-2">Selected Reflection</div>
+            <div className="text-sm text-[var(--color-foreground)]">{selectedReflection.content}</div>
+            <button onClick={() => setSelectedReflection(null)} className="mt-3 text-xs text-[var(--color-secondary)] underline">Close</button>
+          </div>
+        )}
       </div>
     </div>
   );
