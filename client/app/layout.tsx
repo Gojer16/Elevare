@@ -62,7 +62,7 @@ export default function RootLayout({
               name: "Elevare",
               description:
                 "A simple productivity tool to help you focus on what matters most.",
-              url: "https://elevareapp.vercel.app/",
+              url: "https://elevareapp.vercel.app",
               applicationCategory: "ProductivityApplication",
               operatingSystem: "Web",
               author: { "@type": "Organization", name: "Elevare" },
@@ -86,8 +86,8 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="robots" content="index, follow" />
         <meta name="theme-color" content="#4F46E5" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/pfp.jpg" />
+        <link rel="icon" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="preconnect" href="https://va.vercel-scripts.com"
         />
         <Analytics />
