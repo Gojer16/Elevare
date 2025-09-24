@@ -18,7 +18,7 @@ interface TaskSectionProps {
   streak?: { count: number; longest: number };
   onAddTask: (newTask: { title: string; description: string; tagNames?: string[] }) => Promise<Task>;
   onCompleteTask: () => Promise<Task | undefined>;
-  onOpenReflection: () => void;
+  onOpenReflection: (taskId?: string) => void;
   onEditTask: () => void;
   onShowBot?: () => void;
   onContinueAfterCelebration?: () => void;

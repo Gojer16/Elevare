@@ -53,7 +53,7 @@ export default function ReflectionPage() {
         const reflectionData = await reflectionResponse.json();
         const reflectionsData = reflectionData.reflections || [];
 
-        const dedicatedReflections = reflectionsData.map((reflection: any) => ({
+        const dedicatedReflections = reflectionsData.map((reflection: { id: string; content: string; createdAt: string; taskId?: string; task?: { title: string } }) => ({
           id: reflection.id,
           content: reflection.content,
           createdAt: reflection.createdAt,
@@ -69,7 +69,7 @@ export default function ReflectionPage() {
       // Process task-based reflections
       if (tasksResponse.ok) {
         const taskData = await tasksResponse.json();
-        const taskReflections = taskData.filter((task: any) => task.reflection).map((task: any) => ({
+        const taskReflections = taskData.filter((task: { reflection?: string }) => task.reflection).map((task: { id: string; reflection: string; completedAt?: string; createdAt: string; title: string }) => ({
           id: `task-${task.id}`, // Create a unique ID for task reflections
           content: task.reflection,
           createdAt: task.completedAt || task.createdAt,
