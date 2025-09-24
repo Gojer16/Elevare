@@ -6,6 +6,7 @@ import AchievementsGrid from './AchievementsGrid';
 import NextBestAchievement from './NextBestAchievement';
 import { getNextBestAchievement, NextBestAchievementData } from '@/app/lib/nextBestAchievement';
 import { useTheme } from '@/contexts/ThemeContext';
+import ComingSoon from '../UI/ComingSoon';
 
 interface Achievement {
   id: string;
@@ -44,6 +45,9 @@ export default function AchievementsPage() {
   const { data: session, status } = useSession();
   const { theme } = useTheme();
   const [achievements, setAchievements] = useState<Achievement[]>([]);
+
+  // Check if user is a developer
+  const isDeveloper = session?.user?.email === 'operation927@gmail.com' || session?.user?.email === 'gojer@naver.com';
   const [userAchievements, setUserAchievements] = useState<UserAchievement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -204,6 +208,24 @@ export default function AchievementsPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Achievements</h1>
         <p className="text-gray-600 dark:text-gray-300">Please sign in to view your achievements.</p>
       </div>
+    );
+  }
+
+  // Show coming soon for non-developer users
+  if (!isDeveloper) {
+    return (
+      <ComingSoon
+        title="Achievements"
+        description="Track your progress and unlock badges as you complete tasks and build habits. Your achievement system is being crafted with care!"
+        features={[
+          "Progress tracking badges",
+          "Streak achievements", 
+          "Task completion milestones",
+          "Reflection-based rewards",
+          "Personalized achievement goals",
+          "Social sharing capabilities"
+        ]}
+      />
     );
   }
 
