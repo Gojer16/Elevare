@@ -5,8 +5,6 @@ import Providers from "./providers";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next"
 import '../app/dashboard/theme.css';
-import { PostHogProvider } from "posthog-js/react";
-import posthog from "@/lib/posthog";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -103,9 +101,7 @@ export default function RootLayout({
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
-        <PostHogProvider client={posthog}>
             <Providers>{children}</Providers>
-        </PostHogProvider>
       </body>
     </html>
   );

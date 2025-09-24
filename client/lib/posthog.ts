@@ -1,3 +1,4 @@
+"use client";
 import posthog from "posthog-js";
 
 if (typeof window !== "undefined") {
