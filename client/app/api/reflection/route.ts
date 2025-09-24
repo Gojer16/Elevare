@@ -163,6 +163,7 @@ export async function GET(request: NextRequest) {
                 content: true,
                 aiFeedback: true,
                 createdAt: true,
+                taskId: true,
                 task: {
                     select: {
                         id: true,

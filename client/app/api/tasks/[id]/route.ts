@@ -1,3 +1,13 @@
+/**
+ * API Route for Updating Tasks in Elevare
+ * 
+ * This file defines the PUT endpoint for updating existing tasks.
+ * It includes proper authentication, input validation, and database operations.
+ * 
+ * Endpoint:
+ * - PUT /api/tasks/[id]: Update an existing task for the authenticated user
+ */
+
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../../lib/auth';
@@ -5,7 +15,9 @@ import { prisma } from '../../../lib/prisma';
 import { z } from 'zod';
 
 /**
- * URL params validation
+ * URL parameters validation schema
+ * 
+ * Validates the task ID parameter from the route
  * - id: task id as non-empty string
  */
 const paramsSchema = z.object({
@@ -13,8 +25,11 @@ const paramsSchema = z.object({
 });
 
 /**
- * Task update payload validation
- *
+ * Task update payload validation schema
+ * 
+ * Defines the expected structure and validation rules for updating tasks.
+ * All fields are optional to allow for partial updates.
+ * 
  * Optional fields (partial update):
  * - title: non-empty string (trimmed)
  * - description: string | null
@@ -32,31 +47,42 @@ const updateSchema = z.object({
 }).strict();
 
 /**
- * PUT /api/tasks/[id]
- *
- * Auth: required (NextAuth session)
- * Body: Partial task fields (see updateSchema)
+ * PUT /api/tasks/[id] - Update an existing task
+ * 
+ * This endpoint updates a specific task after validating the user's authorization
+ * and input data. It enforces business logic for task completion and reflection handling.
+ * 
+ * Authentication: Required via NextAuth session
+ * 
+ * Path Parameters: { id: string } - The ID of the task to update
+ * Request Body: Partial task fields (see updateSchema)
+ * 
  * Behavior:
- *  - Validates route param id and body
- *  - Ensures the task exists and belongs to the current user
- *  - If isDone=false: clears reflection and completedAt
- *  - If isDone=true and not previously completed: sets completedAt
- *  - Upserts tagNames for the user and sets relations (if provided)
- * Success: 200 updated task JSON (includes tags[{id,name}])
- * Errors:
- *  - 400 invalid id/body
- *  - 401 unauthenticated
- *  - 404 task not found or not owned by user
- *  - 500 on unexpected errors/malformed JSON
+ * - Validates route param id and request body
+ * - Ensures the task exists and belongs to the current user
+ * - If isDone=false: clears reflection and completedAt
+ * - If isDone=true and not previously completed: sets completedAt
+ * - Upserts tagNames for the user and sets relations (if provided)
+ * 
+ * Response:
+ * - 200: Updated task object (includes tags[{id,name}])
+ * - 400: Invalid ID or request body
+ * - 401: Unauthorized if no valid session exists
+ * - 404: Task not found or not owned by user
+ * - 500: Internal server error
+ * 
+ * @param request - HTTP request containing the update data
+ * @returns NextResponse with updated task or error message
  */
 export async function PUT(request: Request) {
   try {
+    // Verify user session
     const session = await getServerSession(authOptions);
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Extract dynamic route `id` from the request URL path (last path segment)
+    // Extract task ID from URL path
     const url = new URL(request.url);
     const segments = url.pathname.split('/').filter(Boolean);
     const id = segments.pop() ?? '';
@@ -65,6 +91,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Invalid task id' }, { status: 400 });
     }
 
+    // Validate request body
     const body = await request.json();
     const parsed = updateSchema.safeParse(body);
     if (!parsed.success) {
@@ -73,9 +100,9 @@ export async function PUT(request: Request) {
     }
     const data = parsed.data;
 
-    // Transaction: check ownership, upsert tags (if provided), update task
+    // Execute the update in a database transaction to ensure data consistency
     const updatedTask = await prisma.$transaction(async (tx) => {
-      // ensure task exists and belongs to the current user
+      // Verify that the task exists and belongs to the current user
       const existing = await tx.task.findUnique({ where: { id } });
       if (!existing || existing.userId !== session.user.id) {
         // Throwing causes the transaction to rollback
@@ -84,7 +111,7 @@ export async function PUT(request: Request) {
         throw e;
       }
 
-      // Build update payload carefully (don't let client set completedAt)
+      // Build update payload, carefully handling special fields
       const updateData: {
         title?: string;
         description?: string | null;
@@ -94,35 +121,37 @@ export async function PUT(request: Request) {
         tags?: { set: { id: string }[] };
       } = {};
 
+      // Copy allowed fields from request data
       if (data.title !== undefined) updateData.title = data.title;
       if (Object.prototype.hasOwnProperty.call(data, 'description'))
         updateData.description = data.description;
       if (Object.prototype.hasOwnProperty.call(data, 'reflection'))
         updateData.reflection = data.reflection;
 
-      // isDone logic: server-manage completedAt and reflection clearing
+      // Handle task completion logic on the server side
+      // This ensures proper handling of completedAt and reflection fields
       if (typeof data.isDone === 'boolean') {
         if (data.isDone === false) {
           updateData.isDone = false;
           updateData.reflection = null;
           updateData.completedAt = null;
         } else {
-          // mark done
+          // Marking task as done
           updateData.isDone = true;
-          // if it wasn't completed before, set completedAt now
+          // If it wasn't completed before, set completedAt to now
           if (!existing.completedAt) updateData.completedAt = new Date();
         }
       }
 
-      // Tag handling (atomic upsert + set)
+      // Handle tag associations with upserting logic
       if (Object.prototype.hasOwnProperty.call(data, 'tagNames')) {
         const tagNames = data.tagNames ?? [];
         if (!Array.isArray(tagNames) || tagNames.length === 0) {
-          // explicit empty array -> clear tags
+          // Explicitly empty array means clear all tags
           updateData.tags = { set: [] };
         } else {
-          // upsert tags and set relation
-          // Find or create tags for this specific user
+          // Upsert tags and create associations for this user
+          // Find or create tags specific to this user
           const tags = await Promise.all(
             tagNames.map((name: string) =>
               tx.tag.upsert({
@@ -144,7 +173,8 @@ export async function PUT(request: Request) {
         }
       }
 
-      // Perform the update (by id, safe because we already confirmed ownership)
+      // Perform the actual update operation
+      // Since we've already verified ownership, this is safe to execute by ID
       const updated = await tx.task.update({
         where: { id },
         data: updateData,
@@ -158,10 +188,10 @@ export async function PUT(request: Request) {
       return updated;
     });
 
-    // Success
+    // Return the successfully updated task
     return NextResponse.json(updatedTask);
   } catch (err: unknown) {
-    // Handle ownership / not found explicitly
+    // Handle explicit ownership / not found errors
     if (err && typeof err === 'object' && 'code' in err && err.code === 'NOT_FOUND_OR_FORBIDDEN') {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
