@@ -5,6 +5,11 @@ import type { Task } from "../../../types/task";
 
 export type { Task };
 
+/**
+ * Achievement interface
+ * 
+ * Represents an achievement that users can unlock in the Elevare application
+ */
 interface Achievement {
   id: string;
   code: string;
@@ -13,6 +18,11 @@ interface Achievement {
   icon: string | null;
 }
 
+/**
+ * Streak interface
+ * 
+ * Represents a user's streak information (consecutive days of task completion)
+ */
 interface Streak {
   id: string;
   count: number;
@@ -22,7 +32,14 @@ interface Streak {
 
 /**
  * Lightweight fetch wrapper used by the hook.
- * Throws Error with normalized message on non-2xx responses.
+ * 
+ * This function handles API requests and normalizes error responses.
+ * It automatically includes credentials and properly handles JSON responses.
+ * 
+ * @param input - The URL or Request object to fetch
+ * @param init - Optional fetch initialization options
+ * @returns The parsed JSON response body
+ * @throws Error with normalized message on non-2xx responses
  */
 async function fetchJson(input: RequestInfo, init: RequestInit = {}) {
   const res = await fetch(input, { credentials: "include", ...init });
@@ -39,15 +56,19 @@ async function fetchJson(input: RequestInfo, init: RequestInit = {}) {
 }
 
 /**
- * useTasks hook backed by React Query.
- *
- * Assumes the following endpoints:
- * GET  /api/tasks            -> returns Task[]
- * POST /api/tasks            -> create task
- * PUT  /api/tasks/:id        -> update task (complete/reflection/edit)
- * GET  /api/streak           -> returns streak
- * POST /api/streak          -> { action: "increment" } increments streak
- * POST /api/achievements/check -> returns { newlyUnlocked: Achievement[] }
+ * Custom React hook for managing tasks in the Elevare dashboard
+ * 
+ * This hook provides a complete interface to the task management functionality
+ * using React Query for data fetching, caching, and synchronization.
+ * 
+ * It handles:
+ * - Fetching and caching user tasks
+ * - Creating new tasks
+ * - Updating tasks (completing, reflecting, editing)
+ * - Managing streaks and achievements
+ * - Providing UI state for the dashboard
+ * 
+ * @returns An object containing tasks data, UI state flags, and action functions
  */
 export function useTasks() {
   const queryClient = useQueryClient();
@@ -56,6 +77,7 @@ export function useTasks() {
   const [error, setError] = useState<string | null>(null);
 
   // --- Queries --- //
+  // Fetches the user's tasks from the API
   const tasksQuery = useQuery<Task[], Error>({
     queryKey: ["tasks"],
     queryFn: async ({ signal }: { signal?: AbortSignal }) => {
@@ -77,6 +99,7 @@ export function useTasks() {
     retry: 2,
   });
 
+  // Fetches the user's streak information
   const streakQuery = useQuery<Streak | null, Error>({
     queryKey: ["streak"],
     queryFn: async ({ signal }: { signal?: AbortSignal }) => {
@@ -92,16 +115,20 @@ export function useTasks() {
     retry: 1,
   });
 
-  // Derived UI state from tasks query
+  // --- Derived UI state from tasks query --- //
+  // All tasks for the current user
   const tasks = useMemo(() => (tasksQuery.data ?? []) as Task[], [tasksQuery.data]);
 
+  // The currently active (not completed) task
   const activeTask = useMemo(() => tasks.find((t: Task) => !t.isDone) ?? null, [tasks]);
 
+  // Archive of completed tasks (all tasks except the active one)
   const archive = useMemo(() => {
     if (!activeTask) return tasks.filter((t: Task) => t.isDone);
     return tasks.filter((t: Task) => t.id !== activeTask.id);
   }, [tasks, activeTask]);
 
+  // Helper to determine if user should see congratulations message
   const today = useMemo(() => new Date().toDateString(), []);
   const showCongratulations = useMemo(() => {
     const todaysCompleted = tasks.find(
@@ -116,7 +143,8 @@ export function useTasks() {
 
   // --- Mutations --- //
 
-  // Add Task (no optimistic update - simple create then invalidate)
+  // Mutation to add a new task
+  // This mutation invalidates the tasks query after successful creation
   const addTaskMutation = useMutation<Task, Error, { title: string; description: string; tagNames?: string[] }>(
     {
       mutationFn: async (newTask) =>
@@ -138,7 +166,8 @@ export function useTasks() {
     }
   );
 
-  // Complete Task (optimistic update with rollback)
+  // Mutation to complete a task with optimistic update
+  // Updates the UI immediately and rolls back on error
   const completeTaskMutation = useMutation<Task, Error, string, { previous?: Task[] }>(
     {
       mutationFn: async (id) =>
@@ -166,7 +195,7 @@ export function useTasks() {
           queryClient.setQueryData(["tasks"], context.previous);
         }
       },
-      onSuccess: async () => {
+      onSuccess: async (_, taskId) => {
         // refresh streak and tasks; achievements check will run after reflection save
         try {
           await fetchJson("/api/streak", {
@@ -180,6 +209,7 @@ export function useTasks() {
         }
 
         // small UX delay before opening reflection modal
+        // Store the task ID for when the reflection modal is opened
         setTimeout(() => setReflectionModalOpen(true), 600);
 
         queryClient.invalidateQueries({ queryKey: ["tasks"] });
@@ -192,15 +222,22 @@ export function useTasks() {
     }
   );
 
-  // Save Reflection (no optimistic update; after success, check achievements)
+  // Mutation to save a reflection on a task
+  // After successful save, checks for newly unlocked achievements
   const saveReflectionMutation = useMutation<void, Error, { id: string; reflection: string }>(
     {
-      mutationFn: async ({ id, reflection }) =>
-        fetchJson(`/api/tasks/${id}`, {
-          method: "PUT",
+      mutationFn: async ({ id, reflection }) => {
+        // Only save reflection to the dedicated reflections table
+        // This prevents duplicates since we were saving to both task.reflection and Reflection table
+        await fetchJson("/api/reflection", {
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reflection }),
-        }),
+          body: JSON.stringify({ 
+            message: reflection,
+            taskId: id
+          }),
+        });
+      },
       onMutate: async () => {
         setError(null);
         setReflectionModalOpen(false);
@@ -232,7 +269,7 @@ export function useTasks() {
     }
   );
 
-  // Edit Task (simple update -> invalidate)
+  // Mutation to edit task details (title, description, etc.)
   const editTaskMutation = useMutation<Task, Error, { id: string; payload: Partial<Task> }>(
     {
       mutationFn: async ({ id, payload }) =>
@@ -255,6 +292,7 @@ export function useTasks() {
   );
 
   // --- Helper actions exposed by the hook --- //
+  // Function to manually trigger a refetch of tasks
   const fetchTasks = useCallback(
     (force?: boolean) => {
       // When force=true we want to actively refetch even inactive queries;
@@ -266,8 +304,11 @@ export function useTasks() {
     },
     [queryClient]
   );
+  
+  // Function to manually trigger a refetch of streak data
   const fetchStreak = useCallback(() => queryClient.invalidateQueries({ queryKey: ["streak"] }), [queryClient]);
 
+  // Function to add a new task
   const addTask = useCallback(
     async (newTask: { title: string; description: string; tagNames?: string[] }) => {
       return addTaskMutation.mutateAsync(newTask);
@@ -275,21 +316,24 @@ export function useTasks() {
     [addTaskMutation]
   );
 
+  // Function to complete the current active task
   const completeTask = useCallback(async () => {
     const t = activeTask;
     if (!t) return;
     return completeTaskMutation.mutateAsync(t.id);
   }, [activeTask, completeTaskMutation]);
 
+  // Function to save a reflection on a specific task
   const saveReflection = useCallback(
-    async (reflection: string) => {
-      const t = activeTask;
+    async (reflection: string, taskId?: string) => {
+      const t = taskId ? tasks.find(task => task.id === taskId) : activeTask;
       if (!t) return;
       return saveReflectionMutation.mutateAsync({ id: t.id, reflection });
     },
-    [activeTask, saveReflectionMutation]
+    [activeTask, saveReflectionMutation, tasks]
   );
 
+  // Function to edit the current active task
   const editTask = useCallback(
     async (payload: Partial<Task>) => {
       const t = activeTask;
@@ -299,11 +343,15 @@ export function useTasks() {
     [activeTask, editTaskMutation]
   );
 
+  // Function to clear the current error state
   const clearError = useCallback(() => setError(null), []);
+  
+  // Function to remove an achievement toast
   const removeAchievementToast = useCallback((id: string) => {
     setAchievementToasts((prev) => prev.filter((a) => a.id !== id));
   }, []);
 
+  // Return the complete interface for the dashboard
   return {
     // data
     task: activeTask,
