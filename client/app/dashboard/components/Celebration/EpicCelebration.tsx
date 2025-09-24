@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
 import { Sparkles, Trophy, Target, Zap, Crown, Rocket } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Task {
     id: string;
@@ -15,7 +16,7 @@ interface EpicCelebrationProps {
     task: Task;
     streak?: { count: number; longest: number };
     onContinue: () => void;
-    onAddReflection: () => void;
+    onAddReflection: (taskId?: string) => void;
 }
 
 const celebrationMessages = [
@@ -48,7 +49,7 @@ const achievements = [
     { icon: Rocket, text: "Momentum Builder", color: "text-green-500" }
 ];
 
-export function EpicCelebration({ task, streak, onContinue, onAddReflection }: EpicCelebrationProps) {
+export function EpicCelebration({ task, streak, onAddReflection }: EpicCelebrationProps) {
     const [stage, setStage] = useState<'explosion' | 'message' | 'achievements' | 'actions'>('explosion');
     const [selectedMessage] = useState(celebrationMessages[Math.floor(Math.random() * celebrationMessages.length)]);
     const [showConfetti, setShowConfetti] = useState(true);
@@ -69,6 +70,8 @@ export function EpicCelebration({ task, streak, onContinue, onAddReflection }: E
             clearTimeout(timer4);
         };
     }, []);
+
+    const router = useRouter();
 
     return (
         <div className="relative">
@@ -242,8 +245,7 @@ export function EpicCelebration({ task, streak, onContinue, onAddReflection }: E
                                         initial={{ opacity: 0, scale: 0.8 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ delay: 0.8 }}
-                                        className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 
-                               rounded-2xl p-4 mb-4"
+                                        className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-2xl p-4 mb-4"
                                     >
                                         <div className="flex items-center justify-center gap-2 mb-2">
                                             <span className="text-2xl">🔥</span>
@@ -276,29 +278,13 @@ export function EpicCelebration({ task, streak, onContinue, onAddReflection }: E
 
                                 <div className="space-y-4">
                                     <motion.button
-                                        onClick={onAddReflection}
+                                        onClick={() => router.push("dashboard/reflection")}
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
-                                        className="w-full flex items-center justify-center gap-3 px-6 py-4 
-                               bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-primary)] 
-                               hover:shadow-lg hover:shadow-[var(--color-secondary)]/25 text-white 
-                               rounded-2xl transition-all duration-200 font-semibold"
+                                        className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-primary)] hover:shadow-lg hover:shadow-[var(--color-secondary)]/25 text-white rounded-2xl transition-all duration-200 font-semibold"
                                     >
                                         <Sparkles className="w-5 h-5" />
                                         Add a Reflection
-                                    </motion.button>
-
-                                    <motion.button
-                                        onClick={onContinue}
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        className="w-full flex items-center justify-center gap-3 px-6 py-4 
-                               bg-[var(--card-bg)] hover:bg-[var(--color-foreground)]/5 
-                               border border-[var(--border-color)] text-[var(--color-foreground)] 
-                               rounded-2xl transition-all duration-200 font-medium"
-                                    >
-                                        <Target className="w-5 h-5" />
-                                        Plan Tomorrow&apos;s Focus
                                     </motion.button>
                                 </div>
 

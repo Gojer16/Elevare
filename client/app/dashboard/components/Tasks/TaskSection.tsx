@@ -63,7 +63,7 @@ export function TaskSection({
             task={completedTask}
             streak={streak}
             onContinue={onContinueAfterCelebration || (() => {})}
-            onAddReflection={onOpenReflection}
+            onAddReflection={() => onOpenReflection(completedTask?.id)}
           />
           <CelebrationSounds isPlaying={true} volume={0.2} />
           <ParticleEffects isActive={true} duration={4000} />
