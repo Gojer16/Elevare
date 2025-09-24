@@ -2,12 +2,12 @@ import {withSentryConfig} from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  poweredByHeader: false, 
+  poweredByHeader: false,
 
   async headers() {
     return [
       {
-        source: "/(.*)", // apply to all routes
+        source: "(.*)", // apply to all routes
         headers: [
           {
             key: "Content-Security-Policy",
@@ -63,6 +63,22 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  async rewrites() {
+    return [
+      {
+        source: "/ingest/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/ingest/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+    ];
+  },
+
+  // This is required to support PostHog trailing slash API requests
+  skipTrailingSlashRedirect: true,
 };
 
 export default withSentryConfig(nextConfig, {
@@ -70,7 +86,6 @@ export default withSentryConfig(nextConfig, {
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
   org: "orlando-ascanio",
-
   project: "javascript-nextjs",
 
   // Only print logs for uploading source maps in CI
