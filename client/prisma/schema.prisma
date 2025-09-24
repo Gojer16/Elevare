@@ -1,167 +1,201 @@
+// Database schema for Elevare application
+// Defines all the data models and relationships for the task management platform
+
 generator client {
   provider = "prisma-client-js"
 }
 
+// PostgreSQL database configuration
+// Uses environment variables for connection details
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
+// Task model - represents a single task that a user creates for the day
+// Each user can have multiple tasks, but only one active task at a time
 model Task {
-  id          String       @id @default(cuid())
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  title       String
-  description String?
-  isDone      Boolean      @default(false)
-  reflection  String?
-  userId      String
-  completedAt DateTime?
-  reflections Reflection[]
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tags        Tag[]        @relation("TaskTags")
+  id          String       @id @default(cuid())  // Unique identifier for the task
+  createdAt   DateTime     @default(now())       // Timestamp when the task was created
+  updatedAt   DateTime     @updatedAt            // Timestamp when the task was last updated
+  title       String                             // The main title/description of the task
+  description String?                            // Optional detailed description of the task
+  isDone      Boolean      @default(false)      // Flag indicating if the task is completed
+  reflection  String?                            // User's reflection on the completed task (deprecated, use Reflection model instead)
+  userId      String                             // Foreign key linking to the user who owns the task
+  completedAt DateTime?                          // Timestamp when the task was marked as done
+  reflections Reflection[]                       // Collection of reflections associated with this task
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)  // Reference to the user who owns the task
+  tags        Tag[]        @relation("TaskTags")  // Collection of tags associated with the task
 
-  @@index([userId])
+  @@index([userId])  // Index on userId for faster queries by user
 }
 
+// Account model - stores third-party authentication provider information
+// Used by NextAuth.js for OAuth authentication
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())  // Unique identifier for the account
+  userId            String                        // Foreign key to the user who owns this account
+  type              String                        // Type of account (e.g., oauth, email)
+  provider          String                        // Provider name (e.g., google, github)
+  providerAccountId String                        // Provider's unique ID for this account
+  refresh_token     String?                       // OAuth refresh token (if applicable)
+  access_token      String?                       // OAuth access token (if applicable)
+  expires_at        Int?                          // Token expiration timestamp (if applicable)
+  token_type        String?                       // Token type (if applicable)
+  scope             String?                       // OAuth scope (if applicable)
+  id_token          String?                       // ID token (for OpenID Connect)
+  session_state     String?                       // Session state (for OAuth)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)  // Reference to the user who owns this account
 
-  @@unique([provider, providerAccountId])
-  @@index([userId])
+  @@unique([provider, providerAccountId])  // Ensure unique combination of provider and providerAccountId
+  @@index([userId])                       // Index on userId for faster queries
 }
 
+// Session model - stores session information for authenticated users
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())  // Unique identifier for the session
+  sessionToken String   @unique               // The actual session token (unique)
+  userId       String                         // Foreign key to the user associated with this session
+  expires      DateTime                       // Timestamp when the session expires
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)  // Reference to the user who owns this session
 
-  @@index([userId])
+  @@index([userId])  // Index on userId for faster queries
 }
 
+// User model - represents a registered user in the application
+// Contains authentication and profile information
 model User {
-  id              String            @id @default(cuid())
-  name            String?
-  email           String?           @unique
-  emailVerified   DateTime?
-  hashedPassword  String?
-  image           String?
-  themePreference Theme             @default(MODERN)
-  timezone        String?
-  accounts        Account[]
-  reflections     Reflection[]
-  sessions        Session[]
-  streak          Streak?
-  tags            Tag[]
-  tasks           Task[]
-  achievements    UserAchievement[]
-  weeklySummaries WeeklySummary[]
+  id              String            @id @default(cuid())  // Unique identifier for the user
+  name            String?                                // User's display name
+  email           String?           @unique              // User's email address (unique)
+  emailVerified   DateTime?                              // Timestamp when email was verified
+  hashedPassword  String?                                // Hashed password for email/password authentication
+  image           String?                                // URL to user's profile image
+  themePreference Theme             @default(MODERN)     // User's selected UI theme
+  timezone        String?                                // User's timezone for date/time calculations
+  accounts        Account[]                              // Collection of authentication accounts (OAuth)
+  reflections     Reflection[]                           // Collection of user's reflections
+  sessions        Session[]                              // Collection of active sessions
+  streak          Streak?                                // User's streak information (one-to-one relationship)
+  tags            Tag[]                                  // Collection of user-specific tags
+  tasks           Task[]                                 // Collection of user's tasks
+  achievements    UserAchievement[]                      // Collection of achievements earned by the user
+  weeklySummaries WeeklySummary[]                        // Collection of user's weekly summaries
 }
 
+// VerificationToken model - used for email verification and password reset
 model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+  identifier String                          // Email or other identifier for the token
+  token      String   @unique               // The verification token (unique)
+  expires    DateTime                        // Timestamp when the token expires
 
-  @@unique([identifier, token])
+  @@unique([identifier, token])  // Ensure unique combination of identifier and token
 }
 
+// Tag model - represents user-specific tags that can be associated with tasks
 model Tag {
-  id     String @id @default(cuid())
-  name   String
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tasks  Task[] @relation("TaskTags")
+  id     String @id @default(cuid())                    // Unique identifier for the tag
+  name   String                                         // The tag name
+  userId String                                         // Foreign key to the user who owns this tag
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)  // Reference to the user who owns the tag
+  tasks  Task[] @relation("TaskTags")                    // Collection of tasks associated with this tag
 
-  @@unique([name, userId])
+  @@unique([name, userId])  // Ensure unique tag names per user
 }
 
+// Reflection model - user's reflection on their tasks and progress
+// Can be associated with a specific task or stand alone
 model Reflection {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  content    String
-  aiFeedback String?
-  taskId     String?
-  userId     String
-  task       Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())              // Unique identifier for the reflection
+  createdAt  DateTime @default(now())                   // Timestamp when the reflection was created
+  updatedAt  DateTime @updatedAt                        // Timestamp when the reflection was last updated
+  content    String                                     // The actual reflection content written by the user
+  aiFeedback String?                                    // AI-generated feedback on the user's reflection
+  taskId     String?                                    // Optional foreign key to the associated task
+  userId     String                                     // Foreign key to the user who created the reflection
+  task       Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)  // Reference to the associated task
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)  // Reference to the user who created the reflection
 
-  @@index([userId])
+  @@index([userId])  // Index on userId for faster queries
 }
 
+// Streak model - tracks user's consecutive days of task completion
 model Streak {
-  id         String   @id @default(cuid())
-  userId     String   @unique
-  count      Int      @default(0)
-  longest    Int      @default(0)
-  lastActive DateTime
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())              // Unique identifier for the streak record
+  userId     String   @unique                           // Foreign key to the user (unique since one streak per user)
+  count      Int      @default(0)                       // Current streak count (consecutive days)
+  longest    Int      @default(0)                       // Longest streak achieved by the user
+  lastActive DateTime                                   // Timestamp of the last activity that contributed to the streak
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)  // Reference to the user who owns this streak
 
-  @@index([userId])
+  @@index([userId])  // Index on userId for faster queries
 }
 
+// WeeklySummary model - stores user's weekly summary of their progress
 model WeeklySummary {
-  id        String   @id @default(cuid())
-  weekStart DateTime
-  weekEnd   DateTime
-  summary   String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())              // Unique identifier for the summary
+  weekStart DateTime                                  // Start date of the week this summary covers
+  weekEnd   DateTime                                  // End date of the week this summary covers
+  summary   String                                     // The actual summary content
+  userId    String                                     // Foreign key to the user who created the summary
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)  // Reference to the user who created the summary
 
-  @@index([userId])
+  @@index([userId])  // Index on userId for faster queries
 }
 
+// Achievement model - defines the types of achievements available in the system
 model Achievement {
-  id               String              @id @default(cuid())
-  code             String              @unique
-  title            String
-  description      String
-  icon             String?
-  category         AchievementCategory @default(OTHER)
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
-  userAchievements UserAchievement[]
+  id               String              @id @default(cuid())  // Unique identifier for the achievement
+  code             String              @unique               // Unique code for the achievement (used in logic)
+  title            String                                     // Display title of the achievement
+  description      String                                     // Detailed description of how to earn the achievement
+  icon             String?                                    // Icon representing the achievement
+  category         AchievementCategory @default(OTHER)        // Category of the achievement
+  createdAt        DateTime            @default(now())        // Timestamp when the achievement was created
+  updatedAt        DateTime            @updatedAt             // Timestamp when the achievement was last updated
+  userAchievements UserAchievement[]                          // Collection of user achievement records (who earned this achievement)
+
+  // Add documentation to the model
+  @@docs("Achievement definitions for the Elevare application. These are the possible achievements a user can earn.")
 }
 
+// UserAchievement model - represents when a user has earned a specific achievement
 model UserAchievement {
-  id            String      @id @default(cuid())
-  userId        String
-  achievementId String
-  unlockedAt    DateTime    @default(now())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String      @id @default(cuid())              // Unique identifier for the user achievement record
+  userId        String                                        // Foreign key to the user who earned the achievement
+  achievementId String                                        // Foreign key to the specific achievement earned
+  unlockedAt    DateTime    @default(now())                   // Timestamp when the achievement was unlocked
+  createdAt     DateTime    @default(now())                   // Timestamp when the record was created
+  updatedAt     DateTime    @updatedAt                        // Timestamp when the record was last updated
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)  // Reference to the achievement earned
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)        // Reference to the user who earned the achievement
 
-  @@unique([userId, achievementId])
-  @@index([userId])
-  @@index([achievementId])
+  @@unique([userId, achievementId])  // Ensure a user can only earn the same achievement once
+  @@index([userId])                  // Index on userId for faster queries
+  @@index([achievementId])           // Index on achievementId for faster queries
+
+  // Add documentation to the model
+  @@docs("Records when a user has earned a specific achievement in the Elevare application.")
 }
 
+// Theme enum - defines the available UI themes for users
 enum Theme {
-  MODERN
-  MINIMAL
+  MODERN   // Modern, sleek theme
+  MINIMAL  // Clean, minimal theme
+
+  // Add documentation to the enum
+  @@docs("Available UI themes for users in the Elevare application.")
 }
 
+// AchievementCategory enum - groups achievements into different categories
 enum AchievementCategory {
-  TASK
-  STREAK
-  REFLECTION
-  OTHER
+  TASK       // Achievements related to task completion
+  STREAK     // Achievements related to maintaining streaks
+  REFLECTION // Achievements related to reflecting on tasks
+  OTHER      // Other miscellaneous achievements
+
+  // Add documentation to the enum
+  @@docs("Categories for organizing achievements in the Elevare application.")
 }
