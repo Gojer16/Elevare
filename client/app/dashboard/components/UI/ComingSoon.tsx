@@ -10,7 +10,7 @@ interface ComingSoonProps {
 
 export default function ComingSoon({ 
   title, 
-  description = "We're working hard to bring you something amazing!", 
+  description = "We&apos;re working hard to bring you something amazing!",
   features = [] 
 }: ComingSoonProps) {
   return (
@@ -83,7 +83,7 @@ export default function ComingSoon({
           >
             <h3 className="text-lg font-semibold text-[var(--color-foreground)] mb-4 flex items-center justify-center gap-2">
               <Zap className="w-5 h-5 text-blue-500" />
-              What's Coming
+              What&apos;s Coming
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {features.map((feature, index) => (

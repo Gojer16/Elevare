@@ -145,6 +145,7 @@ export function EnhancedReflectionModal({
                                     </h3>
                                     {reflectionPrompts.map((prompt, index) => {
                                         const Icon = prompt.icon;
+                                        const isSelected = selectedPrompt === prompt.text;
                                         return (
                                             <motion.button
                                                 key={index}
@@ -152,12 +153,12 @@ export function EnhancedReflectionModal({
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: index * 0.1 }}
                                                 onClick={() => handlePromptSelect(prompt.text)}
-                                                className="w-full p-4 text-left rounded-xl border border-[var(--border-color)] 
-                                   hover:border-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/5 
-                                   transition-all duration-200 group"
+                                                aria-pressed={isSelected}
+                                                className={`w-full p-4 text-left rounded-xl border transition-all duration-200 group
+                                   ${isSelected ? 'border-[var(--color-secondary)] bg-[var(--color-secondary)]/10' : 'border-[var(--border-color)] hover:border-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/5'}`}
                                             >
                                                 <div className="flex items-center gap-3">
-                                                    <div className="p-2 rounded-lg bg-[var(--color-secondary)]/10 group-hover:bg-[var(--color-secondary)]/20 transition-colors">
+                                                    <div className={`p-2 rounded-lg transition-colors ${isSelected ? 'bg-[var(--color-secondary)]/20' : 'bg-[var(--color-secondary)]/10 group-hover:bg-[var(--color-secondary)]/20'}`}>
                                                         <Icon className="w-5 h-5 text-[var(--color-secondary)]" />
                                                     </div>
                                                     <span className="font-medium text-[var(--color-foreground)]">

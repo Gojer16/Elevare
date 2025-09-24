@@ -103,6 +103,15 @@ export function OneThingBot({ onTaskSuggestion, isVisible, onToggle }: OneThingB
 
 
     const handleSuggestionClick = (suggestion: string) => {
+        try {
+            // inform parent about the selected task suggestion (if needed)
+            onTaskSuggestion?.(suggestion);
+        } catch (e) {
+            // ignore if parent handler throws for any reason
+            // (keeps this component resilient)
+            console.warn('onTaskSuggestion handler failed', e);
+        }
+
         handleSend(suggestion);
     };
 

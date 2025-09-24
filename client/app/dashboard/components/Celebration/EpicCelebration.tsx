@@ -278,7 +278,15 @@ export function EpicCelebration({ task, streak, onAddReflection }: EpicCelebrati
 
                                 <div className="space-y-4">
                                     <motion.button
-                                        onClick={() => router.push("dashboard/reflection")}
+                                        onClick={() => {
+                                            try {
+                                                onAddReflection?.(task?.id);
+                                            } catch {
+                                                // ignore
+                                            }
+
+                                            router.push("dashboard/reflection");
+                                        }}
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-primary)] hover:shadow-lg hover:shadow-[var(--color-secondary)]/25 text-white rounded-2xl transition-all duration-200 font-semibold"
