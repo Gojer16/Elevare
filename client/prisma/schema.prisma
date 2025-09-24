@@ -158,7 +158,7 @@ model Achievement {
   userAchievements UserAchievement[]                          // Collection of user achievement records (who earned this achievement)
 
   // Add documentation to the model
-  @@docs("Achievement definitions for the Elevare application. These are the possible achievements a user can earn.")
+  ("Achievement definitions for the Elevare application. These are the possible achievements a user can earn.")
 }
 
 // UserAchievement model - represents when a user has earned a specific achievement
@@ -177,7 +177,7 @@ model UserAchievement {
   @@index([achievementId])           // Index on achievementId for faster queries
 
   // Add documentation to the model
-  @@docs("Records when a user has earned a specific achievement in the Elevare application.")
+  ("Records when a user has earned a specific achievement in the Elevare application.")
 }
 
 // Theme enum - defines the available UI themes for users
@@ -186,7 +186,7 @@ enum Theme {
   MINIMAL  // Clean, minimal theme
 
   // Add documentation to the enum
-  @@docs("Available UI themes for users in the Elevare application.")
+  ("Available UI themes for users in the Elevare application.")
 }
 
 // AchievementCategory enum - groups achievements into different categories
@@ -197,5 +197,5 @@ enum AchievementCategory {
   OTHER      // Other miscellaneous achievements
 
   // Add documentation to the enum
-  @@docs("Categories for organizing achievements in the Elevare application.")
+  ("Categories for organizing achievements in the Elevare application.")
 }
