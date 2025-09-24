@@ -157,8 +157,7 @@ model Achievement {
   updatedAt        DateTime            @updatedAt             // Timestamp when the achievement was last updated
   userAchievements UserAchievement[]                          // Collection of user achievement records (who earned this achievement)
 
-  // Add documentation to the model
-  ("Achievement definitions for the Elevare application. These are the possible achievements a user can earn.")
+ 
 }
 
 // UserAchievement model - represents when a user has earned a specific achievement
@@ -176,8 +175,6 @@ model UserAchievement {
   @@index([userId])                  // Index on userId for faster queries
   @@index([achievementId])           // Index on achievementId for faster queries
 
-  // Add documentation to the model
-  ("Records when a user has earned a specific achievement in the Elevare application.")
 }
 
 // Theme enum - defines the available UI themes for users
@@ -185,8 +182,7 @@ enum Theme {
   MODERN   // Modern, sleek theme
   MINIMAL  // Clean, minimal theme
 
-  // Add documentation to the enum
-  ("Available UI themes for users in the Elevare application.")
+ 
 }
 
 // AchievementCategory enum - groups achievements into different categories
@@ -196,6 +192,5 @@ enum AchievementCategory {
   REFLECTION // Achievements related to reflecting on tasks
   OTHER      // Other miscellaneous achievements
 
-  // Add documentation to the enum
-  ("Categories for organizing achievements in the Elevare application.")
+ 
 }
