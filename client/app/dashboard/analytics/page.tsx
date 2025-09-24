@@ -1,7 +1,8 @@
 "use client";
-
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import ComingSoon from '../components/UI/ComingSoon';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 
 // Types for our analytics data
@@ -38,9 +39,13 @@ interface AnalyticsData {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 export default function AnalyticsPage() {
+  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+
+  // Check if user is a developer
+  const isDeveloper = session?.user?.email === 'operation927@gmail.com' || session?.user?.email === 'gojer@naver.com';
 
   useEffect(() => {
     const fetchAnalyticsData = async () => {
@@ -114,6 +119,24 @@ export default function AnalyticsPage() {
   const completionRate = totalTasks > 0 
     ? Math.round(((analyticsData?.completionData?.length || 0) / totalTasks) * 100) 
     : 0;
+
+  // Show coming soon for non-developer users
+  if (status === 'authenticated' && !isDeveloper) {
+    return (
+      <ComingSoon
+        title="Analytics Dashboard"
+        description="Get deep insights into your productivity patterns, task completion trends, and personal growth metrics. Your analytics dashboard is being built!"
+        features={[
+          "Task completion trends",
+          "Productivity heatmaps",
+          "Tag-based analytics",
+          "Time tracking insights",
+          "Goal progress visualization",
+          "Custom report generation"
+        ]}
+      />
+    );
+  }
 
   if (loading) {
     return (
