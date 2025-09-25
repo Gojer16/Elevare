@@ -9,6 +9,15 @@ import { validateLogin } from "@/app/lib/validation";
 import SocialLogin from "../components/SocialLogin";
 import { ButtonSpinner } from "../components/UnifiedLoadingSpinner";
 import { Button } from "../components/ui/Button";
+import type { Session } from "next-auth";
+import type { SignInResponse } from "next-auth/react";
+
+type SignInFn = (
+  provider?: string,
+  options?: Record<string, unknown>
+) => Promise<SignInResponse | undefined>;
+
+type GetSessionFn = () => Promise<Session | null>;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,14 +25,14 @@ export default function LoginPage() {
   const [authLoaded, setAuthLoaded] = useState(false);
 
   // dynamically import next-auth when needed
-  const [signInFn, setSignInFn] = useState<any>(null);
-  const [getSessionFn, setGetSessionFn] = useState<any>(null);
+  const [signInFn, setSignInFn] = useState<SignInFn | null>(null);
+  const [getSessionFn, setGetSessionFn] = useState<GetSessionFn | null>(null);
 
   useEffect(() => {
     (async () => {
       const mod = await import("next-auth/react");
-      setSignInFn(() => mod.signIn);
-      setGetSessionFn(() => mod.getSession);
+      setSignInFn(() => (mod.signIn as unknown) as SignInFn);
+      setGetSessionFn(() => (mod.getSession as unknown) as GetSessionFn);
       setAuthLoaded(true);
     })();
   }, []);
