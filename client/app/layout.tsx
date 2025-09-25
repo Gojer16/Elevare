@@ -11,6 +11,8 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "700", "900"]
 })
 
 export const metadata: Metadata = {
@@ -70,40 +72,38 @@ export default function RootLayout({
             }),
           }}
         />
-        <Script
-          id="gtm-script"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','GTM-NLQ7D3LQ');
-            `,
-          }}
-        />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="robots" content="index, follow" />
         <meta name="theme-color" content="#4F46E5" />
-        <link rel="icon" href="/logo.png" />
-        <link rel="apple-touch-icon" href="/logo.png" />
-        <link rel="preconnect" href="https://va.vercel-scripts.com"
+        <link rel="icon" href="/logo.webp" />
+        <link rel="apple-touch-icon" href="/logo.webp" />
+        <link rel="preconnect" href="https://va.vercel-scripts.com"/>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="preconnect" href="https://va.vercel-scripts.com" />
+
+        <link
+          rel="preconnect"
+          as="font"
+          href="https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
         />
+        <link
+          rel="preconnect"
+          as="font"
+          href="https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmWUlfBBc-.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+          
         <Analytics />
         <SpeedInsights />
       </head>
       <body
         className={`${roboto.className} antialiased`}
       >
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-NLQ7D3LQ"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
             <Providers>{children}</Providers>
       </body>
     </html>
