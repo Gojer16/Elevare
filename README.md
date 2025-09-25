@@ -27,14 +27,27 @@ Unlike endless to-do lists, Elevare helps you cut through the noise by identifyi
 
 > "Success is about doing the right thing, not about doing everything right."
 
-## Key Features
+## ✨ Features
 
-- 🎯 **Daily Focus** — Commit to your single most important task each day.
-- ✅ **Completion & Reflection** — Mark tasks as complete and reflect to build awareness and growth.
-- 📊 **Archive & Progress** — See your journey unfold through archived tasks and reflections.
-- 🔐 **Secure Authentication** — Built with NextAuth.js + Prisma for safe, private accounts.
-- 🏷️ **Tags** — Organize tasks by life area (#Health, #Work, #Relationships).
-- 🏆 **Gamification** *(Planned)* — Rewards and streaks to keep you consistent.
+*   **Task Management:** Create, manage, and track your daily tasks.
+*   **Streaks & Achievements:** Stay motivated by building streaks for consistent habits and unlocking achievements.
+*   **Reflection Journal:** A dedicated space to reflect on your progress, thoughts, and feelings.
+*   **Analytics:** Visualize your progress and gain insights into your habits with our analytics dashboard.
+*   **AI-Powered Suggestions:** Get personalized suggestions for new achievements and tasks based on your progress.
+*   **User Authentication:** Secure user authentication and profile management.
+
+## 🚀 Tech Stack
+
+*   **Framework:** [Next.js](https://nextjs.org/)
+*   **Language:** [TypeScript](https://www.typescriptlang.org/)
+*   **UI:** [React](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/), [Radix UI](https://www.radix-ui.com/), [Framer Motion](https://www.framer.com/motion/)
+*   **State Management:** [TanStack Query](https://tanstack.com/query/latest)
+*   **Forms:** [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
+*   **Authentication:** [NextAuth.js](https://next-auth.js.org/)
+*   **Database:** [Prisma](https://www.prisma.io/)
+*   **Testing:** [Vitest](https://vitest.dev/) & [Playwright](https://playwright.dev/)
+*   **Analytics:** [Vercel Analytics](https://vercel.com/analytics) & [PostHog](https://posthog.com/)
+*   **Error Monitoring:** [Sentry](https://sentry.io/)
 
 ## Getting Started
 
