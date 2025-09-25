@@ -25,10 +25,8 @@ const Navbar = () => {
 
   return (
     <nav 
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled 
-          ? "bg-white/90 backdrop-blur-md py-3 shadow-sm" 
-          : "bg-transparent py-5"
+      className={`fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-md ${
+        scrolled ? "py-3 shadow-sm" : "py-5"
       }`}
     >
       <div className="container mx-auto px-4 md:px-8">
@@ -55,7 +53,7 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                <Link 
+                <Link
                   href={item.href}
                   className="text-gray-600 hover:text-primary transition-colors font-medium relative group"
                 >
@@ -76,7 +74,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <motion.button 
+          <motion.button
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
@@ -87,19 +85,22 @@ const Navbar = () => {
             aria-controls="mobile-menu"
           >
             <div className="w-6 flex flex-col gap-1">
-              <motion.span 
-                className={`h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}
-                animate={isMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+              <motion.span
+                className={`h-0.5 bg-gray-700 transition-all duration-300 ${
+                  isMenuOpen ? "rotate-45 translate-y-1.5" : ""
+                }`}
                 aria-hidden="true"
               ></motion.span>
-              <motion.span 
-                className={`h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? 'opacity-0' : 'opacity-100'}`}
-                animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+              <motion.span
+                className={`h-0.5 bg-gray-700 transition-all duration-300 ${
+                  isMenuOpen ? "opacity-0" : "opacity-100"
+                }`}
                 aria-hidden="true"
               ></motion.span>
-              <motion.span 
-                className={`h-0.5 bg-gray-700 transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}
-                animate={isMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+              <motion.span
+                className={`h-0.5 bg-gray-700 transition-all duration-300 ${
+                  isMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
+                }`}
                 aria-hidden="true"
               ></motion.span>
             </div>

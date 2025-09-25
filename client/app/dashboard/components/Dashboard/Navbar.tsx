@@ -115,16 +115,7 @@ export default function Navbar() {
                 End Session
                 </Button>
 
-                {/* Mobile hamburger menu */}
-                <div className="sm:hidden">
-                  <button
-                    onClick={() => signOut({ callbackUrl: '/' })}
-                    aria-label="Logout of Elevare"
-                    className="p-2 rounded-md text-[var(--color-foreground)] hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                  <Menu className="w-6 h-6" />
-                  </button>
-                </div>
+
               </>
             ) : null}
           </div>
